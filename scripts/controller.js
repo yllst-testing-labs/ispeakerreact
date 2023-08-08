@@ -146,7 +146,6 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
         $scope.exercise_tpl.url = 'partials/blank.html';
         setTimeout(function() {
             $scope.exercise_tpl.url = $scope.exercise_tpl_arr[$scope.exerceise_counter];
-            $('.titleContainer').trigger('click');
         }, 400);
     };
     $rootScope.mainAns = true;
@@ -251,7 +250,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
         $scope.exercise_tpl.url = 'partials/blank.html';
         setTimeout(function() {
             $scope.exercise_tpl.url = $scope.exercise_tpl.url_;
-            $('.main_wrapper').trigger('click');
+            $('.middle_wrap').trigger('click');
         }, 200);
         $scope.cal_percentage();
         $scope.get_score();
@@ -1074,11 +1073,6 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
     }, 1000);
 
     //home page
-    $scope.check_dropdown = function($event) {
-        if (!$($event.target).hasClass('models_page_down_arrow')) {
-            $scope.dropdown = true;
-        }
-    };
     $scope.load_section = function($event, page_id) {
 
         $scope.con_page2_html = 'partials/blank.html';
@@ -1142,7 +1136,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
             fetchSounds();
 
             setTimeout(function() {
-                $('.main_wrapper').trigger('click');
+                $('.middle_wrap').trigger('click');
             }, 300);
 
             //database
@@ -1511,25 +1505,6 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
 
     //home page
     //subpages
-    $scope.left_menu_clk = function($event) {
-        if ($($event.currentTarget).parents('.page_2_partial').find('.left_part').hasClass('open')) {
-            $($event.currentTarget).parents('.page_2_partial').find('.left_part').addClass('close').removeClass('open');
-            $($event.currentTarget).parents('.page_2_partial').find('.left_part').animate({
-                left: '-100%'
-            }, 500, "linear");
-            $($event.currentTarget).parents('.page_2_partial').find('.left_menu').css('background-position', '-2px 11px');
-            $('.left_part').removeClass('left_part_m');
-            $('.right_part').removeClass('right_part_m');
-        } else {
-            $($event.currentTarget).parents('.page_2_partial').find('.left_part').addClass('open').removeClass('close');
-            $($event.currentTarget).parents('.page_2_partial').find('.left_part').animate({
-                left: '0%'
-            }, 500, "linear");
-            $($event.currentTarget).parents('.page_2_partial').find('.left_menu').css('background-position', '-8px 11px');
-            $('.left_part').addClass('left_part_m');
-            $('.right_part').addClass('right_part_m');
-        }
-    };
     $scope.up_clk = function($event) {
 
         hidel_elem();
@@ -1860,7 +1835,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
             $scope.sound_page2_html = 'partials/blank.html';
             setTimeout(function() {
                 $scope.sound_page2_html = 'partials/sound_page2.html';
-                $('.main_wrapper').trigger('click');
+                $('.middle_wrap').trigger('click');
                 // video_resize();
             }, 200);
             $scope.scroll_bar();
@@ -1919,7 +1894,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
             $scope.exercise_tpl.url = null;
             setTimeout(function() {
                 $scope.exercise_tpl.url = $scope.exercise_tpl.url_;
-                $('.main_wrapper').trigger('click');
+                $('.middle_wrap').trigger('click');
                 $('.disabler').hide();
                 $('._practise_accor').addClass('selected').next().slideDown();
                 $('.reviewC').removeClass('selected').next().slideUp();
@@ -1956,7 +1931,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
             $scope.con_page2_html = 'partials/blank.html';
             setTimeout(function() {
                 $scope.con_page2_html = 'partials/con_page2.html';
-                $('.main_wrapper').trigger('click');
+                $('.middle_wrap').trigger('click');
             }, 200);
             //$('html').css('overflow', 'auto');
 
@@ -2033,7 +2008,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
             $scope.exam_page2_html = 'partials/blank.html';
             setTimeout(function() {
                 $scope.exam_page2_html = 'partials/exam_page2.html';
-                $('.main_wrapper').trigger('click');
+                $('.middle_wrap').trigger('click');
                 //video_resize();
             }, 200);
             //$('html').css('overflow-y', 'hidden');
@@ -2308,7 +2283,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
         $scope.exercise_tpl.url = 'partials/blank.html';
         setTimeout(function() {
             $scope.exercise_tpl.url = $scope.exercise_tpl.url_;
-            $('.main_wrapper').trigger('click');
+            $('.middle_wrap').trigger('click');
             $('.disabler').hide();
             $('.reviewC').removeClass('selected').next().slideUp();
 
@@ -2321,7 +2296,7 @@ angular.module('myApp.controllers', ['ngAnimate']).controller('myCtrl', function
             $scope.exercise_tpl.url = 'partials/blank.html';
             setTimeout(function() {
                 $scope.exercise_tpl.url = $scope.exercise_tpl.url_;
-                $('.main_wrapper').trigger('click');
+                $('.middle_wrap').trigger('click');
                 $('.disabler').hide();
                 $('.reviewC').removeClass('selected').next().slideUp();
 
@@ -2511,7 +2486,7 @@ angular.module('myApp.Snap_Ctrl', []).controller('Snap_Ctrl', function($scope, $
 
     $scope.checkDirty = function() {
         //console.log('in::' + window.answer);
-        $('.main_wrapper').trigger('click');
+        $('.middle_wrap').trigger('click');
         if (window.answer == 'yes') {
             setTimeout($scope.submit('true'), 1000);
             clearInterval($rootScope.timerInt);

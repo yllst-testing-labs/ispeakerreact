@@ -51,7 +51,7 @@ function getMobileOperatingSystem() {
 }
 
 function scroll_top() {
-    var scroll_pos = $('.main_wrapper').position();
+    var scroll_pos = $('.middle_wrap').position();
     $(window).scrollTop(scroll_pos.top);
 }
 

@@ -55,66 +55,6 @@ function scroll_top() {
     $(window).scrollTop(scroll_pos.top);
 }
 
-
-  $(document).ready(function () {
-
-
-
-    /*$('.responsive_entry_center_wrap,#main_column,.main-container').css('margin', '0');
-    $('.responsive_entry_center_wrap,#main_column,.main-container').css('padding', '0');
-    $('.middle_wrap').parent().css('margin', '0');
-    $('.middle_wrap').parent().css('padding', '0');*/
-
-
-    //$('.main_wrapper').parent().css('padding', '0');// to remove padding
-    //set_max_height();
-    $(window).resize(function () {
-      //set_max_height();
-    });
-    $('.models_page_down_arrow').click(function () {
-      var dropd = $('.down_arrow_wrapper');
-      if (dropd.is(':visible')) {
-        $('.down_arrow_wrapper').hide();
-      } else {
-        $('.down_arrow_wrapper').show();
-      }
-    })
-  });
-  function set_max_height() {
-    var window_height = parseInt(($(window).height()));
-    if (window_height <= (678)) {
-      window_height = (678);
-    } else {
-
-    }
-    $('.scroll_bar, .left_part, .right_part').css('min-height', (window_height - 50) + 'px').css('max-height', (window_height - 50) + 'px');
-    //$('.main_wrapper').css('min-height', window_height + 'px');
-  }
-$(document).ready(function() {
-
-    //$('.main_wrapper').parent().css('padding', '0');// to remove padding
-    //set_max_height();
-
-    $('.models_page_down_arrow').click(function() {
-        var dropd = $('.down_arrow_wrapper');
-        if (dropd.is(':visible')) {
-            $('.down_arrow_wrapper').hide();
-        } else {
-            $('.down_arrow_wrapper').show();
-        }
-    });
-});
-function set_max_height() {
-    var window_height = parseInt(($(window).height()));
-    if (window_height <= (678)) {
-        window_height = (678);
-    } else {
-
-    }
-    $('.scroll_bar, .left_part, .right_part').css('min-height', (window_height - 70) + 'px').css('max-height', (window_height - 70) + 'px');
-    //$('.main_wrapper').css('min-height', window_height + 'px');
-}
-
 var recording_path = '/';
 
 function __log(e, data) {

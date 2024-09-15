@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, Col, Nav, Row } from "react-bootstrap";
 import { ArrowLeftCircle, CameraVideo, CardChecklist, ChatDots, Headphones, InfoCircle } from "react-bootstrap-icons";
-import { useIsElectron } from "../../utils/isElectron";
+import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
 import ToastNotification from "../general/ToastNotification";
 import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
@@ -18,7 +18,8 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
 
-    const isElectron = useIsElectron();
+    const [videoUrl, setVideoUrl] = useState(null);
+    const [videoLoading, setVideoLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,7 +27,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 setLoading(true);
 
                 // If it's not an Electron environment, check IndexedDB first
-                if (!isElectron) {
+                if (!isElectron()) {
                     const cachedDataBlob = await getFileFromIndexedDB("examspeaking_data.json", "json");
 
                     if (cachedDataBlob) {
@@ -50,7 +51,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 setLoading(false);
 
                 // Save the fetched data to IndexedDB (excluding Electron)
-                if (!isElectron) {
+                if (!isElectron()) {
                     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
                     await saveFileToIndexedDB("examspeaking_data.json", blob, "json");
                 }
@@ -60,10 +61,47 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
             }
         };
         fetchData();
-    }, [isElectron]);
+    }, []);
+
+    // Use offline file if running in Electron
+    useEffect(() => {
+        const fetchVideoUrl = async () => {
+            if (isElectron() && examData && examData[id]) {
+                const videoFileName = examData[id].watch_and_study.offlineFile;
+                const folderName = "iSpeakerReact_ExamVideos";
+
+                const videoStreamUrl = `http://localhost:8998/video/${folderName}/${videoFileName}`;
+
+                try {
+                    // Make a HEAD request to check if the local video file exists
+                    const response = await fetch(videoStreamUrl, { method: "HEAD" });
+
+                    if (response.ok) {
+                        // If the file exists, set the video URL to the local file
+                        setVideoUrl(videoStreamUrl);
+                    } else if (response.status === 404) {
+                        // If the file doesn't exist, fall back to the Vimeo link
+                        throw new Error("Local video file not found");
+                    }
+                } catch (error) {
+                    console.warn("Falling back to Vimeo due to local video file not found:", error);
+                    // Fallback to Vimeo video link
+                    setVideoUrl(examData[id].watch_and_study.videoLink);
+                }
+
+                setVideoLoading(false); // Video URL is now loaded (either local or Vimeo)
+            } else if (examData && examData[id]) {
+                // This is the web case where we simply use the Vimeo link
+                setVideoUrl(examData[id].watch_and_study.videoLink);
+                setVideoLoading(false); // Video URL for web (Vimeo or other) is set
+            }
+        };
+
+        fetchVideoUrl();
+    }, [examData, id]);
 
     // Check if data is still loading
-    if (loading) {
+    if (loading || videoLoading) {
         return <LoadingOverlay />;
     }
 
@@ -130,7 +168,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 <Card.Body>
                     {activeTab === "#watch_and_study" && (
                         <WatchAndStudyTab
-                            videoUrl={examDetails.watch_and_study.videoLink}
+                            videoUrl={videoUrl}
                             taskData={examDetails.watch_and_study.taskData}
                             dialog={examDetails.watch_and_study.study.dialog}
                             skills={examDetails.watch_and_study.study.skills}

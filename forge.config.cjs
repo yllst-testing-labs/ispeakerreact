@@ -54,6 +54,12 @@ module.exports = {
             name: "@electron-forge/maker-rpm",
             config: {},
         },
+        {
+            name: "@electron-forge/maker-squirrel",
+            config: (arch) => ({
+                setupExe: `iSpeakerReact-${arch}-Setup.exe`,
+            }),
+        },
     ],
     plugins: [
         {

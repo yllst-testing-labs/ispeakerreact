@@ -30,6 +30,11 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@main
 
+            - name: Get version from package.json
+              id: get_version
+              run: |
+                  echo "PACKAGE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
             - name: Set up Node.js
               uses: actions/setup-node@main
               with:
@@ -107,11 +112,12 @@ jobs:
             - name: Build Electron app (Windows)
               if: matrix.os == 'windows-latest'
               run: |
-                  for arch in ${{ join(matrix.arch, ' ') }}; do
-                    npm run make -- --arch=$arch
-                    mkdir -p out/make-$arch
-                    mv out/make/* out/make-$arch/
-                  done
+                  $architectures = @("x64", "arm64")
+                  foreach ($arch in $architectures) {
+                      npm run make -- --arch=$arch
+                      New-Item -ItemType Directory -Force -Path "out/make-$arch"
+                      Move-Item -Path "out/make/*" -Destination "out/make-$arch/"
+                  }
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
 
@@ -124,10 +130,10 @@ jobs:
             - name: Upload Artifacts
               uses: actions/upload-artifact@main
               with:
-                  name: iSpeakerReact-${{ matrix.os }}-${{ matrix.arch }}
+                  name: iSpeakerReact-${{ matrix.os }}
                   path: |
                       out/make*
-                      out/make-$arch/
+                      out/make-*
 
     release:
         runs-on: ubuntu-latest
@@ -152,18 +158,20 @@ jobs:
             - name: Get latest tag
               id: get_tag
               run: |
-                  latest_tag=$(git describe --tags --abbrev=0 || echo "")
+                  latest_tag=$(git tag | sort -V | tail -n 1)
                   if [ -z "$latest_tag" ]; then
                     new_tag="v${{ env.PACKAGE_VERSION }}"
                   else
-                    new_tag="v${{ env.PACKAGE_VERSION }}"
+                    random_str=$(openssl rand -hex 4)
+                    version_prefix=${latest_tag%.*}
+                    new_tag="${version_prefix}-${random_str}"
                   fi
-                  echo "latest_tag=$new_tag" >> $GITHUB_ENV
+                  echo "LATEST_TAG=$new_tag" >> $GITHUB_ENV
 
             - name: Create tag
               run: |
-                  git tag ${{ env.latest_tag }}
-                  git push origin ${{ env.latest_tag }}
+                  git tag ${{ env.LATEST_TAG }}
+                  git push origin ${{ env.LATEST_TAG }}
 
             - name: Create GitHub release
               id: create_release
@@ -171,7 +179,7 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  tag_name: ${{ env.latest_tag }}
+                  tag_name: ${{ env.LATEST_TAG }}
                   name: v${{ env.PACKAGE_VERSION }}
                   body: |
                       Release version ${{ env.PACKAGE_VERSION }} of the project.
@@ -183,9 +191,13 @@ jobs:
             - name: Upload Release Assets
               run: |
                   for artifact in ./release/iSpeakerReact-*; do
-                    for file in $(find $artifact -type f); do
+                    for file in $(find "$artifact" -type f); do
+                      if [[ "$file" == *"RELEASES"* ]]; then
+                        echo "Skipping $file"
+                        continue
+                      fi
                       echo "Attempting to upload: $file"
-                      if gh release upload ${{ env.latest_tag }} "$file" --clobber; then
+                      if gh release upload ${{ env.LATEST_TAG }} "$file" --clobber; then
                         echo "Successfully uploaded: $file"
                       else
                         echo "Failed to upload: $file"

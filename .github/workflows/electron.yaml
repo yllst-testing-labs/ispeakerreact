@@ -269,7 +269,7 @@ jobs:
                       - [Download for Windows (64-bit)](${{ steps.set-urls.outputs.win_x64_url }})
                       - [Download for Windows on Arm (arm64)](${{ steps.set-urls.outputs.win_arm64_url }})
                       - [Download for Linux (x64)](${{ steps.set-urls.outputs.linux_x64_url }})
-                  comment-id: ${{ needs.get-comment-id.outputs.comment-id }}
+                  comment-id: ${{ needs.get-comment-id.outputs.comment-id || '' }}
 
     release:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

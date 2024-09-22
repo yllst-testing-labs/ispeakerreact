@@ -12,8 +12,34 @@ permissions:
     contents: write
     pages: write
     id-token: write
+    pull-requests: write
+    issues: write
 
 jobs:
+    vite-build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@main
+
+            - name: Set up Node.js
+              uses: actions/setup-node@main
+              with:
+                  node-version: "21"
+
+            - name: Install Dependencies
+              run: npm ci
+
+            - name: Build Vite App
+              run: npm run vitebuildcli
+
+            - name: Upload Vite Build Artifact
+              uses: actions/upload-artifact@main
+              with:
+                  name: vite-dist
+                  path: ./dist
+
     build:
         strategy:
             matrix:
@@ -22,13 +48,27 @@ jobs:
                     - os: macos-latest
                       arch: [x64, arm64]
                     - os: windows-latest
-                      arch: [x64, arm64]  # Added ARM64 for Windows
+                      arch: [x64, arm64]
 
         runs-on: ${{ matrix.os }}
+        needs: vite-build
+
+        outputs:
+            mac_x64_artifact_id: ${{ steps.upload-mac-x64.outputs.artifact-id }}
+            mac_arm64_artifact_id: ${{ steps.upload-mac-arm64.outputs.artifact-id }}
+            win_x64_artifact_id: ${{ steps.upload-win-x64.outputs.artifact-id }}
+            win_arm64_artifact_id: ${{ steps.upload-win-arm64.outputs.artifact-id }}
+            linux_x64_artifact_id: ${{ steps.upload-linux-x64.outputs.artifact-id }}
 
         steps:
             - name: Checkout code
               uses: actions/checkout@main
+
+            - name: Download Vite Build Artifact
+              uses: actions/download-artifact@main
+              with:
+                  name: vite-dist
+                  path: ./dist
 
             - name: Get version from package.json
               id: get_version
@@ -104,9 +144,9 @@ jobs:
               run: |
                   source venv/bin/activate
                   for arch in ${{ join(matrix.arch, ' ') }}; do
-                    npm run make -- --arch=$arch
-                    mkdir -p out/make-$arch
-                    mv out/make/* out/make-$arch/
+                    npm run makecli -- --arch=$arch
+                    mkdir -p out/make-mac-$arch
+                    mv out/make/* out/make-mac-$arch/
                   done
 
             - name: Build Electron app (Windows)
@@ -114,28 +154,125 @@ jobs:
               run: |
                   $architectures = @("x64", "arm64")
                   foreach ($arch in $architectures) {
-                      npm run make -- --arch=$arch
-                      New-Item -ItemType Directory -Force -Path "out/make-$arch"
-                      Move-Item -Path "out/make/*" -Destination "out/make-$arch/"
+                      npm run makecli -- --arch=$arch
+                      New-Item -ItemType Directory -Force -Path "out/make-win-$arch"
+                      Move-Item -Path "out/make/*" -Destination "out/make-win-$arch/"
                   }
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
 
             - name: Build Electron app (Linux)
               if: matrix.os == 'ubuntu-latest'
-              run: npm run make
+              run: | 
+                  npm run makecli
+                  mkdir -p out/make-linux
+                  mv out/make/* out/make-linux/
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
 
-            - name: Upload Artifacts
+            - name: Upload Artifacts (macOS x64)
+              if: matrix.os == 'macos-latest' && contains(matrix.arch, 'x64')
+              id: upload-mac-x64
               uses: actions/upload-artifact@main
               with:
-                  name: iSpeakerReact-${{ matrix.os }}
-                  path: |
-                      out/make*
-                      out/make-*
+                  name: iSpeakerReact-macos-x64
+                  path: out/make-mac-x64
+
+            - name: Upload Artifacts (macOS arm64)
+              if: matrix.os == 'macos-latest' && contains(matrix.arch, 'arm64')
+              id: upload-mac-arm64
+              uses: actions/upload-artifact@main
+              with:
+                  name: iSpeakerReact-macos-arm64
+                  path: out/make-mac-arm64
+
+            - name: Upload Artifacts (Windows x64)
+              if: matrix.os == 'windows-latest' && contains(matrix.arch, 'x64')
+              id: upload-win-x64
+              uses: actions/upload-artifact@main
+              with:
+                  name: iSpeakerReact-windows-x64
+                  path: out/make-win-x64
+
+            - name: Upload Artifacts (Windows arm64)
+              if: matrix.os == 'windows-latest' && contains(matrix.arch, 'arm64')
+              id: upload-win-arm64
+              uses: actions/upload-artifact@main
+              with:
+                  name: iSpeakerReact-windows-arm64
+                  path: out/make-win-arm64
+
+            - name: Upload Artifacts (Linux x64)
+              if: matrix.os == 'ubuntu-latest'
+              id: upload-linux-x64
+              uses: actions/upload-artifact@main
+              with:
+                  name: iSpeakerReact-linux-x64
+                  path: out/make-linux
+
+    get-comment-id:
+        runs-on: ubuntu-latest
+        needs: build
+        if: github.event_name == 'pull_request'
+
+        steps:
+            - name: Get Comment ID
+              id: get-comment
+              uses: actions/github-script@main
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const comments = await github.rest.issues.listComments({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: context.issue.number,
+                      });
+
+                      const comment = comments.data.find(
+                        (comment) =>
+                          comment.user.login === "github-actions[bot]" && comment.user.id == 41898282 &&
+                          comment.body.includes(":package: **Build artifacts** are ready for download")
+                      );
+
+                      if (comment) {
+                        return comment.id;
+                      } else {
+                        return null;
+                      }
+        outputs:
+            comment-id: ${{steps.get-comment.outputs.result}}
+    comment:
+        runs-on: ubuntu-latest
+        needs: build
+        if: github.event_name == 'pull_request'
+
+        steps:
+            - name: Set Artifact URLs
+              id: set-urls
+              run: |
+                  echo "mac_x64_url=https://nightly.link/${{ github.repository }}/actions/artifacts/${{ needs.build.outputs.mac_x64_artifact_id }}.zip" >> $GITHUB_OUTPUT
+                  echo "mac_arm64_url=https://nightly.link/${{ github.repository }}/actions/artifacts/${{ needs.build.outputs.mac_arm64_artifact_id }}.zip" >> $GITHUB_OUTPUT
+                  echo "win_x64_url=https://nightly.link/${{ github.repository }}/actions/artifacts/${{ needs.build.outputs.win_x64_artifact_id }}.zip" >> $GITHUB_OUTPUT
+                  echo "win_arm64_url=https://nightly.link/${{ github.repository }}/actions/artifacts/${{ needs.build.outputs.win_arm64_artifact_id }}.zip" >> $GITHUB_OUTPUT
+                  echo "linux_x64_url=https://nightly.link/${{ github.repository }}/actions/artifacts/${{ needs.build.outputs.linux_x64_artifact_id }}.zip" >> $GITHUB_OUTPUT
+
+            - name: Post or Update Comment with Download Links
+              uses: peter-evans/create-or-update-comment@main
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  repository: ${{ github.repository }}
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: |
+                      :package: **Build artifacts** are ready for download:
+                      - [Download for macOS (x64)](${{ steps.set-urls.outputs.mac_x64_url }})
+                      - [Download for macOS Apple Silicon (arm64)](${{ steps.set-urls.outputs.mac_arm64_url }})
+                      - [Download for Windows (64-bit)](${{ steps.set-urls.outputs.win_x64_url }})
+                      - [Download for Windows on Arm (arm64)](${{ steps.set-urls.outputs.win_arm64_url }})
+                      - [Download for Linux (x64)](${{ steps.set-urls.outputs.linux_x64_url }})
+                  comment-id: ${{ needs.get-comment-id.outputs.comment-id }}
 
     release:
+        if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         needs: build
 
@@ -183,7 +320,6 @@ jobs:
                   name: v${{ env.PACKAGE_VERSION }}
                   body: |
                       Release version ${{ env.PACKAGE_VERSION }} of the project.
-                  prerelease: ${{ github.event_name == 'pull_request' }}
 
             - name: Display the release directory structure
               run: ls -R ./release

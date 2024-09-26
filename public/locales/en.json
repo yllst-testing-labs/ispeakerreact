@@ -1,0 +1,41 @@
+{
+    "navigation": {
+        "home": "Home",
+        "sounds": "Sounds",
+        "exercises": "Exercises",
+        "conversations": "Conversations",
+        "exams": "Exams",
+        "settings": "Settings"
+    },
+    "homepage": {
+        "soundDescription": "Watch videos and practice pronouncing sounds.",
+        "exerciseDescription": "Practice listening to sounds and sentences in various exercise types.",
+        "conversationDescription": "Improve your conversation skills for different situations.",
+        "examDescription": "Prepare yourself for different types of speaking exams.",
+        "settingDescription": "Exercise timer, appearance, and more.",
+        "openBtn": "Open"
+    },
+    "accent": {
+        "accentSettings": "Accent",
+        "accentAmerican": "American English",
+        "accentBritish": "British English"
+    },
+    "sound_page": {
+        "consonants": "Consonants",
+        "vowels_dipthongs": "Vowels and diphthongs",
+        "practiceBtn": "Practice",
+        "reviewGood": "good",
+        "reviewNeutral": "neutral",
+        "reviewBad": "bad",
+        "soundTop": "Sound",
+        "exampleWords": "Words that include this sound",
+        "backBtn": "Back to sound list",
+        "alertOnlineVideo": "Want to watch the video offline? Head to the “Settings” page to download it.",
+        "watchCard": "Watch",
+        "practiceCard": "Practice",
+        "reviewCard": "Review",
+        "clipModalTitle": "Pronunciation clip",
+        "recordInstructions": "Watch pronunciation clips, and use the <0>{{icon}}</0> button to record your own sound.",
+        "reviewInstructions": "How do you pronounce the sound {{phoneme}}?"
+    }
+}

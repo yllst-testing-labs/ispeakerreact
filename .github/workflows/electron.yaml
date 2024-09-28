@@ -8,10 +8,18 @@ on:
         branches:
             - main
 
-permissions: write-all
+permissions:
+    contents: write
+    pages: write
+    id-token: write
+    pull-requests: write
+    issues: write
+    actions: read
+    checks: write
 
 jobs:
     vite-build:
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         runs-on: ubuntu-latest
 
         steps:

@@ -20,6 +20,9 @@
         "accentAmerican": "American English",
         "accentBritish": "British English"
     },
+    "alert": {
+        "alertOnlineVideo": "Want to watch the video offline? Head to the “Settings” page to download it."
+    },
     "sound_page": {
         "consonants": "Consonants",
         "vowels_dipthongs": "Vowels and diphthongs",
@@ -30,7 +33,6 @@
         "soundTop": "Sound",
         "exampleWords": "Words that include this sound",
         "backBtn": "Back to sound list",
-        "alertOnlineVideo": "Want to watch the video offline? Head to the “Settings” page to download it.",
         "watchCard": "Watch",
         "practiceCard": "Practice",
         "reviewCard": "Review",

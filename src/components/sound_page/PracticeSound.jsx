@@ -280,7 +280,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                             </Ratio>
                             {isElectron() && !videoUrl?.value.includes("http://localhost") ? (
                                 <Alert variant="secondary" className="mt-4">
-                                    {t("sound_page.alertOnlineVideo")}
+                                    {t("alert.alertOnlineVideo")}
                                 </Alert>
                             ) : (
                                 ""
@@ -352,7 +352,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     </Ratio>
                     {isElectron() && !selectedVideoUrl.startsWith("http://localhost") ? (
                         <Alert variant="secondary" className="mt-4">
-                            {t("sound_page.alertOnlineVideo")}
+                            {t("alert.alertOnlineVideo")}
                         </Alert>
                     ) : (
                         ""

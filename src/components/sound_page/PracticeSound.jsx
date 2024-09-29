@@ -360,7 +360,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
-                        Close
+                        {t("sound_page.closeBtn")}
                     </Button>
                 </Modal.Footer>
             </Modal>

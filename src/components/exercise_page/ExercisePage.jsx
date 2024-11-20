@@ -46,8 +46,8 @@ const ExercisePage = () => {
     };
 
     useEffect(() => {
-        document.title = `Exercises | iSpeakerReact v${__APP_VERSION__}`;
-    }, []);
+        document.title = `${t("navigation.exercises")} | iSpeakerReact v${__APP_VERSION__}`;
+    }, [t]);
 
     const getInfoText = (exercise, defaultInfoKey) => {
         // If exercise has a specific infoKey, use it. Otherwise, use the general infoKey.

@@ -518,5 +518,359 @@
             "warningSomebodyOfDangerCheckbox": "Warning somebody of danger",
             "warningSomebodyOfDangerReview": "I can warn somebody of danger in a variety of ways."
         }
+    },
+    "examPage": {
+        "selectType": "Select an exam task to get started.",
+        "groupTask": {
+            "discussingOpinions": {
+                "title": "Discussing opinions",
+                "tooltip": [
+                    "Appears in the following exams:",
+                    "- Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency, Business Certificates",
+                    "- Trinity ISE, GESE"
+                ],
+                "description": [
+                    "You may be taking an exam where you and a partner have to discuss something, for example pictures that the examiner shows you. You may not have to describe the pictures in detail, but to interpret the situations that they show and express an opinion about them. You must make sure that you take part in the conversation, but also that you involve your partner.",
+                    "This type of task often appears in the following exams: Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency, Business Certificates; Trinity ISE, GESE"
+                ],
+                "taskQuestion": ["Look at the pictures and discuss the questions."],
+                "taskList": [
+                    "What are the good and bad points about cycling?",
+                    "Which situation in the pictures seems more dangerous for the cyclists?"
+                ],
+                "skillCheckbox1": "Ways of giving and responding to opinions",
+                "skillCheckbox2": "Ways of involving the other person in the conversation",
+                "skillCheckbox3": "Phrases for linking one idea to the next",
+                "skillCheckbox4": "Ways of coping when you don’t know the word",
+                "listenHeading1": "Asking for somebody’s opinion",
+                "listenHeading2": "Giving opinions",
+                "listenHeading3": "Responding to opinions",
+                "listenHeading4": "Inviting a response",
+                "listenHeading5": "Sentence stress",
+                "practiceQuestion1": [
+                    "Look at the picture and discuss with your partner why people might choose each type of meal."
+                ],
+                "practiceQuestion2": [
+                    "Look at the pictures and discuss with your partner which is the better way to see the world and learn about other countries."
+                ],
+                "tipsDo": [
+                    "Listen to what the other person says and respond to it.",
+                    "Use expressions like ’Let’s see now’, to buy thinking time.",
+                    "Use questions or question tags like ’isn’t it?’ to involve the other person in the conversation.",
+                    "Talk about each of the questions.",
+                    "Relate your comments to the photographs.",
+                    "Open out the discussion beyond the questions.",
+                    "Indicate personal opinions and relate the topic to your own life."
+                ],
+                "tipsDont": [
+                    "Say things that you know the other person won’t understand.",
+                    "Give one-word answers to a question.",
+                    "Change to a completely different topic from the task."
+                ],
+                "review1": "I can express my own opinions clearly and in a variety of different ways.",
+                "review2": "I can invite other people to respond or express their own opinions.",
+                "review3": "I can respond to opinions in a variety of different ways."
+            },
+            "negotiating": {
+                "title": "Negotiating",
+                "tooltip": [
+                    "Appears in the following exams:",
+                    "Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency, Business Certificates"
+                ],
+                "description": [
+                    "There are many occasions when you will have to discuss various possibilities with someone and try to come to an agreement. In some exams, you have to agree on a solution, for example the choice of a particular suggestion.",
+                    "This type of task often appears in the following exams: Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency, Business Certificates"
+                ],
+                "taskQuestion": [
+                    "Look at the pictures and think about which ones would best promote Scotland as a tourist destination for international visitors.",
+                    "Discuss and decide together which one image would be the best to place on the front cover of a travel brochure."
+                ],
+                "skillCheckbox1": "Ways of organizing a discussion",
+                "skillCheckbox2": "Ways of expressing a personal view",
+                "skillCheckbox3": "Ways of expressing alternative possibilities",
+                "skillCheckbox4": "Ways of agreeing or conceding a point",
+                "skillCheckbox5": "Ways of making suggestions",
+                "listenHeading1": "Asking for a recommendation",
+                "listenHeading2": "Making a recommendation",
+                "listenHeading3": "Making suggestions",
+                "listenHeading4": "Asking for somebody’s opinion",
+                "listenHeading5": "Disagreeing",
+                "listenHeading6": "Conceding a point",
+                "listenHeading7": "Expressing personal viewpoints",
+                "practiceQuestion1": [
+                    "Look at the pictures and think about the different styles of learning they represent. Discuss and decide which is the most effective way to learn."
+                ],
+                "practiceQuestion2": [
+                    "Look at the pictures and think about the different ways that people do their shopping. Discuss and decide together which is the best way to shop in the 21st century."
+                ],
+                "tipsDo": [
+                    "Listen to what the other person says and respond to it.",
+                    "Use expressions like ’personally’ to show you are giving a personal opinion rather than a statement of fact.",
+                    "Show that you understand and appreciate the other person’s suggestions.",
+                    "Try to reach a decision which is satisfactory for both or all participants in the discussion."
+                ],
+                "tipsDont": [
+                    "Move too far away from the task.",
+                    "Agree on the first idea mentioned, without discussing the other options.",
+                    "Insist on your choice without carefully considering your partner’s ideas.",
+                    "Spend too long talking about one option, leaving no time to consider the others.",
+                    "Take the outcome too seriously - you are here to show your English, not your decision-making skills!"
+                ],
+                "review1": "I can start a discussion, take my turn and end the conversation when appropriate.",
+                "review2": "I can make suggestions in a variety of ways.",
+                "review3": "I can disagree in a polite way.",
+                "review4": "I can express personal opinions and give clear reasons for my choices."
+            }
+        },
+        "individualTask": {
+            "describingPicture": {
+                "title": "Describing a picture",
+                "tooltip": [
+                    "Appears in the following exams:",
+                    "- TOEIC",
+                    "- Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency"
+                ],
+                "description": [
+                    "In some exams, you have to describe what you see in a picture or photograph. You might also want to speculate about the situation or about a wider issue prompted by the picture or photograph.",
+                    "This type of task often appears in the following exams: TOEIC; Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency"
+                ],
+                "taskQuestion": [
+                    "Describe the photo. What do you think is happening, and what is your opinion about it?"
+                ],
+                "skillCheckbox1": "Ways of describing what you can see in a picture",
+                "skillCheckbox2": "Ways of speculating about what may be true in a picture",
+                "skillCheckbox3": "Ways of talking about the ideas presented in a picture",
+                "listenHeading1": "Describing a picture",
+                "listenHeading2": "Speculating",
+                "listenHeading3": "Expressing personal viewpoints",
+                "practiceQuestion": [
+                    "Describe the photo. What do you think is happening and what is your opinion about it?"
+                ],
+                "tipsDo": [
+                    "Take a few moments to think before you start talking.",
+                    "Explain which part of the picture you’re talking about.",
+                    "Speculate about what might be true about the picture or photograph.",
+                    "If appropriate, describe what you think might have happened before or after the scene in the picture or photograph.",
+                    "Ff the photograph or picture contains people, describe what you think the relationship is between them.",
+                    "Use the present continuous tense to say what is happening in the picture.",
+                    "If you have to look at two photographs or pictures, think about how you could compare them.",
+                    "Try to guess which questions you may be asked about the photograph or picture.",
+                    "Give your impressions and opinions about the ideas presented in the picture or photograph.",
+                    "Think of a different way of expressing something if you don’t know the exact word for what you can see."
+                ],
+                "tipsDont": [
+                    "Move too far away from the ideas presented in the picture or photograph.",
+                    "Be too certain about what may or may not be happening in the picture or photograph, if it is unclear.",
+                    "Worry if you are unsure about exactly what is happening in the picture or photograph. Instead say what you think might be happening."
+                ],
+                "review1": "I can give a detailed description of what I can see in a picture.",
+                "review2": "I can speculate about what may be true in a picture.",
+                "review3": "I can give my opinion about what a picture represents."
+            },
+            "personalInformation": {
+                "title": "Giving personal information",
+                "tooltip": [
+                    "Appears in the following exams:",
+                    "- IELTS",
+                    "- TOEIC",
+                    "- Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency",
+                    "- Trinity ISE, GESE"
+                ],
+                "description": [
+                    "On some occasions, you will be required to give personal information about yourself. You may also be asked to talk about your experiences and what you’d like to do in the future.",
+                    "This type of task often appears in the following exams: IELTS; TOEIC; Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency; Trinity ISE, GESE"
+                ],
+                "taskQuestion": [
+                    "Answer the examiner’s questions about yourself, your current situation and your future plans."
+                ],
+                "skillCheckbox1": "Ways of finding out personal information",
+                "skillCheckbox2": "Ways of giving basic personal information about yourself",
+                "skillCheckbox3": "Ways of responding when somebody gives you personal information",
+                "skillCheckbox4": "Ways of talking about what you’d like to do in the future",
+                "skillCheckbox5": "Ways of talking about your experiences",
+                "listenHeading1": "Asking for personal information",
+                "listenHeading2": "Giving personal information",
+                "listenHeading3": "Talking about future plans",
+                "practiceQuestion": ["Answer the same questions from the video, giving information about yourself."],
+                "tipsDo": [
+                    "Use language you know is correct.",
+                    "Think of a different way of expressing your idea if you’ve forgotten a word.",
+                    "Correct yourself if you make a mistake, and continue.",
+                    "Use a wide range of tenses and vocabulary.",
+                    "Make eye contact with the examiner.",
+                    "Ask the examiner to clarify a question if you are not sure what it means.",
+                    "Record yourself answering possible questions or practise with a friend or relative.",
+                    "Speak clearly.",
+                    "Try to relax and be spontaneous."
+                ],
+                "tipsDont": [
+                    "Give one-word answers. Try to give as much detail as possible.",
+                    "Speak too quickly.",
+                    "Learn prepared answers word-for-word."
+                ],
+                "review1": "I can talk about myself.",
+                "review2": "I can ask other people about themselves.",
+                "review3": "I can talk about what I’d like to do in the future."
+            },
+            "topicTalking": {
+                "title": "Talking about a topic",
+                "tooltip": [
+                    "Appears in the following exams:",
+                    "- IELTS",
+                    "- TOEIC",
+                    "- TOEFL",
+                    "- Cambridge Assessment English: C1 Advanced, C2 Proficiency, Business Certificates",
+                    "- Trinity GESE"
+                ],
+                "description": [
+                    "In some exams, you are asked to talk for a short time about a topic which you are given during the test. You may have a few minutes to prepare it and to make a few notes. You could be asked to choose something that is the most important, best, most useful, etc. of its kind, and you have to describe it and explain why you have chosen it.",
+                    "This type of task often appears in the following exams: IELTS; TOEIC; TOEFL; Cambridge Assessment English: C1 Advanced, C2 Proficiency, Business Certificates; Trinity GESE"
+                ],
+                "taskQuestion": [
+                    "Describe a place that you sometimes visit which is very important to you. You should say:"
+                ],
+                "taskList": [
+                    "where it is, how often and why you go there.",
+                    "what it is like.",
+                    "why it is so important to you."
+                ],
+                "skillCheckbox1": "Ways you can describe something",
+                "skillCheckbox2": "Ways of explaining and giving your reasons",
+                "skillCheckbox3": "Ways of correcting yourself or finding alternative ways of expressing something",
+                "skillCheckbox4": "Ways of expressing your preferences",
+                "listenHeading1": "Expressing a preference",
+                "listenHeading2": "Giving reasons, justifying a choice",
+                "listenHeading3": "Correcting yourself",
+                "listenHeading4": "Using adverbs to give more emphasis to a point",
+                "listenHeading5": "Changing emphasis by turning the sentence around",
+                "practiceQuestion1": ["Describe a friend. You should say:"],
+                "practiceQuestion1List": [
+                    "how long you have known each other.",
+                    "how you met.",
+                    "what you usually do together.",
+                    "what you like most about him/her."
+                ],
+                "practiceQuestion2": ["Describe your education. You should say:"],
+                "practiceQuestion2List": [
+                    "what kind of school you went to/go to.",
+                    "what was/is your favourite subject.",
+                    "who was/is your favourite teacher.",
+                    "how effective you think your country’s education system is."
+                ],
+                "tipsDo": [
+                    "Write brief notes to use as prompts.",
+                    "Use a wide range of vocabulary.",
+                    "Try to use the full time allowed.",
+                    "Think of a different way of expressing your idea if you’ve forgotten a word.",
+                    "Correct yourself if you make a mistake, and continue.",
+                    "Make eye contact with the examiner.",
+                    "Try to vary the vocabulary you use. For example, choose descriptive adjectives, not just ‘nice’, ‘good’ or ‘interesting’."
+                ],
+                "tipsDont": [
+                    "Spend too much time trying to think of the ideal topic.",
+                    "Use your note-making time to write full sentences.",
+                    "Speak too quickly.",
+                    "Just read out your notes to the examiner or give a prepared speech.",
+                    "Stop if you can’t remember a word."
+                ],
+                "review1": "I can give clear, detailed descriptions.",
+                "review2": "I have a good range of vocabulary and can choose different words to avoid frequent repetition.",
+                "review3": "I can paraphrase if I don’t know a particular word.",
+                "review4": "I can correct myself if I realize I have made a mistake."
+            }
+        },
+        "realLifeTask": {
+            "presentation": {
+                "title": "Giving a presentation",
+                "tooltip": [
+                    "Appears in the following exams:",
+                    "- Cambridge Assessment English: Business Certificates",
+                    "- Trinity ISE, GESE"
+                ],
+                "description": [
+                    "You may be taking an exam where you are required to give a presentation. You will need to structure your presentation appropriately. You should be able to introduce different points and ensure that there is a smooth transition between each part of the presentation. You may wish to support what you are saying with the use of visual aids.",
+                    "This type of task often appears in the following exams: Cambridge Assessment English: Business Certificates; Trinity ISE, GESE"
+                ],
+                "taskQuestion": [
+                    "You have been commissioned by an electric company to survey their customers.",
+                    "The company is concerned that more and more customers are cancelling contracts within the first fourteen days, or are making complaints.",
+                    "Present your findings with the help of some visual aids."
+                ],
+                "skillCheckbox1": "How you can introduce a presentation",
+                "skillCheckbox2": "Ways of explaining the structure of a presentation",
+                "skillCheckbox3": "Ways of introducing each point in a presentation",
+                "skillCheckbox4": "How you can change the subject in a presentation",
+                "skillCheckbox5": "How you can conclude a presentation",
+                "skillCheckbox6": "Ways of referring to charts or graphs in a presentation",
+                "listenHeading1": "Introductions",
+                "listenHeading2": "Explaining structure",
+                "listenHeading3": "Introducing a point",
+                "listenHeading4": "Clarifying",
+                "listenHeading5": "Changing the subject",
+                "listenHeading6": "Concluding",
+                "listenHeading7": "Dealing with questions",
+                "practiceQuestion": ["Write your own presentation on a subject you know about."],
+                "tipsDo": [
+                    "Think about the purpose of your talk.",
+                    "Think about your audience and how much they already know.",
+                    "Structure your talk with an introduction, a middle and a conclusion.",
+                    "Make notes on cards in English that you can refer to while you are speaking.",
+                    "Close with a summary and an invitation for people to ask questions.",
+                    "Practise on your own and then with one or more friends listening."
+                ],
+                "tipsDont": [
+                    "Put too much information on each slide.",
+                    "Try to cover more than is realistic in the time available.",
+                    "Read out your whole talk like an essay."
+                ],
+                "review1": "I can introduce a presentation in a variety of ways.",
+                "review2": "I can introduce each point in a presentation in a variety of ways.",
+                "review3": "I can change the subject in a presentation in a variety of ways.",
+                "review4": "I can refer to charts or graphs in a presentation in a variety of ways.",
+                "review5": "I can conclude a presentation in a variety of ways."
+            },
+            "jobInterview": {
+                "title": "Job interview",
+                "tooltip": [
+                    "Appears in the following exams:",
+                    "Cambridge Assessment English: C1 Advanced, Business Certificates"
+                ],
+                "description": [
+                    "In an exam, you may have to pretend that you are attending a job interview. You will need to be able to describe your personal qualities and skills. You may also have to talk about your work experience and your hopes and aspirations for the future.",
+                    "This type of task often appears in the following exams: Cambridge Assessment English: C1 Advanced, Business Certificates"
+                ],
+                "taskQuestion": [
+                    "You have applied for a job with a television company.",
+                    "Answer the interviewer’s questions about your qualifications and experience. And about why you want the job."
+                ],
+                "skillCheckbox1": "Phrases an interviewer may use",
+                "skillCheckbox2": "Questions you may be asked in an interview",
+                "skillCheckbox3": "Ways of talking about your work experience",
+                "skillCheckbox4": "Ways of talking about your personal qualities and aspirations",
+                "skillCheckbox5": "Ways of explaining why you would like a particular job",
+                "listenHeading1": "Asking questions in an interview",
+                "listenHeading2": "Talking about why you want a particular job",
+                "listenHeading3": "Talking about your skills and work experience",
+                "listenHeading4": "Talking about your hopes for the future",
+                "listenHeading5": "Questions to ask an employer",
+                "practiceQuestion": ["Role-play a job interview, talking about your own skills and experience."],
+                "tipsDo": [
+                    "Maintain eye contact when possible.",
+                    "Listen carefully to each question and ask for clarification if you aren’t sure what something means.",
+                    "Prepare some questions to ask the interviewer.",
+                    "Show that you know something about the employer.",
+                    "Record yourself answering possible questions or practise with a friend or relative."
+                ],
+                "tipDonts": [
+                    "Make negative comments about your previous employers.",
+                    "Be embarrassed to talk about yourself and your achievements.",
+                    "Worry if you need to pause to think before giving an answer."
+                ],
+                "review1": "I can talk about my work experience in a variety of ways.",
+                "review2": "I can talk about my personal qualities and skills in a variety of ways.",
+                "review3": "I can talk about my hopes for the future in a variety of ways.",
+                "review4": "I can give different reasons for why I want a particular job."
+            }
+        }
     }
 }

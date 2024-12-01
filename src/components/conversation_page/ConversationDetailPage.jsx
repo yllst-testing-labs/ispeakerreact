@@ -110,8 +110,6 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
         fetchVideoUrl();
     }, [accentData, accent]);
 
-    const accentDisplay = accent === "british" ? "British English" : "American English";
-
     return (
         <>
             <h3 className="mt-4">
@@ -119,7 +117,7 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
             </h3>
             <p>
                 {t("accent.accentSettings")}:{" "}
-                {t(accentDisplay === "british" ? "accent.accentBritish" : "accent.accentAmerican")}
+                {t(accent === "british" ? "accent.accentBritish" : "accent.accentAmerican")}
             </p>
             <Button variant="primary" className="my-3" onClick={onBack}>
                 <ArrowLeftCircle className="me-1" /> {t("buttonConversationExam.conversationBackBtn")}

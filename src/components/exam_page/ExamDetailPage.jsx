@@ -114,7 +114,6 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
     }
 
     const examDetails = examData[id];
-    const accentDisplay = accent === "british" ? "British English" : "American English";
 
     const examLocalizedDescArray = t(examDetails.description, { returnObjects: true });
 
@@ -127,7 +126,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                     </h3>
                     <p>
                         {t("accent.accentSettings")}:{" "}
-                        {t(accentDisplay === "british" ? "accent.accentBritish" : "accent.accentAmerican")}
+                        {t(accent === "british" ? "accent.accentBritish" : "accent.accentAmerican")}
                     </p>
                     <Button variant="primary" className="my-3" onClick={onBack}>
                         <ArrowLeftCircle className="me-1" /> {t("buttonConversationExam.examBackBtn")}

@@ -32,7 +32,8 @@
         "textSaveFailed": "Error saving text. Reason: ",
         "textClearSuccess": "Text cleared successfully.",
         "textClearFailed": "Error clearing text. Reason: ",
-        "audioPlayFailed": "Unable to play audio due to a network issue. Please check your connection and reload the page."
+        "audioPlayFailed": "Unable to play audio due to a network issue. Please check your connection and reload the page.",
+        "loadingError": "Error while loading the data. Please try refreshing the page."
     },
     "buttonConversationExam": {
         "watchBtn": "Watch",
@@ -44,11 +45,15 @@
         "recordBtn": "Record",
         "stopRecordBtn": "Stop recording",
         "playBtn": "Play recording",
-        "stopPlayBtn": "Stop playback"
+        "stopPlayBtn": "Stop playback",
+        "conversationBackBtn": "Back to conversation list",
+        "examBackBtn": "Back to exam list"
     },
     "tabConversationExam": {
+        "taskCard": "Task",
         "watchCard": "Watch the video",
         "studyCard": "Study",
+        "imageFullSizeModal": "Full size view",
         "practiceConversationText": [
             "Practice writing your own conversation.",
             "You may use some of the language from this topic.",
@@ -521,7 +526,9 @@
     },
     "examPage": {
         "selectType": "Select an exam task to get started.",
+        "taskInfo": "Task info",
         "groupTask": {
+            "heading": "Group tasks",
             "discussingOpinions": {
                 "title": "Discussing opinions",
                 "tooltip": [
@@ -553,7 +560,7 @@
                 "practiceQuestion2": [
                     "Look at the pictures and discuss with your partner which is the better way to see the world and learn about other countries."
                 ],
-                "tipsDo": [
+                "tipDos": [
                     "Listen to what the other person says and respond to it.",
                     "Use expressions like ’Let’s see now’, to buy thinking time.",
                     "Use questions or question tags like ’isn’t it?’ to involve the other person in the conversation.",
@@ -562,7 +569,7 @@
                     "Open out the discussion beyond the questions.",
                     "Indicate personal opinions and relate the topic to your own life."
                 ],
-                "tipsDont": [
+                "tipDonts": [
                     "Say things that you know the other person won’t understand.",
                     "Give one-word answers to a question.",
                     "Change to a completely different topic from the task."
@@ -603,13 +610,13 @@
                 "practiceQuestion2": [
                     "Look at the pictures and think about the different ways that people do their shopping. Discuss and decide together which is the best way to shop in the 21st century."
                 ],
-                "tipsDo": [
+                "tipDos": [
                     "Listen to what the other person says and respond to it.",
                     "Use expressions like ’personally’ to show you are giving a personal opinion rather than a statement of fact.",
                     "Show that you understand and appreciate the other person’s suggestions.",
                     "Try to reach a decision which is satisfactory for both or all participants in the discussion."
                 ],
-                "tipsDont": [
+                "tipDonts": [
                     "Move too far away from the task.",
                     "Agree on the first idea mentioned, without discussing the other options.",
                     "Insist on your choice without carefully considering your partner’s ideas.",
@@ -623,6 +630,7 @@
             }
         },
         "individualTask": {
+            "heading": "Individual tasks",
             "describingPicture": {
                 "title": "Describing a picture",
                 "tooltip": [
@@ -646,7 +654,7 @@
                 "practiceQuestion": [
                     "Describe the photo. What do you think is happening and what is your opinion about it?"
                 ],
-                "tipsDo": [
+                "tipDos": [
                     "Take a few moments to think before you start talking.",
                     "Explain which part of the picture you’re talking about.",
                     "Speculate about what might be true about the picture or photograph.",
@@ -658,7 +666,7 @@
                     "Give your impressions and opinions about the ideas presented in the picture or photograph.",
                     "Think of a different way of expressing something if you don’t know the exact word for what you can see."
                 ],
-                "tipsDont": [
+                "tipDonts": [
                     "Move too far away from the ideas presented in the picture or photograph.",
                     "Be too certain about what may or may not be happening in the picture or photograph, if it is unclear.",
                     "Worry if you are unsure about exactly what is happening in the picture or photograph. Instead say what you think might be happening."
@@ -692,7 +700,7 @@
                 "listenHeading2": "Giving personal information",
                 "listenHeading3": "Talking about future plans",
                 "practiceQuestion": ["Answer the same questions from the video, giving information about yourself."],
-                "tipsDo": [
+                "tipDos": [
                     "Use language you know is correct.",
                     "Think of a different way of expressing your idea if you’ve forgotten a word.",
                     "Correct yourself if you make a mistake, and continue.",
@@ -703,7 +711,7 @@
                     "Speak clearly.",
                     "Try to relax and be spontaneous."
                 ],
-                "tipsDont": [
+                "tipDonts": [
                     "Give one-word answers. Try to give as much detail as possible.",
                     "Speak too quickly.",
                     "Learn prepared answers word-for-word."
@@ -757,7 +765,7 @@
                     "who was/is your favourite teacher.",
                     "how effective you think your country’s education system is."
                 ],
-                "tipsDo": [
+                "tipDos": [
                     "Write brief notes to use as prompts.",
                     "Use a wide range of vocabulary.",
                     "Try to use the full time allowed.",
@@ -766,7 +774,7 @@
                     "Make eye contact with the examiner.",
                     "Try to vary the vocabulary you use. For example, choose descriptive adjectives, not just ‘nice’, ‘good’ or ‘interesting’."
                 ],
-                "tipsDont": [
+                "tipDonts": [
                     "Spend too much time trying to think of the ideal topic.",
                     "Use your note-making time to write full sentences.",
                     "Speak too quickly.",
@@ -780,6 +788,7 @@
             }
         },
         "realLifeTask": {
+            "heading": "Real-life tasks",
             "presentation": {
                 "title": "Giving a presentation",
                 "tooltip": [
@@ -810,7 +819,7 @@
                 "listenHeading6": "Concluding",
                 "listenHeading7": "Dealing with questions",
                 "practiceQuestion": ["Write your own presentation on a subject you know about."],
-                "tipsDo": [
+                "tipDos": [
                     "Think about the purpose of your talk.",
                     "Think about your audience and how much they already know.",
                     "Structure your talk with an introduction, a middle and a conclusion.",
@@ -818,7 +827,7 @@
                     "Close with a summary and an invitation for people to ask questions.",
                     "Practise on your own and then with one or more friends listening."
                 ],
-                "tipsDont": [
+                "tipDonts": [
                     "Put too much information on each slide.",
                     "Try to cover more than is realistic in the time available.",
                     "Read out your whole talk like an essay."
@@ -854,7 +863,7 @@
                 "listenHeading4": "Talking about your hopes for the future",
                 "listenHeading5": "Questions to ask an employer",
                 "practiceQuestion": ["Role-play a job interview, talking about your own skills and experience."],
-                "tipsDo": [
+                "tipDos": [
                     "Maintain eye contact when possible.",
                     "Listen carefully to each question and ask for clarification if you aren’t sure what something means.",
                     "Prepare some questions to ask the interviewer.",

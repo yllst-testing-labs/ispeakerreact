@@ -881,5 +881,91 @@
                 "review4": "I can give different reasons for why I want a particular job."
             }
         }
+    },
+    "settingPage": {
+        "heading": "iSpeakerReact settings",
+        "version": "Version",
+        "checkUpdateBtn": "Check for updates",
+        "checkUpdateMSBtn": "Check for updates in Microsoft Store",
+        "exerciseSettings": {
+            "timerHeading": "Exercise timer",
+            "timerOption": "Enable timer",
+            "timerDescription": "Extra challenge by completing as many exercises as possible within the time limit.",
+            "hint": "Setting to 0 to disable timer for specific exercises.",
+            "textboxError": "Enter a value between 0 and 10.",
+            "applyBtn": "Apply",
+            "cancelBtn": "Cancel"
+        },
+        "appearanceSettings": {
+            "appearanceHeading": "Appearance",
+            "themeOption": "Theme",
+            "themeLight": "Light",
+            "themeDark": "Dark",
+            "themeAuto": "Follow OS theme",
+            "themeToggleBtn": "Toggle theme",
+            "themeAutoOptionToggle": "Auto",
+            "themeToggleOption": "Show “Toggle theme” button"
+        },
+        "cacheSettings": {
+            "cacheHeading": "Caching",
+            "menuCacheOption": "Cache menu files for faster loading"
+        },
+        "videoDownloadSettings": {
+            "videoDownloadHeading": "Video downloads",
+            "videoDownloadOption": "Download video files",
+            "videoPageHeading": "Download video files for offline watching",
+            "instructionCardHeading": "Instructions",
+            "stepNumberEmphasis": "Step",
+            "step1": "Click on the “Download” link to download the video file you want to watch offline.",
+            "step2": "Click on the “Open download folder” button, and move the file(s) you have downloaded into there.",
+            "step3": "Click on the “Back to settings” button (or any page), and then go back to this page. This is to refresh the state of the file downloaded status.",
+            "step4": "Click on the “Verify” button, and wait until the verification process is finished.",
+            "warningHeading": "Warning!",
+            "warningBody": "Do not manually extract, rename the file(s), or modify the zip file’s content. Doing so will make the verification process fail.",
+            "openDownloadBtn": "Open download folder",
+            "downloadTable": {
+                "nameHeading": "Name",
+                "fileSizeTotalHeading": "Total file size",
+                "linkHeading": "Download link",
+                "downloadStatusHeading": "Downloaded?",
+                "actionHeading": "Action",
+                "verifyBtn": "Verify",
+                "downloadLink": "Download",
+                "examVideos": "Exam videos",
+                "conversationVideosUK": "Conversation videos (British English)",
+                "conversationVideosUS": "Conversation videos (American English)",
+                "soundVideosUK": "Sound videos (British English)",
+                "soundVideosUS": "Sound videos (American English)"
+            },
+            "verifyModalHeading": "Verify downloaded files",
+            "verifyTitle": "You are about to verify this:",
+            "verifyFooter": "Proceed?",
+            "nextBtn": "Next",
+            "inProgressModalHeading": "Verification in progress",
+            "verifySuccess": "Verification success",
+            "verifySuccessMessage": "All extracted files are verified in the folder: ",
+            "verifyFailed": "Verification failed",
+            "verifyFailedMessage": "It seems like either the files are corrupted or missing. Please try downloading the file again."
+        },
+        "logSettings": {
+            "logSettingsHeading": "Log settings",
+            "logSettingsDescription": "Log files assist in troubleshooting issues such as application crashes, recording errors, and other unexpected behaviors.",
+            "numOfLogsOption": "Number of logs",
+            "numOfLogsNumLog": " logs",
+            "numOfLogsUnlimited": "Unlimited",
+            "deleteOldLogsOption": "Delete logs older than",
+            "deleteOldLogNumDay": " days",
+            "deleteOldLogNever": "Never",
+            "openLogBtn": "Open log folder"
+        },
+        "resetSettings": {
+            "resetHeading": "Reset settings",
+            "resetSettingsData": "Reset iSpeakerReact’s settings and review data",
+            "resetSettingsDataModalMessage": "Are you sure you want to reset iSpeakerReact’s settings and review data? This action cannot be undone.",
+            "deleteRecordingData": "Delete saved recordings",
+            "deleteRecordingDataModalMessage": "Are you sure you want to delete saved recordings? This action cannot be undone.",
+            "resetModalHeading": "Confirm...",
+            "resetConfirmBtn": "Confirm"
+        }
     }
 }

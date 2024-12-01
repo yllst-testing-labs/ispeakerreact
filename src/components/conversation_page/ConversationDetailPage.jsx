@@ -114,10 +114,15 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
 
     return (
         <>
-            <h3 className="mt-4">{t("conversationPage.topicHeading")} {t(title)}</h3>
-            <p>Accent: {accentDisplay}</p>
+            <h3 className="mt-4">
+                {t("conversationPage.topicHeading")} {t(title)}
+            </h3>
+            <p>
+                {t("accent.accentSettings")}:{" "}
+                {t(accentDisplay === "british" ? "accent.accentBritish" : "accent.accentAmerican")}
+            </p>
             <Button variant="primary" className="my-3" onClick={onBack}>
-                <ArrowLeftCircle className="me-1" /> Back to conversation list
+                <ArrowLeftCircle className="me-1" /> {t("buttonConversationExam.conversationBackBtn")}
             </Button>
             {loading || videoLoading ? (
                 <LoadingOverlay />

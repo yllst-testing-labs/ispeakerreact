@@ -21,7 +21,11 @@
         "accentBritish": "British English"
     },
     "alert": {
-        "alertOnlineVideo": "Want to watch the video offline? Head to the “Settings” page to download it."
+        "alertOnlineVideo": "Want to watch the video offline? Head to the “Settings” page to download it.",
+        "alertAppNoInternet": "No Internet connection. Please check your connection and try again.",
+        "appNewVersionGitHub": "A new update is found. Go to the project's GitHub page for more information.",
+        "appVersionLatest": "You are already using the latest version.",
+        "appUpdateError": "Error checking for updates. Please try again."
     },
     "toast": {
         "recordingExceeded": "Duration limit reached. Recording has stopped.",
@@ -887,6 +891,7 @@
         "version": "Version",
         "checkUpdateBtn": "Check for updates",
         "checkUpdateMSBtn": "Check for updates in Microsoft Store",
+        "openGitHubAlertLink": "Open GitHub",
         "exerciseSettings": {
             "timerHeading": "Exercise timer",
             "timerOption": "Enable timer",
@@ -908,18 +913,22 @@
         },
         "cacheSettings": {
             "cacheHeading": "Caching",
-            "menuCacheOption": "Cache menu files for faster loading"
+            "menuCacheOption": "Cache menu files for faster loading",
+            "cacheMenuError": "Failed to download menu files.",
+            "cacheJSONFileError": "Error downloading or caching files."
         },
         "videoDownloadSettings": {
             "videoDownloadHeading": "Video downloads",
             "videoDownloadOption": "Download video files",
             "videoPageHeading": "Download video files for offline watching",
+            "backToSettingsBtn": "Back to settings",
             "instructionCardHeading": "Instructions",
-            "stepNumberEmphasis": "Step",
-            "step1": "Click on the “Download” link to download the video file you want to watch offline.",
-            "step2": "Click on the “Open download folder” button, and move the file(s) you have downloaded into there.",
-            "step3": "Click on the “Back to settings” button (or any page), and then go back to this page. This is to refresh the state of the file downloaded status.",
-            "step4": "Click on the “Verify” button, and wait until the verification process is finished.",
+            "steps": [
+                "<1>Step {{number}}</1>: Click on the “Download” link to download the video file you want to watch offline.",
+                "<1>Step {{number}}</1>: Click on the “Open download folder” button, and move the file(s) you have downloaded into there.",
+                "<1>Step {{number}}</1>: Click on the “Back to settings” button (or any page), and then go back to this page. This is to refresh the state of the file downloaded status.",
+                "<1>Step {{number}}</1>: Click on the “Verify” button, and wait until the verification process is finished."
+            ],
             "warningHeading": "Warning!",
             "warningBody": "Do not manually extract, rename the file(s), or modify the zip file’s content. Doing so will make the verification process fail.",
             "openDownloadBtn": "Open download folder",

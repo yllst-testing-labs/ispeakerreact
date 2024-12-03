@@ -462,10 +462,10 @@
             "askingAboutObligationCheckbox": "Asking about obligation",
             "askingAboutObligationReview": "I can ask about obligation in a variety of ways.",
             "askingForPermissionTitle": "Asking for permission",
-            "askingForPermissionInfo": "If you need to ask for permission or a favour, you are more likely to get what you want if you can ask for it politely.",
-            "askingForPermissionCheckbox1": "Asking for permission or favours",
+            "askingForPermissionInfo": "If you need to ask for permission or a favor, you are more likely to get what you want if you can ask for it politely.",
+            "askingForPermissionCheckbox1": "Asking for permission or favors",
             "askingForPermissionCheckbox2": "Giving permission",
-            "askingForPermissionReview1": "I can ask for permission or favours in a variety of ways.",
+            "askingForPermissionReview1": "I can ask for permission or favors in a variety of ways.",
             "askingForPermissionReview2": "I can give permission in a variety of ways.",
             "forbiddingSomethingTitle": "Forbidding something",
             "forbiddingSomethingInfo": "There are different polite ways of asking somebody not to do something.",
@@ -485,7 +485,7 @@
         "suggestionsAndAdvice": {
             "heading": "Suggestions and advice",
             "askingForHelpTitle": "Asking for help",
-            "askingForHelpInfo": "If you need help, people are more likely to react favourably if you ask politely.",
+            "askingForHelpInfo": "If you need help, people are more likely to react favorably if you ask politely.",
             "askingForHelpCheckbox1": "Asking for help",
             "askingForHelpCheckbox2": "Responding to requests for help",
             "askingForHelpReview1": "I can ask for help in a variety of ways.",
@@ -711,7 +711,7 @@
                     "Use a wide range of tenses and vocabulary.",
                     "Make eye contact with the examiner.",
                     "Ask the examiner to clarify a question if you are not sure what it means.",
-                    "Record yourself answering possible questions or practise with a friend or relative.",
+                    "Record yourself answering possible questions or practice with a friend or relative.",
                     "Speak clearly.",
                     "Try to relax and be spontaneous."
                 ],
@@ -765,8 +765,8 @@
                 "practiceQuestion2": ["Describe your education. You should say:"],
                 "practiceQuestion2List": [
                     "what kind of school you went to/go to.",
-                    "what was/is your favourite subject.",
-                    "who was/is your favourite teacher.",
+                    "what was/is your favorite subject.",
+                    "who was/is your favorite teacher.",
                     "how effective you think your country’s education system is."
                 ],
                 "tipDos": [
@@ -872,7 +872,7 @@
                     "Listen carefully to each question and ask for clarification if you aren’t sure what something means.",
                     "Prepare some questions to ask the interviewer.",
                     "Show that you know something about the employer.",
-                    "Record yourself answering possible questions or practise with a friend or relative."
+                    "Record yourself answering possible questions or practice with a friend or relative."
                 ],
                 "tipDonts": [
                     "Make negative comments about your previous employers.",

@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { playRecording } from "../../utils/databaseOperations";
-import { isElectron } from "../../utils/isElectron";
+import { toast } from "sonner";
+import { playRecording } from "../../../utils/databaseOperations";
+import { isElectron } from "../../../utils/isElectron";
 
 export function usePlaybackFunction(
     getRecordingKey,
@@ -12,9 +13,7 @@ export function usePlaybackFunction(
     setCurrentAudioElement,
     setIsRecordingPlaying,
     setActivePlaybackCard,
-    setPlayingRecordings,
-    setToastMessage,
-    setShowToast
+    setPlayingRecordings
 ) {
     const { t } = useTranslation();
     const handlePlayRecording = async (cardIndex) => {
@@ -54,8 +53,7 @@ export function usePlaybackFunction(
                     }
                 } catch (error) {
                     console.error("Failed to resume AudioContext:", error);
-                    setToastMessage("Error resuming audio playback: " + error.message);
-                    setShowToast(true);
+                    toast.error(`Error resuming audio playback: ${error.message}`);
                 }
             } else {
                 // AudioContext is already running
@@ -82,8 +80,7 @@ export function usePlaybackFunction(
             (error) => {
                 console.error("Error during playback:", error);
                 isElectron() && window.electron.log("error", `Error during playback: ${error}`);
-                setToastMessage(`${t("toast.playbackError")} ${error.message}`);
-                setShowToast(true);
+                toast.error(`${t("toast.playbackError")} ${error.message}`);
                 setIsRecordingPlaying(false);
                 setActivePlaybackCard(null);
                 setPlayingRecordings((prev) => ({ ...prev, [key]: false }));
@@ -115,8 +112,7 @@ export function usePlaybackFunction(
             (error) => {
                 console.error("Error during playback:", error);
                 isElectron() && window.electron.log("error", `Error during playback: ${error}`);
-                setToastMessage(`${t("toast.playbackError")} ${error.message}`);
-                setShowToast(true);
+                toast.error(`${t("toast.playbackError")} ${error.message}`);
                 setIsRecordingPlaying(false);
                 setActivePlaybackCard(null);
                 setPlayingRecordings((prev) => ({ ...prev, [key]: false }));

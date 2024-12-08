@@ -1,12 +1,42 @@
-import { useEffect } from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import TopNavBar from "./general/TopNavBar";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import Container from "../ui/Container";
+import { useTheme } from "../utils/ThemeContext/useTheme";
+import TopNavBar from "./general/TopNavBar";
 
 function Homepage() {
     const { t } = useTranslation();
+
     const navigate = useNavigate();
+    const { theme } = useTheme();
+    const [currentTheme, setCurrentTheme] = useState(theme);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const updateTheme = () => {
+            if (theme === "auto") {
+                const systemPrefersDark = mediaQuery.matches;
+                setCurrentTheme(systemPrefersDark ? "dark" : "light");
+                setIsDarkMode(systemPrefersDark);
+            } else {
+                setCurrentTheme(theme);
+                setIsDarkMode(theme === "dark");
+            }
+        };
+
+        // Initial check and listener
+        updateTheme();
+        if (theme === "auto") {
+            mediaQuery.addEventListener("change", updateTheme);
+        }
+
+        return () => {
+            mediaQuery.removeEventListener("change", updateTheme);
+        };
+    }, [theme]);
 
     const handleNavigate = (path) => {
         navigate(path);
@@ -15,6 +45,10 @@ function Homepage() {
     useEffect(() => {
         document.title = `${t("navigation.home")} | iSpeakerReact v${__APP_VERSION__}`;
     }, [t]);
+
+    const logoSrc = isDarkMode
+        ? `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background-darkmode.svg`
+        : `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background.svg`;
 
     const cardsInfo = [
         {
@@ -49,39 +83,45 @@ function Homepage() {
         },
     ];
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <>
             <TopNavBar />
-            <Row className="justify-content-center text-center">
-                <Col md="auto">
-                    <h1 className="fw-bold">iSpeakerReact</h1>
-                </Col>
-            </Row>
-            <Row xs={1} md={3} className="g-4 mt-1 d-flex justify-content-center">
-                {cardsInfo.map((card, idx) => (
-                    <Col key={idx}>
-                        <Card className="h-100 shadow-sm">
-                            <Card.Body>
-                                <Card.Title>{card.title}</Card.Title>
-                                <Card.Text>{card.description}</Card.Text>
-                                <Card.Text className="mt-auto mb-3 d-flex justify-content-center">
-                                    <img alt={`${card.title} section icon`} className="w-25" src={card.icon} />
-                                </Card.Text>
-                                <div className="mt-auto d-flex justify-content-center">
-                                    <Button
-                                        variant="primary"
-                                        className="w-50"
-                                        onClick={() => handleNavigate(card.path)}
-                                        disabled={card.disabled}
-                                        aria-label={`Open the ${card.title} section`}>
-                                        {t("homepage.openBtn")}
-                                    </Button>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
+            <Container>
+                <div className="p-6 mb-4">
+                    <div className="flex justify-center items-center space-x-4">
+                        <img alt="iSpeakerReact logo" src={logoSrc} width="64" height="64" />
+                        <h1 className="text-3xl md:text-4xl font-bold">iSpeakerReact</h1>
+                    </div>
+                    <p className="text-center mt-2">v{__APP_VERSION__}</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-5">
+                    {cardsInfo.map((card, idx) => (
+                        <div
+                            key={idx}
+                            className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6 w-full sm:w-1/2 lg:w-1/4">
+                            <figure className="px-10 pt-10">
+                                <img alt={`${card.title} section icon`} className="w-24" src={card.icon} />
+                            </figure>
+                            <div className="card-body items-center text-center flex-grow">
+                                <h2 className="card-title">{card.title}</h2>
+                                <p>{card.description}</p>
+                            </div>
+                            <div className="card-actions px-6">
+                                <button
+                                    className="btn btn-primary w-full"
+                                    onClick={() => handleNavigate(card.path)}
+                                    aria-label={`Open the ${card.title} section`}>
+                                    {t("homepage.openBtn")}
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </Container>
         </>
     );
 }

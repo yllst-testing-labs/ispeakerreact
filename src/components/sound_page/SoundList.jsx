@@ -1,7 +1,7 @@
 import he from "he";
 import { Suspense, lazy, useEffect, useState } from "react";
-import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
 import { isElectron } from "../../utils/isElectron";
 import AccentDropdown from "../general/AccentDropdown";
@@ -16,6 +16,7 @@ const SoundList = () => {
     const [selectedSound, setSelectedSound] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedAccent, setSelectedAccent] = AccentLocalStorage();
+    const [activeTab, setActiveTab] = useState("tab1");
 
     const [soundsData, setSoundsData] = useState({
         consonants: [],
@@ -58,24 +59,18 @@ const SoundList = () => {
     };
 
     const getBadgeColor = (sound, index) => {
-        // Retrieve the entire data structure from localStorage
         const ispeakerData = JSON.parse(localStorage.getItem("ispeaker") || "{}");
         const accentReviews = ispeakerData.soundReview ? ispeakerData.soundReview[selectedAccent] || {} : {};
-
-        // Generate the correct review key for this sound based on its index
         const reviewKey = getReviewKey(sound, index);
-        const review = accentReviews[reviewKey]; // Access the specific review by its key
+        const review = accentReviews[reviewKey];
 
-        switch (review) {
-            case "good":
-                return "success";
-            case "neutral":
-                return "warning";
-            case "bad":
-                return "danger";
-            default:
-                return "secondary"; // No review found or the key does not exist
-        }
+        const badgeColors = {
+            good: "badge-success",
+            neutral: "badge-warning",
+            bad: "badge-error",
+        };
+
+        return badgeColors[review] || null; // Return the Tailwind class or null
     };
 
     const getReviewText = (review) => {
@@ -139,94 +134,155 @@ const SoundList = () => {
     return (
         <>
             <TopNavBar />
-            <h1 className="fw-semibold">{t("navigation.sounds")}</h1>
-            {selectedSound ? (
-                <Suspense fallback={isElectron() ? null : <LoadingOverlay />}>
-                    <PracticeSound
-                        sound={selectedSound.sound}
-                        accent={selectedSound.accent}
-                        soundsData={soundsData}
-                        index={selectedSound.index}
-                        onBack={() => handleGoBack()}
-                    />
-                </Suspense>
-            ) : (
-                <>
-                    <AccentDropdown onAccentChange={setSelectedAccent} />
-                    <div>
-                        {loading ? (
-                            <LoadingOverlay />
-                        ) : (
-                            <>
-                                <h3 className="mb-4">{t("sound_page.consonants")}</h3>
-                                <Row className="d-flex justify-content-center">
-                                    {soundsData.consonants
-                                        .filter(
-                                            (sound) =>
-                                                (selectedAccent === "british" && sound.b_s === "yes") ||
-                                                (selectedAccent === "american" && sound.a_s === "yes")
-                                        )
-                                        .map((sound, index) => (
-                                            <Col xs={"auto"} md={2} key={index} className="mb-4">
-                                                <Card className="h-100 shadow-sm">
-                                                    <Card.Body className="text-center">
-                                                        <Badge
-                                                            bg={getBadgeColor(sound, index)}
-                                                            className="position-absolute top-0 end-0 rounded-start-0 rounded-bottom-0">
-                                                            {getReviewText(reviews[`${getReviewKey(sound, index)}`])}
-                                                        </Badge>
-                                                        <Card.Title>{he.decode(sound.phoneme)}</Card.Title>
-                                                        <Card.Text>{sound.example_word}</Card.Text>
-                                                        <Button
-                                                            size="sm"
-                                                            onClick={() =>
-                                                                handlePracticeClick(sound, selectedAccent, index)
-                                                            }
-                                                            aria-label={`Open the sound ${he.decode(sound.phoneme)}`}>
-                                                            {t("sound_page.practiceBtn")}
-                                                        </Button>
-                                                    </Card.Body>
-                                                </Card>
-                                            </Col>
-                                        ))}
-                                </Row>
-                                <hr />
-                                <h3 className="my-4">{t("sound_page.vowels_dipthongs")}</h3>
-                                <Row className="d-flex justify-content-center">
-                                    {soundsData.vowels_n_diphthongs
-                                        .filter(
-                                            (sound) =>
-                                                (selectedAccent === "british" && sound.b_s === "yes") ||
-                                                (selectedAccent === "american" && sound.a_s === "yes")
-                                        )
-                                        .map((sound, index) => (
-                                            <Col xs={"auto"} md={2} key={index} className="mb-4">
-                                                <Card className="h-100 shadow-sm">
-                                                    <Card.Body className="text-center">
-                                                        <Badge
-                                                            bg={getBadgeColor(sound, index)}
-                                                            className="position-absolute top-0 end-0 rounded-start-0 rounded-bottom-0">
-                                                            {getReviewText(reviews[`${getReviewKey(sound, index)}`])}
-                                                        </Badge>
-                                                        <Card.Title>{he.decode(sound.phoneme)}</Card.Title>
-                                                        <Card.Text>{sound.example_word}</Card.Text>
-                                                        <Button
-                                                            size="sm"
-                                                            onClick={() =>
-                                                                handlePracticeClick(sound, selectedAccent, index)
-                                                            }>
-                                                            {t("sound_page.practiceBtn")}
-                                                        </Button>
-                                                    </Card.Body>
-                                                </Card>
-                                            </Col>
-                                        ))}
-                                </Row>
-                            </>
-                        )}
-                    </div>
-                </>
-            )}
+            <Container>
+                <h1 className="py-6 text-3xl md:text-4xl font-bold">{t("navigation.sounds")}</h1>
+                {selectedSound ? (
+                    <Suspense fallback={isElectron() ? null : <LoadingOverlay />}>
+                        <PracticeSound
+                            sound={selectedSound.sound}
+                            accent={selectedSound.accent}
+                            soundsData={soundsData}
+                            index={selectedSound.index}
+                            onBack={() => handleGoBack()}
+                        />
+                    </Suspense>
+                ) : (
+                    <>
+                        <AccentDropdown onAccentChange={setSelectedAccent} />
+                        <div>
+                            {loading ? (
+                                <LoadingOverlay />
+                            ) : (
+                                <>
+                                    <div className="flex justify-center py-8">
+                                        {/* Menu */}
+                                        <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
+                                            <li>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setActiveTab("tab1")}
+                                                    className={`md:text-base ${activeTab === "tab1" ? "active" : ""}`}>
+                                                    {t("sound_page.consonants")}
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setActiveTab("tab2")}
+                                                    className={`md:text-base ${activeTab === "tab2" ? "active" : ""}`}>
+                                                    {t("sound_page.vowels_dipthongs")}
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {/* Tab Content */}
+                                    <div className="mt-4">
+                                        {activeTab === "tab1" && (
+                                            <>
+                                                <div className="flex flex-wrap justify-center gap-7 mb-10">
+                                                    {soundsData.consonants
+                                                        .filter(
+                                                            (sound) =>
+                                                                (selectedAccent === "british" && sound.b_s === "yes") ||
+                                                                (selectedAccent === "american" && sound.a_s === "yes")
+                                                        )
+                                                        .map((sound, index) => (
+                                                            <div key={index} className="indicator">
+                                                                {getBadgeColor(sound, index) && (
+                                                                    <span
+                                                                        className={`indicator-item indicator-center badge ${getBadgeColor(
+                                                                            sound,
+                                                                            index
+                                                                        )}`}>
+                                                                        {getReviewText(
+                                                                            reviews[`${getReviewKey(sound, index)}`]
+                                                                        )}
+                                                                    </span>
+                                                                )}
+                                                                <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6">
+                                                                    <div className="card-body items-center text-center flex-grow">
+                                                                        <h2 className="card-title">
+                                                                            {he.decode(sound.phoneme)}{" "}
+                                                                        </h2>
+                                                                        <p>{sound.example_word}</p>
+                                                                    </div>
+                                                                    <div className="card-actions px-6">
+                                                                        <button
+                                                                            className="btn btn-primary w-full"
+                                                                            onClick={() =>
+                                                                                handlePracticeClick(
+                                                                                    sound,
+                                                                                    selectedAccent,
+                                                                                    index
+                                                                                )
+                                                                            }
+                                                                            aria-label={`Open the sound ${he.decode(
+                                                                                sound.phoneme
+                                                                            )}`}>
+                                                                            {t("sound_page.practiceBtn")}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                </div>
+                                            </>
+                                        )}
+                                        {activeTab === "tab2" && (
+                                            <>
+                                                <div className="flex flex-wrap justify-center gap-7 mb-10">
+                                                    {soundsData.vowels_n_diphthongs
+                                                        .filter(
+                                                            (sound) =>
+                                                                (selectedAccent === "british" && sound.b_s === "yes") ||
+                                                                (selectedAccent === "american" && sound.a_s === "yes")
+                                                        )
+                                                        .map((sound, index) => (
+                                                            <div key={index} className="indicator">
+                                                                {getBadgeColor(sound, index) && (
+                                                                    <span
+                                                                        className={`indicator-item indicator-center badge ${getBadgeColor(
+                                                                            sound,
+                                                                            index
+                                                                        )}`}>
+                                                                        {getReviewText(
+                                                                            reviews[`${getReviewKey(sound, index)}`]
+                                                                        )}
+                                                                    </span>
+                                                                )}
+                                                                <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6">
+                                                                    <div className="card-body items-center text-center flex-grow">
+                                                                        <h2 className="card-title">
+                                                                            {he.decode(sound.phoneme)}
+                                                                        </h2>
+                                                                        <p>{sound.example_word}</p>
+                                                                    </div>
+                                                                    <div className="card-actions px-6">
+                                                                        <button
+                                                                            className="btn btn-primary w-full"
+                                                                            onClick={() =>
+                                                                                handlePracticeClick(
+                                                                                    sound,
+                                                                                    selectedAccent,
+                                                                                    index
+                                                                                )
+                                                                            }>
+                                                                            {t("sound_page.practiceBtn")}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </>
+                )}
+            </Container>
         </>
     );
 };

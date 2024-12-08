@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import Container from "../../ui/Container";
 import { isElectron } from "../../utils/isElectron";
 import TopNavBar from "../general/TopNavBar";
 import AppearanceSettings from "./Appearance";
@@ -38,9 +38,9 @@ const SettingsPage = () => {
     return (
         <>
             <TopNavBar />
-            <div className="p-1 p-md-3">
-                <Row className="justify-content-center">
-                    <Col lg={8}>
+            <Container>
+                <div className="flex justify-center">
+                    <div className="flex-2">
                         {currentPage === "settings" && (
                             <>
                                 <h1 className="fw-semibold">{t("settingPage.heading")}</h1>
@@ -79,9 +79,9 @@ const SettingsPage = () => {
                         )}
 
                         {currentPage === "video-download" && <VideoDownloadSubPage onGoBack={handleGoBackToSettings} />}
-                    </Col>
-                </Row>
-            </div>
+                    </div>
+                </div>
+            </Container>
         </>
     );
 };

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { Dropdown } from "react-bootstrap";
-import AccentLocalStorage from "../../utils/AccentLocalStorage";
 import { useTranslation } from "react-i18next";
+import AccentLocalStorage from "../../utils/AccentLocalStorage";
 
 const AccentDropdown = ({ onAccentChange }) => {
     const [selectedAccent, setSelectedAccent] = AccentLocalStorage();
@@ -24,22 +23,31 @@ const AccentDropdown = ({ onAccentChange }) => {
     };
 
     return (
-        <Dropdown className="my-4">
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                <span className="fw-semibold">{t("accent.accentSettings")}:</span>{" "}
-                {selectedAccentOptions.find((item) => item.value === selectedAccent).name}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                {selectedAccentOptions.map((item) => (
-                    <Dropdown.Item
-                        key={item.value}
-                        onClick={() => handleAccentChange(item.value)}
-                        active={selectedAccent === item.value}>
-                        {item.name}
-                    </Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>
+        <>
+            <div className="flex items-center space-x-4">
+                <p className="font-semibold">{t("accent.accentSettings")}:</p>
+                <div className="dropdown">
+                    <div tabIndex={0} role="button" className="btn m-1 btn-accent">
+                        {selectedAccentOptions.find((item) => item.value === selectedAccent).name}
+                    </div>
+                    <ul
+                        tabIndex={0}
+                        className="dropdown-content menu border dark:border-slate-600 bg-base-100 rounded-box z-[300] w-52 p-2 shadow-md">
+                        {selectedAccentOptions.map((item) => (
+                            <li key={item.value}>
+                                <button
+                                    className={`${
+                                        selectedAccent === item.value ? "btn-active" : ""
+                                    } btn btn-sm btn-block btn-ghost justify-start`}
+                                    onClick={() => handleAccentChange(item.value)}>
+                                    {item.name}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </>
     );
 };
 

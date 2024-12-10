@@ -1,7 +1,7 @@
 import he from "he";
 import { useCallback, useEffect, useState } from "react";
-import { BsRecordCircleFill } from "react-icons/bs";
-import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
+import { BsChevronLeft, BsRecordCircleFill } from "react-icons/bs";
+import { IoChevronBackOutline } from "react-icons/io5";
 import { MdChecklist, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 
 import { Trans, useTranslation } from "react-i18next";
@@ -314,7 +314,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     </div>
                     {isElectron() && !selectedVideoUrl.startsWith("http://localhost") && (
                         <div role="alert" className="alert mt-5">
-                            <IoInformationCircleOutline className="h-6 w-6" />
+                            <BsChevronLeft className="h-6 w-6" />
                             <span>{t("alert.alertOnlineVideo")}</span>
                         </div>
                     )}

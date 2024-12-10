@@ -1,15 +1,14 @@
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { saveRecording } from "../../utils/databaseOperations";
-import { isElectron } from "../../utils/isElectron";
+import { saveRecording } from "../../../utils/databaseOperations";
+import { isElectron } from "../../../utils/isElectron";
+import { sonnerErrorToast, sonnerSuccessToast, sonnerWarningToast } from "../../../utils/sonnerCustomToast";
 
 export function useRecordingFunction(
     activeRecordingCard,
     setActiveRecordingCard,
     setIsRecording,
     setMediaRecorder,
-    setToastMessage,
-    setShowToast,
     setRecordingAvailability,
     isRecording,
     mediaRecorder,
@@ -65,8 +64,7 @@ export function useRecordingFunction(
                             const recordingDuration = Date.now() - recordingStartTime;
                             if (recordingDuration > MAX_RECORDING_DURATION_MS) {
                                 mediaRecorder.stop();
-                                setToastMessage(t("toast.recordingExceeded"));
-                                setShowToast(true);
+                                sonnerWarningToast(t("toast.recordingExceeded"));
                                 setIsRecording(false);
                                 setActiveRecordingCard(null);
                             }
@@ -74,8 +72,7 @@ export function useRecordingFunction(
                             if (mediaRecorder.state === "inactive") {
                                 const audioBlob = new Blob(audioChunks, { type: mimeType });
                                 saveRecording(audioBlob, recordingDataIndex, mimeType);
-                                setToastMessage(t("toast.recordingSuccess"));
-                                setShowToast(true);
+                                sonnerSuccessToast(t("toast.recordingSuccess"));
                                 setRecordingAvailability((prev) => ({ ...prev, [recordingDataIndex]: true }));
                                 audioChunks = [];
                             }
@@ -85,8 +82,7 @@ export function useRecordingFunction(
                         setTimeout(() => {
                             if (mediaRecorder.state !== "inactive") {
                                 mediaRecorder.stop();
-                                setToastMessage(t("toast.recordingExceeded"));
-                                setShowToast(true);
+                                sonnerWarningToast(t("toast.recordingExceeded"));
                                 setIsRecording(false);
                                 setActiveRecordingCard(null);
                             }
@@ -95,8 +91,7 @@ export function useRecordingFunction(
                     .catch((err) => {
                         console.error("Error accessing the microphone.", err);
                         isElectron() && window.electron.log("error", `Error accessing the microphone: ${err}`);
-                        setToastMessage(`${t("toast.recordingFailed")} ${err.message}`);
-                        setShowToast(true);
+                        sonnerErrorToast(`${t("toast.recordingFailed")} ${err.message}`);
                         setIsRecording(false);
                         setActiveRecordingCard(null);
                     });
@@ -122,8 +117,6 @@ export function useRecordingFunction(
             setActiveRecordingCard,
             setIsRecording,
             setMediaRecorder,
-            setToastMessage,
-            setShowToast,
             setRecordingAvailability,
             t,
         ]

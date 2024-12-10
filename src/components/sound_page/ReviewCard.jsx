@@ -1,33 +1,62 @@
 import he from "he";
-import { Card, Col, Row } from "react-bootstrap";
-import { EmojiFrown, EmojiNeutral, EmojiSmile } from "react-bootstrap-icons";
 import { useTranslation } from "react-i18next";
+import {
+    BsEmojiFrown,
+    BsEmojiFrownFill,
+    BsEmojiNeutral,
+    BsEmojiNeutralFill,
+    BsEmojiSmile,
+    BsEmojiSmileFill,
+} from "react-icons/bs";
+import { useReview } from "./hooks/useReview";
 
-const ReviewCard = ({ sound, handleReviewClick, emojiStyle }) => {
+const ReviewCard = ({ sound, accent, index, soundsData }) => {
     const { t } = useTranslation();
 
+    // Integrate the useReview hook
+    const { review, handleReviewClick } = useReview(sound, accent, index, soundsData);
+
+    // Local function for emoji styling
+    const emojiStyle = (reviewType) => {
+        const styles = {
+            good: "text-success",
+            neutral: "text-warning",
+            bad: "text-error",
+        };
+        return review === reviewType ? styles[reviewType] : "";
+    };
+
     return (
-        <Card className="shadow-sm">
-            <Card.Header className="fw-semibold">{t("sound_page.reviewCard")}</Card.Header>
-            <Card.Body>
-                <Card.Text>{t("sound_page.reviewInstructions", { phoneme: he.decode(sound.phoneme) })}</Card.Text>
-                <Row className="d-flex justify-content-center">
-                    <Col xs={"auto"} className="me-2" onClick={() => handleReviewClick("good")}>
-                        <EmojiSmile size={52} role="button" className={`bi bi-emoji-smile ${emojiStyle("good")}`} />
-                    </Col>
-                    <Col xs={"auto"} className="me-2" onClick={() => handleReviewClick("neutral")}>
-                        <EmojiNeutral
-                            size={52}
-                            role="button"
-                            className={`bi bi-emoji-neutral ${emojiStyle("neutral")}`}
-                        />
-                    </Col>
-                    <Col xs={"auto"} className="me-2" onClick={() => handleReviewClick("bad")}>
-                        <EmojiFrown size={52} role="button" className={`bi bi-emoji-frown ${emojiStyle("bad")}`} />
-                    </Col>
-                </Row>
-            </Card.Body>
-        </Card>
+        <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6">
+            <div className="card-body">
+                <p className="mb-2 text-center">
+                    {t("sound_page.reviewInstructions", { phoneme: he.decode(sound.phoneme) })}
+                </p>
+                <div className="flex flex-row justify-center items-center space-x-4">
+                    <a onClick={() => handleReviewClick("good")}>
+                        {review === "good" ? (
+                            <BsEmojiSmileFill size={52} role="button" className={`${emojiStyle("good")}`} />
+                        ) : (
+                            <BsEmojiSmile size={52} role="button" className={`${emojiStyle("good")}`} />
+                        )}
+                    </a>
+                    <a onClick={() => handleReviewClick("neutral")}>
+                        {review === "neutral" ? (
+                            <BsEmojiNeutralFill size={52} role="button" className={`${emojiStyle("neutral")}`} />
+                        ) : (
+                            <BsEmojiNeutral size={52} role="button" className={`${emojiStyle("neutral")}`} />
+                        )}
+                    </a>
+                    <a onClick={() => handleReviewClick("bad")}>
+                        {review === "bad" ? (
+                            <BsEmojiFrownFill size={52} role="button" className={`${emojiStyle("bad")}`} />
+                        ) : (
+                            <BsEmojiFrown size={52} role="button" className={`${emojiStyle("bad")}`} />
+                        )}
+                    </a>
+                </div>
+            </div>
+        </div>
     );
 };
 

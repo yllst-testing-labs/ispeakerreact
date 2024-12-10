@@ -163,7 +163,7 @@ const SoundList = () => {
                                                         type="button"
                                                         onClick={() => setActiveTab("tab1")}
                                                         className={`md:text-base ${
-                                                            activeTab === "tab1" ? "active" : ""
+                                                            activeTab === "tab1" ? "active font-semibold" : ""
                                                         }`}>
                                                         {t("sound_page.consonants")}
                                                     </button>
@@ -173,7 +173,7 @@ const SoundList = () => {
                                                         type="button"
                                                         onClick={() => setActiveTab("tab2")}
                                                         className={`md:text-base ${
-                                                            activeTab === "tab2" ? "active" : ""
+                                                            activeTab === "tab2" ? "active font-semibold" : ""
                                                         }`}>
                                                         {t("sound_page.vowels_dipthongs")}
                                                     </button>

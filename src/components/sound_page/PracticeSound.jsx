@@ -193,28 +193,34 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     </button>
                 </div>
                 <div className="w-full lg:w-3/4">
-                    <div className="sticky top-[calc(5rem)] z-10 bg-base-100 pb-8 pt-8 lg:pt-0">
+                    <div className="sticky top-[calc(5rem)] z-10 bg-base-100 py-4">
                         <div className="flex flex-col items-center">
                             {/* Menu */}
                             <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
                                 <li>
                                     <button
                                         onClick={() => setActiveTab("watchTab")}
-                                        className={`md:text-base ${activeTab === "watchTab" ? "active" : ""}`}>
+                                        className={`md:text-base ${
+                                            activeTab === "watchTab" ? "active font-semibold" : ""
+                                        }`}>
                                         <MdOutlineOndemandVideo className="md:h-6 md:w-6" /> Watch
                                     </button>
                                 </li>
                                 <li>
                                     <button
                                         onClick={() => setActiveTab("practieTab")}
-                                        className={`md:text-base ${activeTab === "practieTab" ? "active" : ""}`}>
+                                        className={`md:text-base ${
+                                            activeTab === "practieTab" ? "active font-semibold" : ""
+                                        }`}>
                                         <MdKeyboardVoice className="md:h-6 md:w-6" /> Practice
                                     </button>
                                 </li>
                                 <li>
                                     <button
                                         onClick={() => setActiveTab("reviewTab")}
-                                        className={`md:text-base ${activeTab === "reviewTab" ? "active" : ""}`}>
+                                        className={`md:text-base ${
+                                            activeTab === "reviewTab" ? "active font-semibold" : ""
+                                        }`}>
                                         <MdChecklist className="md:h-6 md:w-6" /> Review
                                     </button>
                                 </li>
@@ -223,7 +229,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     </div>
 
                     {/* Tab Content */}
-                    <div>
+                    <div className="mt-4">
                         {activeTab === "watchTab" && (
                             <WatchVideoCard
                                 videoUrl={videoUrl}
@@ -272,7 +278,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
 
             <dialog id="sound_video_modal" className="modal">
                 <div
-                    className={`modal-box w-full max-w-4xl ${
+                    className={`modal-box w-full max-w-3xl ${
                         iframeLoadingStates.modalIframe ? "overflow-hidden" : ""
                     }`}>
                     <h3 className="font-bold text-lg">

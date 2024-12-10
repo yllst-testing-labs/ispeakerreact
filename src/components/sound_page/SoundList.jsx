@@ -154,26 +154,32 @@ const SoundList = () => {
                                 <LoadingOverlay />
                             ) : (
                                 <>
-                                    <div className="flex justify-center py-8">
-                                        {/* Menu */}
-                                        <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
-                                            <li>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setActiveTab("tab1")}
-                                                    className={`md:text-base ${activeTab === "tab1" ? "active" : ""}`}>
-                                                    {t("sound_page.consonants")}
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setActiveTab("tab2")}
-                                                    className={`md:text-base ${activeTab === "tab2" ? "active" : ""}`}>
-                                                    {t("sound_page.vowels_dipthongs")}
-                                                </button>
-                                            </li>
-                                        </ul>
+                                    <div className="sticky top-[calc(5rem)] z-10 py-8 bg-base-100">
+                                        <div className="flex justify-center">
+                                            {/* Menu */}
+                                            <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setActiveTab("tab1")}
+                                                        className={`md:text-base ${
+                                                            activeTab === "tab1" ? "active" : ""
+                                                        }`}>
+                                                        {t("sound_page.consonants")}
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setActiveTab("tab2")}
+                                                        className={`md:text-base ${
+                                                            activeTab === "tab2" ? "active" : ""
+                                                        }`}>
+                                                        {t("sound_page.vowels_dipthongs")}
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     {/* Tab Content */}
                                     <div className="mt-4">

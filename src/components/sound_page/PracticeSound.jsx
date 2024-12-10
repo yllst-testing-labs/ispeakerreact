@@ -193,38 +193,39 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     </button>
                 </div>
                 <div className="w-full lg:w-3/4">
-                    <div className="flex flex-col items-center mb-4">
-                        {/* Menu */}
-                        <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
-                            <li>
-                                <button
-                                    onClick={() => setActiveTab("watchTab")}
-                                    className={`md:text-base ${activeTab === "watchTab" ? "active" : ""}`}>
-                                    <MdOutlineOndemandVideo className="md:h-6 md:w-6" /> Watch
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => setActiveTab("practieTab")}
-                                    className={`md:text-base ${activeTab === "practieTab" ? "active" : ""}`}>
-                                    <MdKeyboardVoice className="md:h-6 md:w-6" /> Practice
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => setActiveTab("reviewTab")}
-                                    className={`md:text-base ${activeTab === "reviewTab" ? "active" : ""}`}>
-                                    <MdChecklist className="md:h-6 md:w-6" /> Review
-                                </button>
-                            </li>
-                        </ul>
+                    <div className="sticky top-[calc(5rem)] z-10 bg-base-100 pb-8 pt-8 lg:pt-0">
+                        <div className="flex flex-col items-center">
+                            {/* Menu */}
+                            <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
+                                <li>
+                                    <button
+                                        onClick={() => setActiveTab("watchTab")}
+                                        className={`md:text-base ${activeTab === "watchTab" ? "active" : ""}`}>
+                                        <MdOutlineOndemandVideo className="md:h-6 md:w-6" /> Watch
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveTab("practieTab")}
+                                        className={`md:text-base ${activeTab === "practieTab" ? "active" : ""}`}>
+                                        <MdKeyboardVoice className="md:h-6 md:w-6" /> Practice
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveTab("reviewTab")}
+                                        className={`md:text-base ${activeTab === "reviewTab" ? "active" : ""}`}>
+                                        <MdChecklist className="md:h-6 md:w-6" /> Review
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
                     {/* Tab Content */}
-                    <div className="mt-8">
+                    <div>
                         {activeTab === "watchTab" && (
                             <WatchVideoCard
-                                className="overflow-hidden"
                                 videoUrl={videoUrl}
                                 iframeLoadingStates={iframeLoadingStates}
                                 t={t}

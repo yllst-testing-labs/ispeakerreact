@@ -1,18 +1,18 @@
 import he from "he";
 import { useCallback, useEffect, useState } from "react";
-import { BsArrowLeftCircle, BsRecordCircleFill } from "react-icons/bs";
-import { IoInformationCircleOutline } from "react-icons/io5";
-import { MdOutlineOndemandVideo, MdKeyboardVoice, MdChecklist } from "react-icons/md";
+import { BsRecordCircleFill } from "react-icons/bs";
+import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
+import { MdChecklist, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 
 import { Trans, useTranslation } from "react-i18next";
 import { checkRecordingExists } from "../../utils/databaseOperations";
 import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
-import ReviewCard from "./ReviewCard";
-import SoundPracticeCard from "./SoundPracticeCard";
 import { usePlaybackFunction } from "./hooks/usePlaybackFunction";
 import { useRecordingFunction } from "./hooks/useRecordingFunction";
 import { useSoundVideoMapping } from "./hooks/useSoundVideoMapping";
+import ReviewCard from "./ReviewCard";
+import SoundPracticeCard from "./SoundPracticeCard";
 import { WatchVideoCard } from "./WatchVideoCard";
 
 const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
@@ -189,7 +189,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                         </>
                     )}
                     <button className="btn btn-secondary my-6" onClick={onBack}>
-                        <BsArrowLeftCircle /> {t("sound_page.backBtn")}
+                        <IoChevronBackOutline className="h-5 w-5" /> {t("sound_page.backBtn")}
                     </button>
                 </div>
                 <div className="w-full lg:w-3/4">

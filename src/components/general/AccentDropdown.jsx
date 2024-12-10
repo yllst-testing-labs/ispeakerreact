@@ -7,8 +7,8 @@ const AccentDropdown = ({ onAccentChange }) => {
     const { t } = useTranslation();
 
     const selectedAccentOptions = [
-        { name: `${t("accent.accentAmerican")}`, value: "american" },
-        { name: `${t("accent.accentBritish")}`, value: "british" },
+        { name: `${t("accent.accentAmerican")}`, value: "american", emoji: "🇺🇸" },
+        { name: `${t("accent.accentBritish")}`, value: "british", emoji: "🇬🇧" },
     ];
 
     useEffect(() => {
@@ -28,6 +28,9 @@ const AccentDropdown = ({ onAccentChange }) => {
                 <p className="font-semibold">{t("accent.accentSettings")}:</p>
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn m-1 btn-accent">
+                        <span className="noto-color-emoji">
+                            {selectedAccentOptions.find((item) => item.value === selectedAccent).emoji}
+                        </span>{" "}
                         {selectedAccentOptions.find((item) => item.value === selectedAccent).name}
                     </div>
                     <ul
@@ -40,7 +43,7 @@ const AccentDropdown = ({ onAccentChange }) => {
                                         selectedAccent === item.value ? "btn-active" : ""
                                     } btn btn-sm btn-block btn-ghost justify-start`}
                                     onClick={() => handleAccentChange(item.value)}>
-                                    {item.name}
+                                    <span className="noto-color-emoji">{item.emoji}</span> {item.name}
                                 </button>
                             </li>
                         ))}

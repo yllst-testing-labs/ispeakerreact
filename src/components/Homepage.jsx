@@ -1,42 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Container from "../ui/Container";
-import { useTheme } from "../utils/ThemeContext/useTheme";
+import Footer from "./general/Footer";
+import LogoLightOrDark from "./general/LogoLightOrDark";
 import TopNavBar from "./general/TopNavBar";
 
 function Homepage() {
     const { t } = useTranslation();
 
     const navigate = useNavigate();
-    const { theme } = useTheme();
-    const [currentTheme, setCurrentTheme] = useState(theme);
-    const [isDarkMode, setIsDarkMode] = useState(false);
-
-    useEffect(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-        const updateTheme = () => {
-            if (theme === "auto") {
-                const systemPrefersDark = mediaQuery.matches;
-                setCurrentTheme(systemPrefersDark ? "dark" : "light");
-                setIsDarkMode(systemPrefersDark);
-            } else {
-                setCurrentTheme(theme);
-                setIsDarkMode(theme === "dark");
-            }
-        };
-
-        // Initial check and listener
-        updateTheme();
-        if (theme === "auto") {
-            mediaQuery.addEventListener("change", updateTheme);
-        }
-
-        return () => {
-            mediaQuery.removeEventListener("change", updateTheme);
-        };
-    }, [theme]);
 
     const handleNavigate = (path) => {
         navigate(path);
@@ -45,10 +18,6 @@ function Homepage() {
     useEffect(() => {
         document.title = `${t("navigation.home")} | iSpeakerReact v${__APP_VERSION__}`;
     }, [t]);
-
-    const logoSrc = isDarkMode
-        ? `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background-darkmode.svg`
-        : `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background.svg`;
 
     const cardsInfo = [
         {
@@ -93,7 +62,7 @@ function Homepage() {
             <Container>
                 <div className="p-6 mb-4">
                     <div className="flex justify-center items-center space-x-4">
-                        <img alt="iSpeakerReact logo" src={logoSrc} width="64" height="64" />
+                        <LogoLightOrDark width="64" height="64" />
                         <h1 className="text-3xl md:text-4xl font-bold">iSpeakerReact</h1>
                     </div>
                     <p className="text-center mt-2">v{__APP_VERSION__}</p>
@@ -122,6 +91,7 @@ function Homepage() {
                     ))}
                 </div>
             </Container>
+            <Footer />
         </>
     );
 }

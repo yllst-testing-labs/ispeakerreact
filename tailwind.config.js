@@ -13,7 +13,7 @@ export default {
             {
                 light: {
                     "color-scheme": "light",
-                    primary: "oklch(64.23% 0.1467 133.01)",
+                    primary: "oklch(65.88% 0.1467 133.01)",
                     secondary: "oklch(83.66% 0.1165 66.29)",
                     accent: "oklch(85.39% 0.201 100.73)",
                     neutral: "oklch(30.98% 0.075 108.6)",

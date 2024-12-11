@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
-import { InfoCircle } from "react-bootstrap-icons";
+import { IoInformationCircleOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
 import { isElectron } from "../../utils/isElectron";
 import AccentDropdown from "../general/AccentDropdown";
@@ -16,12 +16,6 @@ const ExercisePage = () => {
     const [loading, setLoading] = useState(true);
     const [selectedAccent, setSelectedAccent] = AccentLocalStorage();
     const [selectedExercise, setSelectedExercise] = useState(null);
-
-    const TooltipIcon = ({ info }) => (
-        <OverlayTrigger overlay={<Tooltip>{info}</Tooltip>} trigger={["hover", "focus"]}>
-            <InfoCircle className="ms-2" />
-        </OverlayTrigger>
-    );
 
     const selectedAccentOptions = [
         { name: "American English", value: "american" },
@@ -54,31 +48,62 @@ const ExercisePage = () => {
         return exercise.infoKey ? t(exercise.infoKey) : t(defaultInfoKey);
     };
 
+    const TooltipIcon = ({ info, modalId }) => {
+        return (
+            <>
+                {/* Tooltip for larger screens */}
+                <div className="tooltip dark:tooltip-accent hidden sm:inline" data-tip={info}>
+                    <IoInformationCircleOutline className="h-5 w-5 cursor-pointer hover:text-primary" />
+                </div>
+
+                {/* Modal for small screens */}
+                <button className="btn btn-sm btn-info sm:hidden inline focus:ring-2">
+                    <IoInformationCircleOutline
+                        className="h-5 w-5 cursor-pointer"
+                        onClick={() => document.getElementById(modalId).showModal()}
+                    />
+                </button>
+                <dialog id={modalId} className="modal">
+                    <div className="modal-box">
+                        <h3 className="font-bold text-lg">{t("exercise_page.modalInfoHeader")}</h3>
+                        <p className="py-4">{info}</p>
+                        <div className="modal-action">
+                            <form method="dialog">
+                                <button className="btn">{t("sound_page.closeBtn")}</button>
+                            </form>
+                        </div>
+                    </div>
+                </dialog>
+            </>
+        );
+    };
+
     const ExerciseCard = ({ heading, titles, infoKey, file }) => (
-        <Col>
-            <Card className="mb-4 h-100 shadow-sm">
-                <Card.Header className="fw-semibold">{t(heading)}</Card.Header>
-                <Card.Body>
-                    {titles
-                        .filter(({ american, british }) => {
-                            if (selectedAccent === "american" && american === false) return false;
-                            if (selectedAccent === "british" && british === false) return false;
-                            return true;
-                        })
-                        .map((exercise, index) => (
-                            <Card.Text key={index} className="">
-                                <Button
-                                    variant="link"
-                                    className="p-0 m-0"
+        <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto w-full md:w-1/3 lg:w-1/4">
+            <div className="card-body flex-grow">
+                <div className="font-semibold card-title">{t(heading)}</div>
+                <div className="divider divider-secondary m-0"></div>
+                {titles
+                    .filter(({ american, british }) => {
+                        if (selectedAccent === "american" && american === false) return false;
+                        if (selectedAccent === "british" && british === false) return false;
+                        return true;
+                    })
+                    .map((exercise, index) => {
+                        const modalId = `exerciseInfoModal-${heading}-${index}`;
+                        return (
+                            <div key={index} className="flex items-center space-x-2">
+                                <a
+                                    className="link hover:link-primary"
                                     onClick={() => handleSelectExercise({ ...exercise, file }, heading)}>
                                     {t(exercise.titleKey) || exercise.title}
-                                </Button>
-                                <TooltipIcon info={getInfoText(exercise, infoKey)} />
-                            </Card.Text>
-                        ))}
-                </Card.Body>
-            </Card>
-        </Col>
+                                </a>
+                                <TooltipIcon info={getInfoText(exercise, infoKey)} modalId={modalId} />
+                            </div>
+                        );
+                    })}
+            </div>
+        </div>
     );
 
     useEffect(() => {
@@ -136,38 +161,40 @@ const ExercisePage = () => {
     return (
         <>
             <TopNavBar />
-            <h1 className="fw-semibold">{t("navigation.exercises")}</h1>
-            {selectedExercise ? (
-                <ExerciseDetailPage
-                    heading={selectedExercise.heading}
-                    id={selectedExercise.id}
-                    title={selectedExercise.title}
-                    accent={selectedExercise.accent}
-                    instructions={selectedExercise.instructions}
-                    file={selectedExercise.file}
-                    onBack={handleGoBack}
-                />
-            ) : (
-                <>
-                    <AccentDropdown onAccentChange={setSelectedAccent} />
-                    <p>{t("exercise_page.exerciseSubheading")}</p>
-                    {loading ? (
-                        <LoadingOverlay />
-                    ) : (
-                        <Row xs={1} md={4} className="g-4 mt-1 d-flex justify-content-center">
-                            {data.map((section, index) => (
-                                <ExerciseCard
-                                    key={index}
-                                    heading={section.heading}
-                                    titles={section.titles}
-                                    infoKey={section.infoKey}
-                                    file={section.file}
-                                />
-                            ))}
-                        </Row>
-                    )}
-                </>
-            )}
+            <Container>
+                <h1 className="py-6 text-3xl md:text-4xl font-bold">{t("navigation.exercises")}</h1>
+                {selectedExercise ? (
+                    <ExerciseDetailPage
+                        heading={selectedExercise.heading}
+                        id={selectedExercise.id}
+                        title={selectedExercise.title}
+                        accent={selectedExercise.accent}
+                        instructions={selectedExercise.instructions}
+                        file={selectedExercise.file}
+                        onBack={handleGoBack}
+                    />
+                ) : (
+                    <>
+                        <AccentDropdown onAccentChange={setSelectedAccent} />
+                        <p className="py-4">{t("exercise_page.exerciseSubheading")}</p>
+                        {loading ? (
+                            <LoadingOverlay />
+                        ) : (
+                            <div className="flex flex-wrap justify-center gap-7 mb-10">
+                                {data.map((section, index) => (
+                                    <ExerciseCard
+                                        key={index}
+                                        heading={section.heading}
+                                        titles={section.titles}
+                                        infoKey={section.infoKey}
+                                        file={section.file}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
+            </Container>
         </>
     );
 };

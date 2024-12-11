@@ -1,9 +1,10 @@
 import _ from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Card, Col, Form, Row, Spinner } from "react-bootstrap";
-import { ArrowRightCircle, Check2Circle, VolumeUp, VolumeUpFill, XCircle } from "react-bootstrap-icons";
-import useCountdownTimer from "../../utils/useCountdownTimer";
 import { useTranslation } from "react-i18next";
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import { IoInformationCircleOutline, IoVolumeHigh, IoVolumeHighOutline } from "react-icons/io5";
+import { LiaCheckCircle, LiaChevronCircleRightSolid, LiaTimesCircle } from "react-icons/lia";
+import useCountdownTimer from "../../utils/useCountdownTimer";
 
 const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -75,7 +76,7 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                 ""
             ) : (
                 <>
-                    {t("exercise_page.result.correctAnswer")} <span className="fw-bold fst-italic">{correctAnswer}</span>
+                    {t("exercise_page.result.correctAnswer")} <span className="font-bold italic">{correctAnswer}</span>
                 </>
             )
         );
@@ -167,27 +168,47 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
 
         return currentWords.map((word, index) => {
             if (word.value) {
-                return <span key={index}>{word.value}</span>;
+                return (
+                    <span className="mx-2" key={index}>
+                        {word.value}
+                    </span>
+                );
             }
 
             if (word.textbox) {
+                const isCorrect = answer.trim().toLowerCase() === word.textbox.toLowerCase();
+
                 return (
-                    <Form.Control
+                    <span
                         key={index}
-                        type="text"
-                        value={answer}
-                        onChange={(e) => {
-                            setAnswer(e.target.value);
-                            startTimer();
-                        }}
-                        isInvalid={validationVariant === "danger" && showValidation}
-                        isValid={validationVariant === "success" && showValidation}
-                        autoComplete="off"
-                        spellCheck="false"
-                        disabled={isTextboxDisabled}
-                        className={`px-0 text-center${hasValueAndTextbox ? " mx-2" : " w-50 mx-auto"}`}
-                        style={hasValueAndTextbox ? { width: "40%", display: "inline-block" } : {}}
-                    />
+                        className={`inline-block my-2 ${hasValueAndTextbox ? "w-48" : "w-full lg:w-3/4"}`}>
+                        <label className="input input-bordered flex items-center md:gap-2 gap-0">
+                            <input
+                                type="text"
+                                value={answer}
+                                onChange={(e) => {
+                                    setAnswer(e.target.value);
+                                    startTimer();
+                                }}
+                                autoComplete="off"
+                                spellCheck="false"
+                                disabled={isTextboxDisabled}
+                                className={`grow text-center${
+                                    hasValueAndTextbox ? " mx-2" : " mx-auto"
+                                } text-black dark:text-slate-200`}
+                                style={hasValueAndTextbox ? { width: "40%" } : {}}
+                            />
+                            {showValidation && (
+                                <>
+                                    {isCorrect ? (
+                                        <AiOutlineCheckCircle className="h-6 w-6 text-primary" />
+                                    ) : (
+                                        <AiOutlineCloseCircle className="h-6 w-6 text-error" />
+                                    )}
+                                </>
+                            )}
+                        </label>
+                    </span>
                 );
             }
 
@@ -197,57 +218,69 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
 
     return (
         <>
-            <Card.Header className="fw-semibold">
-                <div className="d-flex">
-                    <div className="me-auto">{t("exercise_page.questionNo")} #{currentQuestionIndex + 1}</div>
-                    {timer > 0 && <div className="ms-auto">{t("exercise_page.timer")} {formatTime()}</div>}
-                </div>
-            </Card.Header>
-            <Card.Body>
-                <Row>
-                    <Col xs={12} className="d-flex justify-content-center">
-                        <Button variant="primary" onClick={handleAudioPlay} className="mb-3" disabled={isLoading}>
-                            {isLoading ? (
-                                <Spinner animation="border" size="sm" />
-                            ) : isPlaying ? (
-                                <VolumeUpFill />
-                            ) : (
-                                <VolumeUp />
-                            )}
-                        </Button>
-                    </Col>
-                    <Col xs={12}>
-                        <Form onSubmit={handleSubmit} className="text-center">
-                            <Form.Group controlId="formAnswer">
-                                <div>{renderWords()}</div>
-                            </Form.Group>
-                        </Form>
-                    </Col>
-                </Row>
-                {showValidation && validationVariant === "danger" && (
-                    <Alert className="mt-4" variant="info">
-                        {validationMessage}
-                    </Alert>
-                )}
-                <div className="d-flex justify-content-end mt-3">
-                    <Button
-                        variant="success"
-                        type="submit"
-                        className="mt-3"
-                        disabled={isSubmitButtonEnabled}
-                        onClick={handleSubmit}>
-                        <Check2Circle /> {t("exercise_page.buttons.checkBtn")}
-                    </Button>
-                    {currentQuestionIndex < quiz.length - 1 && (
-                        <Button variant="secondary" className="mt-3 ms-2" onClick={handleNext}>
-                            <ArrowRightCircle /> {t("exercise_page.buttons.nextBtn")}
-                        </Button>
+            <div className={`card-body p-4 md:p-8 ${timer <= 0 ? "text-center" : ""}`}>
+                <div className="font-semibold justify-center">
+                    {timer > 0 ? (
+                        <div className="flex items-center">
+                            <div className="flex-1 md:flex-none md:justify-center md:text-center">
+                                {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
+                            </div>
+                            <div className="flex justify-end ms-auto">
+                                {t("exercise_page.timer")} {formatTime()}
+                            </div>
+                        </div>
+                    ) : (
+                        <p>
+                            {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
+                        </p>
                     )}
-                    <Button variant="danger" className="mt-3 ms-2" onClick={handleQuit}>
-                        <XCircle /> {t("exercise_page.buttons.quitBtn")}
-                    </Button>
                 </div>
-            </Card.Body>
+                <div className="divider divider-secondary m-0"></div>
+                <div className="flex justify-center">
+                    <button
+                        onClick={handleAudioPlay}
+                        className="btn btn-success btn-circle my-3"
+                        disabled={isLoading}>
+                        {isLoading ? (
+                            <span className="loading loading-spinner loading-md"></span>
+                        ) : isPlaying ? (
+                            <IoVolumeHigh className="h-6 w-6" />
+                        ) : (
+                            <IoVolumeHighOutline className="h-6 w-6" />
+                        )}
+                    </button>
+                </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="text-center">{renderWords()}</div>
+                </form>
+                {showValidation && validationVariant === "danger" && (
+                    <div className="flex justify-center">
+                        <div role="alert" className="alert alert-info w-auto flex my-4 gap-1 md:gap-2">
+                            <IoInformationCircleOutline className="h-6 w-6" />
+                            <span>{validationMessage}</span>
+                        </div>
+                    </div>
+                )}
+                <div className="card-actions justify-center">
+                    <div className="flex flex-wrap justify-center my-3 gap-2">
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={isSubmitButtonEnabled}
+                            onClick={handleSubmit}>
+                            <LiaCheckCircle className="h-6 w-6" /> {t("exercise_page.buttons.checkBtn")}
+                        </button>
+                        {currentQuestionIndex < quiz.length - 1 && (
+                            <button className="btn btn-accent" onClick={handleNext}>
+                                <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
+                            </button>
+                        )}
+                        <button className="btn btn-error" onClick={handleQuit}>
+                            <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

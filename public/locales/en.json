@@ -90,6 +90,7 @@
     },
     "exercise_page": {
         "exerciseSubheading": "Select an exercise to get started.",
+        "modalInfoHeader": "Exercise info",
         "dictationHeading": "Dictation",
         "matchUpHeading": "Match-up",
         "reorderingHeading": "Reordering",
@@ -121,6 +122,7 @@
             "quitBtn": "Quit",
             "restartBtn": "Restart quiz",
             "backBtn": "Back to exercise list",
+            "instructionBtn": "Instructions",
             "collapseBtn": "Collapse instructions",
             "expandBtn": "View instructions"
         },

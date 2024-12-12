@@ -188,7 +188,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                             ))}
                         </>
                     )}
-                    <button className="btn btn-secondary my-6" onClick={onBack}>
+                    <button type="button" className="btn btn-secondary my-6" onClick={onBack}>
                         <IoChevronBackOutline className="h-5 w-5" /> {t("sound_page.backBtn")}
                     </button>
                 </div>
@@ -199,6 +199,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                             <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
                                 <li>
                                     <button
+                                        type="button"
                                         onClick={() => setActiveTab("watchTab")}
                                         className={`md:text-base ${
                                             activeTab === "watchTab" ? "active font-semibold" : ""
@@ -208,6 +209,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                 </li>
                                 <li>
                                     <button
+                                        type="button"
                                         onClick={() => setActiveTab("practieTab")}
                                         className={`md:text-base ${
                                             activeTab === "practieTab" ? "active font-semibold" : ""
@@ -217,6 +219,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                 </li>
                                 <li>
                                     <button
+                                        type="button"
                                         onClick={() => setActiveTab("reviewTab")}
                                         className={`md:text-base ${
                                             activeTab === "reviewTab" ? "active font-semibold" : ""
@@ -320,7 +323,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     )}
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">{t("sound_page.closeBtn")}</button>
+                            <button type="button" className="btn">{t("sound_page.closeBtn")}</button>
                         </form>
                     </div>
                 </div>

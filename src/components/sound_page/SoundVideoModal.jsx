@@ -59,7 +59,7 @@ const SoundVideoModal = ({ videoUrls, videoUrl, videoLoading }) => {
                 )}
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn">{t("sound_page.closeBtn")}</button>
+                        <button type="button" className="btn">{t("sound_page.closeBtn")}</button>
                     </form>
                 </div>
             </div>

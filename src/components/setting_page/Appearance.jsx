@@ -38,6 +38,7 @@ const AppearanceSettings = () => {
                                 className="dropdown-content menu border-slate-50 bg-base-100 rounded-box z-[300] w-52 p-2 shadow-md">
                                 <li>
                                     <button
+                                        type="button"
                                         onClick={() => handleThemeSelect("light")}
                                         className={`${
                                             theme === "light" ? "btn-active" : ""
@@ -48,6 +49,7 @@ const AppearanceSettings = () => {
                                 </li>
                                 <li>
                                     <button
+                                        type="button"
                                         onClick={() => handleThemeSelect("dark")}
                                         className={`${
                                             theme === "dark" ? "btn-active" : ""
@@ -58,6 +60,7 @@ const AppearanceSettings = () => {
                                 </li>
                                 <li>
                                     <button
+                                        type="button"
                                         onClick={() => handleThemeSelect("auto")}
                                         className={`${
                                             theme === "auto" ? "btn-active" : ""

@@ -81,6 +81,7 @@ function Homepage() {
                             </div>
                             <div className="card-actions px-6">
                                 <button
+                                    type="button"
                                     className="btn btn-primary w-full"
                                     onClick={() => handleNavigate(card.path)}
                                     aria-label={`Open the ${card.title} section`}>

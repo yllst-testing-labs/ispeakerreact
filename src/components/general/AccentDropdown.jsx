@@ -39,6 +39,7 @@ const AccentDropdown = ({ onAccentChange }) => {
                         {selectedAccentOptions.map((item) => (
                             <li key={item.value}>
                                 <button
+                                    type="button"
                                     className={`${
                                         selectedAccent === item.value ? "btn-active" : ""
                                     } btn btn-sm btn-block btn-ghost justify-start`}

@@ -54,7 +54,7 @@ const TopNavBar = () => {
     ];
 
     return (
-        <div
+        <nav
             className={`navbar sticky top-0 z-[300] w-full backdrop-blur-md backdrop-brightness-125 backdrop-saturate-200 flex-none ${navbarClass}`}>
             <div className="navbar md:navbar-start">
                 {/* Mobile Drawer */}
@@ -112,7 +112,7 @@ const TopNavBar = () => {
                     </span>
                 </a>
             </div>
-        </div>
+        </nav>
     );
 };
 

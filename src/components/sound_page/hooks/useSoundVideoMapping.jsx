@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { isElectron } from "../../utils/isElectron";
+import { isElectron } from "../../../utils/isElectron";
 
 export function useSoundVideoMapping(type, accent, soundsData, phonemeIndex) {
     const [videoUrl, setVideoUrl] = useState(null);

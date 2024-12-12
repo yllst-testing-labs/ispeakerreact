@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { Suspense, lazy, useCallback, useEffect, useState } from "react";
-import { Button, Card, Col, Collapse, Row } from "react-bootstrap";
-import { ArrowCounterclockwise, ArrowLeftCircle, ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import { useTranslation } from "react-i18next";
+import { BsChevronLeft } from "react-icons/bs";
+import { PiArrowsCounterClockwise } from "react-icons/pi";
 import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
 import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
@@ -221,45 +221,45 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                     {t("exercise_page.encouragementMsg.level0")} <span className="noto-color-emoji">🚀</span>
                 </>
             );
+
         const percentage = (score / totalAnswered) * 100;
 
-        if (percentage === 100) {
-            return (
-                <>
-                    {t("exercise_page.encouragementMsg.level6")} <span className="noto-color-emoji">🎉</span>
-                </>
-            );
-        } else if (percentage >= 80) {
-            return (
-                <>
-                    {t("exercise_page.encouragementMsg.level5")} <span className="noto-color-emoji">👍</span>
-                </>
-            );
-        } else if (percentage >= 60) {
-            return (
-                <>
-                    {t("exercise_page.encouragementMsg.level4")} <span className="noto-color-emoji">😊</span>
-                </>
-            );
-        } else if (percentage >= 40) {
-            return (
-                <>
-                    {t("exercise_page.encouragementMsg.level3")} <span className="noto-color-emoji">💪</span>
-                </>
-            );
-        } else if (percentage >= 20) {
-            return (
-                <>
-                    {t("exercise_page.encouragementMsg.level2")} <span className="noto-color-emoji">🌱</span>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    {t("exercise_page.encouragementMsg.level1")} <span className="noto-color-emoji">🛤️</span>
-                </>
-            );
+        let level;
+        switch (true) {
+            case percentage === 100:
+                level = 6;
+                break;
+            case percentage >= 80:
+                level = 5;
+                break;
+            case percentage >= 60:
+                level = 4;
+                break;
+            case percentage >= 40:
+                level = 3;
+                break;
+            case percentage >= 20:
+                level = 2;
+                break;
+            default:
+                level = 1;
         }
+
+        const emojis = {
+            6: "🎉",
+            5: "👍",
+            4: "😊",
+            3: "💪",
+            2: "🌱",
+            1: "🛤️",
+        };
+
+        return (
+            <>
+                {t(`exercise_page.encouragementMsg.level${level}`)}{" "}
+                <span className="noto-color-emoji">{emojis[level]}</span>
+            </>
+        );
     };
 
     const encouragementMessage = quizCompleted && totalAnswered > 0 ? getEncouragementMessage() : null;
@@ -295,7 +295,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                         onMatchFinished={handleMatchFinished}
                     />
                 ) : (
-                    <Card.Body>This quiz type is not yet implemented.</Card.Body>
+                    <div className="card-body">This quiz type is not yet implemented.</div>
                 )}
             </Suspense>
         );
@@ -307,71 +307,87 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                 <LoadingOverlay />
             ) : (
                 <>
-                    <h3 className="mt-4">{t(heading)}</h3>
-                    <Row className="mt-2 g-4">
-                        <Col md={4}>
-                            <Card className="h-100 shadow-sm">
-                                <Card.Header className="fw-semibold">{title}</Card.Header>
-                                <Card.Body>
-                                    <p>
-                                        <strong>{t("accent.accentSettings")}:</strong>{" "}
-                                        {accent === "American English"
-                                            ? t("accent.accentAmerican")
-                                            : t("accent.accentBritish")}
-                                    </p>
+                    <h3 className="mt-4 font-semibold text-2xl">{t(heading)}</h3>
+                    <p className="mb-6 text-lg">{title}</p>
+                    <div className="flex flex-wrap md:flex-nowrap gap-8">
+                        <div className="w-full md:w-1/3">
+                            <p className="mb-4">
+                                <strong>{t("accent.accentSettings")}:</strong>{" "}
+                                {accent === "American English" ? t("accent.accentAmerican") : t("accent.accentBritish")}
+                            </p>
 
-                                    <div>
-                                        <Button
-                                            variant="info"
-                                            onClick={() => setOpenInstructions(!openInstructions)}
-                                            aria-controls="instructions-collapse"
-                                            aria-expanded={openInstructions}>
-                                            {openInstructions
-                                                ? t("exercise_page.buttons.collapseBtn")
-                                                : t("exercise_page.buttons.expandBtn")}{" "}
-                                            {openInstructions ? <ChevronUp /> : <ChevronDown />}
-                                        </Button>
-                                        <Collapse in={openInstructions}>
-                                            <div id="instructions-collapse">
-                                                <Card body className="mt-2">
-                                                    {instructions &&
-                                                    Array.isArray(instructions) &&
-                                                    instructions.length > 0 ? (
-                                                        instructions.map((instruction, index) => (
-                                                            <p
-                                                                key={index}
-                                                                className={
-                                                                    index === instructions.length - 1 ? "mb-0" : ""
-                                                                }>
-                                                                {instruction}
-                                                            </p>
-                                                        ))
-                                                    ) : (
-                                                        <p className="mb-0">
-                                                            [Instructions for this type of exercise is not yet
-                                                            translated. Please update accordingly.]
-                                                        </p>
-                                                    )}
-                                                </Card>
-                                            </div>
-                                        </Collapse>
+                            <dialog id="instructionModal" className="modal">
+                                <div className="modal-box">
+                                    <h3 className="font-bold text-lg">{t("exercise_page.buttons.instructionBtn")}</h3>
+                                    <div className="py-4">
+                                        {instructions && Array.isArray(instructions) && instructions.length > 0 ? (
+                                            instructions.map((instruction, index) => (
+                                                <p
+                                                    key={index}
+                                                    className={`mb-2 ${
+                                                        index === instructions.length - 1 ? " mb-0" : ""
+                                                    }`}>
+                                                    {instruction}
+                                                </p>
+                                            ))
+                                        ) : (
+                                            <p className="mb-0">
+                                                [Instructions for this type of exercise is not yet translated. Please
+                                                update accordingly.]
+                                            </p>
+                                        )}
                                     </div>
+                                    <div className="modal-action">
+                                        <form method="dialog">
+                                            <button className="btn">{t("sound_page.closeBtn")}</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
 
-                                    <Button className="mb-2 mt-4" variant="primary" onClick={onBack}>
-                                        <ArrowLeftCircle /> {t("exercise_page.buttons.backBtn")}
-                                    </Button>
-                                </Card.Body>
-                            </Card>
-                        </Col>
+                            <button
+                                className="btn btn-neutral md:hidden block"
+                                onClick={() => document.getElementById("instructionModal").showModal()}>
+                                {t("exercise_page.buttons.expandBtn")}
+                            </button>
 
-                        <Col md={8}>
-                            <Card className="shadow-sm">
+                            <div className="collapse collapse-arrow bg-base-200 dark:bg-slate-700 hidden md:grid">
+                                <input type="checkbox" />
+                                <button className="collapse-title font-semibold text-start">
+                                    {t("exercise_page.buttons.expandBtn")}
+                                </button>
+                                <div className="collapse-content">
+                                    {instructions && Array.isArray(instructions) && instructions.length > 0 ? (
+                                        instructions.map((instruction, index) => (
+                                            <p
+                                                key={index}
+                                                className={`mb-2 ${index === instructions.length - 1 ? " mb-0" : ""}`}>
+                                                {instruction}
+                                            </p>
+                                        ))
+                                    ) : (
+                                        <p className="mb-0">
+                                            [Instructions for this type of exercise is not yet translated. Please update
+                                            accordingly.]
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <button className="btn btn-secondary my-8" onClick={onBack}>
+                                <BsChevronLeft className="h-5 w-5" /> {t("exercise_page.buttons.backBtn")}
+                            </button>
+                        </div>
+
+                        <div className="w-full md:w-2/3">
+                            <div className="card card-bordered dark:border-slate-600 shadow-md">
                                 {timeIsUp || quizCompleted || onMatchFinished ? (
                                     <>
-                                        <Card.Header className="fw-semibold">
-                                            {t("exercise_page.result.cardHeading")}
-                                        </Card.Header>
-                                        <Card.Body>
+                                        <div className="card-body">
+                                            <div className="font-semibold card-title justify-center">
+                                                {t("exercise_page.result.cardHeading")}
+                                            </div>
+                                            <div className="divider divider-secondary m-0"></div>
                                             {onMatchFinished ? <p>{t("exercise_page.result.matchUpFinished")}</p> : ""}
                                             {timeIsUp && !onMatchFinished ? (
                                                 <p>{t("exercise_page.result.timeUp")}</p>
@@ -394,24 +410,30 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                                     <p>{t("exercise_page.result.answerBottom")}</p>
                                                 </>
                                             ) : (
-                                                <p>{t("exercise_page.buttons.answerBottom")}</p>
+                                                <p>{t("exercise_page.result.answerBottom")}</p>
                                             )}
-                                            <Button variant="secondary" onClick={handleQuizRestart}>
-                                                <ArrowCounterclockwise /> {t("exercise_page.buttons.restartBtn")}
-                                            </Button>
-                                        </Card.Body>
+                                            <div className="card-actions justify-center">
+                                                <button className="btn btn-accent mt-4" onClick={handleQuizRestart}>
+                                                    <PiArrowsCounterClockwise className="h-5 w-5" />{" "}
+                                                    {t("exercise_page.buttons.restartBtn")}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </>
                                 ) : (
                                     <>{renderQuizComponent()}</>
                                 )}
-                            </Card>
+                            </div>
 
                             {timeIsUp || quizCompleted || currentExerciseType == "memory_match" ? (
                                 ""
                             ) : (
-                                <Card className="mt-4 shadow-sm">
-                                    <Card.Header className="fw-semibold">Review</Card.Header>
-                                    <Card.Body>
+                                <div className="card card-bordered dark:border-slate-600 shadow-md mt-4">
+                                    <div className="card-body">
+                                        <div className="font-semibold card-title justify-center">
+                                            {t("sound_page.reviewCard")}
+                                        </div>
+                                        <div className="divider divider-secondary m-0"></div>
                                         {score === 0 && totalAnswered === 0 ? (
                                             ""
                                         ) : (
@@ -425,11 +447,11 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                         ) : (
                                             <p>{t("exercise_page.result.tryAgainBottom")}</p>
                                         )}
-                                    </Card.Body>
-                                </Card>
+                                    </div>
+                                </div>
                             )}
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 </>
             )}
         </>

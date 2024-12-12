@@ -57,7 +57,7 @@ const ExercisePage = () => {
                 </div>
 
                 {/* Modal for small screens */}
-                <button className="btn btn-sm btn-info sm:hidden inline focus:ring-2">
+                <button type="button" title={t("exercise_page.buttons.expandBtn")} className="btn btn-sm btn-info sm:hidden inline focus:ring-2">
                     <IoInformationCircleOutline
                         className="h-5 w-5 cursor-pointer"
                         onClick={() => document.getElementById(modalId).showModal()}
@@ -69,7 +69,7 @@ const ExercisePage = () => {
                         <p className="py-4">{info}</p>
                         <div className="modal-action">
                             <form method="dialog">
-                                <button className="btn">{t("sound_page.closeBtn")}</button>
+                                <button type="button" className="btn">{t("sound_page.closeBtn")}</button>
                             </form>
                         </div>
                     </div>

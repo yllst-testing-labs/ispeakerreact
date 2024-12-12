@@ -339,13 +339,13 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                     </div>
                                     <div className="modal-action">
                                         <form method="dialog">
-                                            <button className="btn">{t("sound_page.closeBtn")}</button>
+                                            <button type="button" className="btn">{t("sound_page.closeBtn")}</button>
                                         </form>
                                     </div>
                                 </div>
                             </dialog>
 
-                            <button
+                            <button type="button"
                                 className="btn btn-neutral md:hidden block"
                                 onClick={() => document.getElementById("instructionModal").showModal()}>
                                 {t("exercise_page.buttons.expandBtn")}
@@ -353,7 +353,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
 
                             <div className="collapse collapse-arrow bg-base-200 dark:bg-slate-700 hidden md:grid">
                                 <input type="checkbox" />
-                                <button className="collapse-title font-semibold text-start">
+                                <button type="button" className="collapse-title font-semibold text-start">
                                     {t("exercise_page.buttons.expandBtn")}
                                 </button>
                                 <div className="collapse-content">
@@ -374,7 +374,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                 </div>
                             </div>
 
-                            <button className="btn btn-secondary my-8" onClick={onBack}>
+                            <button type="button" className="btn btn-secondary my-8" onClick={onBack}>
                                 <BsChevronLeft className="h-5 w-5" /> {t("exercise_page.buttons.backBtn")}
                             </button>
                         </div>
@@ -384,7 +384,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                 {timeIsUp || quizCompleted || onMatchFinished ? (
                                     <>
                                         <div className="card-body">
-                                            <div className="font-semibold card-title justify-center">
+                                            <div className="font-semibold card-title">
                                                 {t("exercise_page.result.cardHeading")}
                                             </div>
                                             <div className="divider divider-secondary m-0"></div>
@@ -413,7 +413,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                                 <p>{t("exercise_page.result.answerBottom")}</p>
                                             )}
                                             <div className="card-actions justify-center">
-                                                <button className="btn btn-accent mt-4" onClick={handleQuizRestart}>
+                                                <button type="button" className="btn btn-accent mt-4" onClick={handleQuizRestart}>
                                                     <PiArrowsCounterClockwise className="h-5 w-5" />{" "}
                                                     {t("exercise_page.buttons.restartBtn")}
                                                 </button>
@@ -430,7 +430,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                             ) : (
                                 <div className="card card-bordered dark:border-slate-600 shadow-md mt-4">
                                     <div className="card-body">
-                                        <div className="font-semibold card-title justify-center">
+                                        <div className="font-semibold card-title">
                                             {t("sound_page.reviewCard")}
                                         </div>
                                         <div className="divider divider-secondary m-0"></div>

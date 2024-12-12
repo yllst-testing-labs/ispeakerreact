@@ -16,15 +16,15 @@ import {
 } from "@dnd-kit/sortable";
 import _ from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card, Col, Row, Spinner } from "react-bootstrap";
-import { ArrowRightCircle, Check2Circle, VolumeUp, VolumeUpFill, XCircle } from "react-bootstrap-icons";
 import { useTranslation } from "react-i18next";
+import { IoVolumeHigh, IoVolumeHighOutline } from "react-icons/io5";
+import { LiaCheckCircle, LiaChevronCircleRightSolid, LiaTimesCircle } from "react-icons/lia";
 import { ShuffleArray } from "../../utils/ShuffleArray";
 import useCountdownTimer from "../../utils/useCountdownTimer";
 import SortableWord from "./SortableWord";
 
 const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
-    const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+    const [currentQuestionIndex, setcurrentQuestionIndex] = useState(0);
     const [shuffledQuiz, setShuffledQuiz] = useState([]);
     const [shuffledWords, setShuffledWords] = useState([]);
     const [audioItems, setAudioItems] = useState([]);
@@ -72,16 +72,16 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
     useEffect(() => {
         if (quiz?.length > 0) {
             setShuffledQuiz(filterAndShuffleQuiz(quiz));
-            setCurrentQuizIndex(0);
+            setcurrentQuestionIndex(0);
         }
     }, [quiz, filterAndShuffleQuiz]);
 
     useEffect(() => {
-        if (shuffledQuiz.length > 0 && currentQuizIndex < shuffledQuiz.length) {
-            loadQuiz(shuffledQuiz[currentQuizIndex]);
-            setIsLoading(new Array(shuffledQuiz[currentQuizIndex].audio.length).fill(false));
+        if (shuffledQuiz.length > 0 && currentQuestionIndex < shuffledQuiz.length) {
+            loadQuiz(shuffledQuiz[currentQuestionIndex]);
+            setIsLoading(new Array(shuffledQuiz[currentQuestionIndex].audio.length).fill(false));
         }
-    }, [shuffledQuiz, currentQuizIndex, loadQuiz]);
+    }, [shuffledQuiz, currentQuestionIndex, loadQuiz]);
 
     useEffect(() => {
         // Initialize the audioRef
@@ -219,8 +219,8 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
         // Reset audio state and element
         stopAudio();
 
-        if (currentQuizIndex < shuffledQuiz.length - 1) {
-            setCurrentQuizIndex(currentQuizIndex + 1);
+        if (currentQuestionIndex < shuffledQuiz.length - 1) {
+            setcurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
             onQuit();
             stopAudio();
@@ -236,48 +236,58 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
 
     return (
         <>
-            <Card.Header className="fw-semibold">
-                <div className="d-flex">
-                    <div className="me-auto">
-                        {t("exercise_page.questionNo")} #{currentQuizIndex + 1}
-                    </div>
-                    {timer > 0 && (
-                        <div className="ms-auto">
-                            {t("exercise_page.timer")} {formatTime()}
+            <div className="card-body">
+                <div className="font-semibold text-lg">
+                    {timer > 0 ? (
+                        <div className="flex items-center">
+                            <div className="flex-1 md:flex-none">
+                                {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
+                            </div>
+                            <div className="flex justify-end ms-auto">
+                                {t("exercise_page.timer")} {formatTime()}
+                            </div>
                         </div>
+                    ) : (
+                        <p>
+                            {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
+                        </p>
                     )}
                 </div>
-            </Card.Header>
-            <Card.Body>
-                <Row className="d-flex justify-content-center">
-                    <Col xs={2} md={2} className="d-flex justify-content-end">
-                        <div>
+                <div className="divider divider-secondary mt-0 mb-3"></div>
+                <div className="flex justify-center items-center gap-4 my-3">
+                    {/* Audio Buttons Column */}
+                    <div className="flex w-auto lg:w-2/5 2xl:w-1/3 justify-end">
+                        <div className="flex flex-col gap-4 items-center">
                             {audioItems.map((audio, index) => (
-                                <div key={index} className="mb-3">
-                                    <Button
-                                        variant="primary"
+                                <div key={index}>
+                                    <button
+                                        type="button"
+                                        title={t("exercise_page.buttons.playAudioBtn")}
+                                        className="btn btn-success btn-circle"
                                         onClick={() => handleAudioPlay(audio.src, index)}
                                         disabled={isLoading[index]}>
                                         {isLoading[index] ? (
-                                            <Spinner animation="border" size="sm" />
+                                            <span className="loading loading-spinner loading-md"></span>
                                         ) : isPlaying === index ? (
-                                            <VolumeUpFill />
+                                            <IoVolumeHigh className="h-6 w-6" />
                                         ) : (
-                                            <VolumeUp />
+                                            <IoVolumeHighOutline className="h-6 w-6" />
                                         )}
-                                    </Button>
+                                    </button>
                                 </div>
                             ))}
                         </div>
-                    </Col>
-                    <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        autoScroll={{ layoutShiftCompensation: false, enable: false }}
-                        onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}>
-                        <Col xs={6} md={4}>
-                            <div className="d-flex justify-content-center flex-column flex-wrap gap-2">
+                    </div>
+
+                    <div className="flex w-full lg:w-3/4 2xl:w-2/3">
+                        {/* Sortable Words Column */}
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            autoScroll={{ layoutShiftCompensation: false, enable: false }}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}>
+                            <div className="flex flex-col justify-start gap-4 w-full lg:w-3/4">
                                 <SortableContext
                                     items={shuffledWords.map((word) => word.id)}
                                     strategy={verticalListSortingStrategy}>
@@ -303,24 +313,30 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                                     ) : null}
                                 </DragOverlay>
                             </div>
-                        </Col>
-                    </DndContext>
-                </Row>
-
-                <div className="d-flex justify-content-end mt-3">
-                    <Button variant="success" onClick={handleSubmit} disabled={buttonsDisabled}>
-                        <Check2Circle /> {t("exercise_page.buttons.checkBtn")}
-                    </Button>
-                    {currentQuizIndex < shuffledQuiz.length - 1 && (
-                        <Button variant="secondary" className="ms-2" onClick={handleNextQuiz}>
-                            <ArrowRightCircle /> {t("exercise_page.buttons.nextBtn")}
-                        </Button>
-                    )}
-                    <Button variant="danger" className="ms-2" onClick={handleQuit}>
-                        <XCircle /> {t("exercise_page.buttons.quitBtn")}
-                    </Button>
+                        </DndContext>
+                    </div>
                 </div>
-            </Card.Body>
+
+                <div className="card-actions justify-center">
+                    <div className="flex flex-wrap justify-center my-3 gap-2">
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleSubmit}
+                            disabled={buttonsDisabled}>
+                            <LiaCheckCircle className="h-6 w-6" /> {t("exercise_page.buttons.checkBtn")}
+                        </button>
+                        {currentQuestionIndex < shuffledQuiz.length - 1 && (
+                            <button type="button" className="btn btn-accent" onClick={handleNextQuiz}>
+                                <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
+                            </button>
+                        )}
+                        <button type="button" className="btn btn-error" onClick={handleQuit}>
+                            <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

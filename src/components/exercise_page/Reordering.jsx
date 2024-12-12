@@ -11,15 +11,15 @@ import { SortableContext, arrayMove, horizontalListSortingStrategy } from "@dnd-
 import he from "he";
 import _ from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Button, Card, Col, Row, Spinner, Stack } from "react-bootstrap";
-import { ArrowRightCircle, Check2Circle, VolumeUp, VolumeUpFill, XCircle } from "react-bootstrap-icons";
 import { useTranslation } from "react-i18next";
+import { IoInformationCircleOutline, IoVolumeHigh, IoVolumeHighOutline } from "react-icons/io5";
+import { LiaCheckCircle, LiaChevronCircleRightSolid, LiaTimesCircle } from "react-icons/lia";
 import { ShuffleArray } from "../../utils/ShuffleArray";
 import useCountdownTimer from "../../utils/useCountdownTimer";
 import SortableWord from "./SortableWord";
 
 const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
-    const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+    const [currentQuestionIndex, setcurrentQuestionIndex] = useState(0);
     const [shuffledItems, setShuffledItems] = useState([]);
     const [activeId, setActiveId] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -100,16 +100,16 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
             // Filter out unique items and shuffle the quiz array
             const uniqueShuffledQuiz = filterAndShuffleQuiz(quiz);
             setShuffledQuizArray(uniqueShuffledQuiz);
-            // Reset currentQuizIndex to 0
-            setCurrentQuizIndex(0);
+            // Reset currentQuestionIndex to 0
+            setcurrentQuestionIndex(0);
         }
     }, [quiz]);
 
     useEffect(() => {
-        if (shuffledQuizArray.length > 0 && currentQuizIndex < shuffledQuizArray.length) {
-            loadQuiz(shuffledQuizArray[currentQuizIndex]);
+        if (shuffledQuizArray.length > 0 && currentQuestionIndex < shuffledQuizArray.length) {
+            loadQuiz(shuffledQuizArray[currentQuestionIndex]);
         }
-    }, [shuffledQuizArray, currentQuizIndex, loadQuiz]);
+    }, [shuffledQuizArray, currentQuestionIndex, loadQuiz]);
 
     useEffect(() => {
         return () => {
@@ -233,10 +233,10 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
 
         stopAudio();
 
-        if (currentQuizIndex < shuffledQuizArray.length - 1) {
-            setCurrentQuizIndex(currentQuizIndex + 1);
+        if (currentQuestionIndex < shuffledQuizArray.length - 1) {
+            setcurrentQuestionIndex(currentQuestionIndex + 1);
             setShowAlert(false);
-            loadQuiz(shuffledQuizArray[currentQuizIndex + 1]);
+            loadQuiz(shuffledQuizArray[currentQuestionIndex + 1]);
         } else {
             onQuit();
             stopAudio();
@@ -252,81 +252,106 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
 
     return (
         <>
-            <Card.Header className="fw-semibold">
-                <div className="d-flex">
-                    <div className="me-auto">{t("exercise_page.questionNo")} #{currentQuizIndex + 1}</div>
-                    {timer > 0 && <div className="ms-auto">{t("exercise_page.timer")} {formatTime()}</div>}
-                </div>
-            </Card.Header>
-            <Card.Body>
-                <Row className="d-flex justify-content-center g-3">
-                    <Col xs={12} className="d-flex justify-content-center">
-                        <Button variant="primary" onClick={handleAudioPlay} disabled={isLoading}>
-                            {isLoading ? (
-                                <Spinner animation="border" size="sm" />
-                            ) : isPlaying ? (
-                                <VolumeUpFill />
-                            ) : (
-                                <VolumeUp />
-                            )}
-                        </Button>
-                    </Col>
-                    <Col xs={12}>
-                        <div className="d-flex justify-content-center flex-row flex-wrap gap-2">
-                            <DndContext
-                                sensors={sensors}
-                                collisionDetection={closestCenter}
-                                onDragStart={handleDragStart}
-                                onDragEnd={handleDragEnd}>
-                                <SortableContext items={shuffledItems} strategy={horizontalListSortingStrategy}>
-                                    {shuffledItems.map((item) => (
-                                        <SortableWord
-                                            key={item.id}
-                                            word={{ text: he.encode(item.value), id: item.id }}
-                                            disabled={buttonsDisabled}
-                                            isCorrect={item.isCorrect ?? null}
-                                        />
-                                    ))}
-                                </SortableContext>
-                                <DragOverlay>
-                                    {activeId ? (
-                                        <SortableWord
-                                            key={activeId}
-                                            word={{
-                                                text: he.encode(
-                                                    shuffledItems.find((item) => item.id === activeId)?.value || ""
-                                                ),
-                                                id: activeId,
-                                            }}
-                                            isOverlay={true}
-                                        />
-                                    ) : null}
-                                </DragOverlay>
-                            </DndContext>
+            <div className="card-body">
+                <div className="font-semibold text-lg">
+                    {timer > 0 ? (
+                        <div className="flex items-center">
+                            <div className="flex-1 md:flex-none">
+                                {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
+                            </div>
+                            <div className="flex justify-end ms-auto">
+                                {t("exercise_page.timer")} {formatTime()}
+                            </div>
                         </div>
-                    </Col>
-                </Row>
-                {showAlert && (
-                    <Alert variant="info" className="mt-2">
-                        {t("exercise_page.result.correctAnswer")} <span className="fw-bold fst-italic">{correctAnswer}</span>
-                    </Alert>
-                )}
-                <div className="d-flex justify-content-end mt-3">
-                    <Stack direction="horizontal" gap={2}>
-                        <Button variant="success" onClick={handleSubmit} disabled={buttonsDisabled}>
-                            <Check2Circle /> {t("exercise_page.buttons.checkBtn")}
-                        </Button>
-                        {currentQuizIndex < quiz.length - 1 && (
-                            <Button variant="secondary" onClick={handleNextQuiz}>
-                                <ArrowRightCircle /> {t("exercise_page.buttons.nextBtn")}
-                            </Button>
-                        )}
-                        <Button variant="danger" onClick={handleQuit}>
-                            <XCircle /> {t("exercise_page.buttons.quitBtn")}
-                        </Button>
-                    </Stack>
+                    ) : (
+                        <p>
+                            {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
+                        </p>
+                    )}
                 </div>
-            </Card.Body>
+                <div className="divider divider-secondary m-0"></div>
+
+                <div className="flex justify-center my-3">
+                    <button
+                        type="button"
+                        title={t("exercise_page.buttons.playAudioBtn")}
+                        className="btn btn-circle btn-success"
+                        onClick={handleAudioPlay}
+                        disabled={isLoading}>
+                        {isLoading ? (
+                            <span className="loading loading-spinner loading-md"></span>
+                        ) : isPlaying ? (
+                            <IoVolumeHigh className="h-6 w-6" />
+                        ) : (
+                            <IoVolumeHighOutline className="h-6 w-6" />
+                        )}
+                    </button>
+                </div>
+
+                <div className="flex flex-row flex-wrap gap-2 justify-center my-3">
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}>
+                        <SortableContext items={shuffledItems} strategy={horizontalListSortingStrategy}>
+                            {shuffledItems.map((item) => (
+                                <SortableWord
+                                    key={item.id}
+                                    word={{ text: he.encode(item.value), id: item.id }}
+                                    disabled={buttonsDisabled}
+                                    isCorrect={item.isCorrect ?? null}
+                                />
+                            ))}
+                        </SortableContext>
+                        <DragOverlay>
+                            {activeId ? (
+                                <SortableWord
+                                    key={activeId}
+                                    word={{
+                                        text: he.encode(
+                                            shuffledItems.find((item) => item.id === activeId)?.value || ""
+                                        ),
+                                        id: activeId,
+                                    }}
+                                    isOverlay={true}
+                                />
+                            ) : null}
+                        </DragOverlay>
+                    </DndContext>
+                </div>
+
+                {showAlert && (
+                    <div className="flex justify-center">
+                        <div role="alert" className="alert alert-info w-full lg:w-1/2 flex my-4 gap-1 md:gap-2">
+                            <IoInformationCircleOutline className="h-6 w-6 " />
+                            <div className="w-4/5 lg:w-auto">
+                                <h3>{t("exercise_page.result.correctAnswer")}</h3>
+                                <p className="italic font-bold text-xl">{correctAnswer}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <div className="card-actions justify-center">
+                    <div className="flex flex-wrap justify-center my-3 gap-2">
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleSubmit}
+                            disabled={buttonsDisabled}>
+                            <LiaCheckCircle className="h-6 w-6" /> {t("exercise_page.buttons.checkBtn")}
+                        </button>
+                        {currentQuestionIndex < quiz.length - 1 && (
+                            <button type="button" className="btn btn-accent" onClick={handleNextQuiz}>
+                                <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
+                            </button>
+                        )}
+                        <button type="button" className="btn btn-error" onClick={handleQuit}>
+                            <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

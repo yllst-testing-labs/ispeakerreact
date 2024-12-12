@@ -71,15 +71,7 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
         setHasAnswered(true);
         setShowValidation(true);
         setValidationVariant(isCorrect ? "success" : "danger");
-        setValidationMessage(
-            isCorrect ? (
-                ""
-            ) : (
-                <>
-                    {t("exercise_page.result.correctAnswer")} <span className="font-bold italic">{correctAnswer}</span>
-                </>
-            )
-        );
+        setValidationMessage(isCorrect ? "" : correctAnswer);
 
         onAnswer(isCorrect, "single");
     };
@@ -218,11 +210,11 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
 
     return (
         <>
-            <div className={`card-body p-4 md:p-8 ${timer <= 0 ? "text-center" : ""}`}>
-                <div className="font-semibold justify-center">
+            <div className="card-body">
+                <div className="font-semibold text-lg">
                     {timer > 0 ? (
                         <div className="flex items-center">
-                            <div className="flex-1 md:flex-none md:justify-center md:text-center">
+                            <div className="flex-1 md:flex-none">
                                 {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
                             </div>
                             <div className="flex justify-end ms-auto">
@@ -238,6 +230,8 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                 <div className="divider divider-secondary m-0"></div>
                 <div className="flex justify-center">
                     <button
+                        type="button"
+                        title={t("exercise_page.buttons.playAudioBtn")}
                         onClick={handleAudioPlay}
                         className="btn btn-success btn-circle my-3"
                         disabled={isLoading}>
@@ -255,27 +249,30 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                 </form>
                 {showValidation && validationVariant === "danger" && (
                     <div className="flex justify-center">
-                        <div role="alert" className="alert alert-info w-auto flex my-4 gap-1 md:gap-2">
-                            <IoInformationCircleOutline className="h-6 w-6" />
-                            <span>{validationMessage}</span>
+                        <div role="alert" className="alert alert-info w-full lg:w-1/2 flex my-4 gap-1 md:gap-2">
+                            <IoInformationCircleOutline className="h-6 w-6 " />
+                            <div className="w-4/5 lg:w-auto">
+                                <h3>{t("exercise_page.result.correctAnswer")}</h3>
+                                <p className="font-bold italic text-xl">{validationMessage}</p>
+                            </div>
                         </div>
                     </div>
                 )}
                 <div className="card-actions justify-center">
                     <div className="flex flex-wrap justify-center my-3 gap-2">
                         <button
-                            type="submit"
+                            type="button"
                             className="btn btn-primary"
                             disabled={isSubmitButtonEnabled}
                             onClick={handleSubmit}>
                             <LiaCheckCircle className="h-6 w-6" /> {t("exercise_page.buttons.checkBtn")}
                         </button>
                         {currentQuestionIndex < quiz.length - 1 && (
-                            <button className="btn btn-accent" onClick={handleNext}>
+                            <button type="button" className="btn btn-accent" onClick={handleNext}>
                                 <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
                             </button>
                         )}
-                        <button className="btn btn-error" onClick={handleQuit}>
+                        <button type="button" className="btn btn-error" onClick={handleQuit}>
                             <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
                         </button>
                     </div>

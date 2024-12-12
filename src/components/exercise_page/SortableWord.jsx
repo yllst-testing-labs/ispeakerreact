@@ -2,8 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import he from "he";
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { CheckCircleFill, XCircleFill } from "react-bootstrap-icons";
+import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
 const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
     const [itemWidth, setItemWidth] = useState(null);
@@ -31,26 +30,21 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const variant = isOverlay
-        ? "secondary"
-        : isCorrect === null
-        ? "outline-secondary"
-        : isCorrect
-        ? "success"
-        : "danger";
+    const btnVariant = isOverlay ? "" : isCorrect === null ? "outline" : isCorrect ? "success" : "error";
 
     const trueFalse = isOverlay ? (
         ""
     ) : isCorrect === null ? (
         ""
     ) : isCorrect ? (
-        <CheckCircleFill className="ms-2" />
+        <BsCheckCircleFill className="h-5 w-5" />
     ) : (
-        <XCircleFill className="ms-2" />
+        <BsXCircleFill className="h-5 w-5" />
     );
 
     return (
-        <Button
+        <button
+            type="button"
             ref={(node) => {
                 setNodeRef(node);
                 ref.current = node;
@@ -58,13 +52,12 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
             style={style}
             {...attributes}
             {...listeners}
-            variant={variant}
-            className={`${item ? "w-100 " : ""}mb-2 text-center fw-bold ${
+            className={`btn no-animation btn-${btnVariant} text-lg ${item ? "min-w-full " : ""} ${
                 isDragging && !disabled ? " opacity-50" : ""
-            } ${disabled ? "pe-none" : ""} ${isOverlay ? "z-2 shadow-sm" : ""}`}>
+            } ${disabled ? "pointer-events-none" : ""} ${isOverlay ? "z-2 shadow-lg" : ""}`}>
             {he.decode(word?.text || item?.value)}
             {trueFalse}
-        </Button>
+        </button>
     );
 };
 

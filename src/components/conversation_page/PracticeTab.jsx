@@ -4,8 +4,9 @@ import { Floppy, PlayCircle, RecordCircle, StopCircle, Trash } from "react-boots
 import { useTranslation } from "react-i18next";
 import { checkRecordingExists, openDatabase, playRecording, saveRecording } from "../../utils/databaseOperations";
 import { isElectron } from "../../utils/isElectron";
+import { sonnerErrorToast, sonnerSuccessToast, sonnerWarningToast } from "../../utils/sonnerCustomToast";
 
-const PracticeTab = ({ accent, conversationId, setToastMessage, setShowToast }) => {
+const PracticeTab = ({ accent, conversationId }) => {
     const { t } = useTranslation();
 
     const [textValue, setTextValue] = useState("");
@@ -70,13 +71,11 @@ const PracticeTab = ({ accent, conversationId, setToastMessage, setShowToast }) 
             const request = store.put({ id: textKey, text: textValue });
 
             request.onsuccess = () => {
-                setToastMessage(t("toast.textSaveSuccess"));
-                setShowToast(true);
+                sonnerSuccessToast(t("toast.textSaveSuccess"));
             };
             request.onerror = (error) => {
                 isElectron() && window.electron.log("error", `Error saving text: ${error}`);
-                setToastMessage(t("toast.textSaveFailed") + error.message);
-                setShowToast(true);
+                sonnerErrorToast(t("toast.textSaveFailed") + error.message);
             };
         } catch (error) {
             console.error("Error saving text: ", error);
@@ -94,19 +93,16 @@ const PracticeTab = ({ accent, conversationId, setToastMessage, setShowToast }) 
 
             request.onsuccess = () => {
                 setTextValue("");
-                setToastMessage(t("toast.textClearSuccess"));
-                setShowToast(true);
+                sonnerSuccessToast(t("toast.textClearSuccess"));
             };
             request.onerror = (error) => {
-                setToastMessage(t("toast.textClearFailed") + error.message);
+                sonnerErrorToast(t("toast.textClearFailed") + error.message);
                 isElectron() && window.electron.log("error", `Error clearing text: ${error}`);
-                setShowToast(true);
             };
         } catch (error) {
             console.error("Error clearing text: ", error);
             isElectron() && window.electron.log("error", `Error clearing text: ${error}`);
-            setToastMessage(t("toast.textClearFailed") + error.message);
-            setShowToast(true);
+            sonnerErrorToast(t("toast.textClearFailed") + error.message);
         }
     };
 
@@ -131,9 +127,9 @@ const PracticeTab = ({ accent, conversationId, setToastMessage, setShowToast }) 
                         if (mediaRecorder.state === "inactive") {
                             const audioBlob = new Blob(audioChunks, { type: event.data.type });
                             saveRecording(audioBlob, recordingKey, event.data.type);
-                            setToastMessage(t("toast.recordingSuccess"));
+                            sonnerSuccessToast(t("toast.recordingSuccess"));
                             isElectron() && window.electron.log("log", `Recording saved: ${recordingKey}`);
-                            setShowToast(true);
+
                             setRecordingExists(true);
                             audioChunks = [];
                         }
@@ -143,16 +139,14 @@ const PracticeTab = ({ accent, conversationId, setToastMessage, setShowToast }) 
                     setTimeout(() => {
                         if (mediaRecorder.state !== "inactive") {
                             mediaRecorder.stop();
-                            setToastMessage(t("toast.recordingExceeded"));
-                            setShowToast(true);
+                            sonnerWarningToast(t("toast.recordingExceeded"));
                             setIsRecording(false);
                         }
                     }, 15 * 60 * 1000);
                 })
                 .catch((error) => {
-                    setToastMessage(t("toast.recordingFailed") + error.message);
+                    sonnerErrorToast(t("toast.recordingFailed") + error.message);
                     isElectron() && window.electron.log("error", `Recording failed: ${error}`);
-                    setShowToast(true);
                 });
         } else {
             // Stop recording
@@ -186,9 +180,9 @@ const PracticeTab = ({ accent, conversationId, setToastMessage, setShowToast }) 
                     }
                 },
                 (error) => {
-                    setToastMessage(t("toast.playbackError") + error.message);
+                    sonnerErrorToast(t("toast.playbackError") + error.message);
                     isElectron() && window.electron.log("error", `Error saving text: ${error}`);
-                    setShowToast(true);
+
                     setIsRecordingPlaying(false);
                 },
                 () => {

@@ -4,7 +4,6 @@ import { ArrowLeftCircle, CameraVideo, CardChecklist, ChatDots, Headphones, Info
 import { useTranslation } from "react-i18next";
 import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
-import ToastNotification from "../general/ToastNotification";
 import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 import ListeningTab from "./ListeningTab";
 import PracticeTab from "./PracticeTab";
@@ -17,9 +16,6 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
     const [activeTab, setActiveTab] = useState("#watch_and_study");
     const [examData, setExamData] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
 
     const [videoUrl, setVideoUrl] = useState(null);
     const [videoLoading, setVideoLoading] = useState(true);
@@ -196,19 +192,11 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                             accent={accent}
                             taskData={examDetails.practise.task}
                             tips={examDetails.practise.tips}
-                            setToastMessage={setToastMessage}
-                            setShowToast={setShowToast}
                         />
                     )}
                     {activeTab === "#review" && <ReviewTab reviews={examDetails.reviews} examId={id} accent={accent} />}
                 </Card.Body>
             </Card>
-            <ToastNotification
-                show={showToast}
-                onClose={() => setShowToast(false)}
-                message={toastMessage}
-                variant="warning"
-            />
         </>
     );
 };

@@ -4,7 +4,6 @@ import { ArrowLeftCircle, CameraVideo, CardChecklist, ChatDots, Headphones } fro
 import { useTranslation } from "react-i18next";
 import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
-import ToastNotification from "../general/ToastNotification";
 import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 import ListeningTab from "./ListeningTab";
 import PracticeTab from "./PracticeTab";
@@ -17,9 +16,6 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
     const [activeTab, setActiveTab] = useState("#watch_and_study");
     const [loading, setLoading] = useState(true);
     const [accentData, setAccentData] = useState(null);
-
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
 
     const [videoUrl, setVideoUrl] = useState(null);
     const [videoLoading, setVideoLoading] = useState(true);
@@ -164,14 +160,7 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
 
                         {activeTab === "#listen" && <ListeningTab sentences={accentData.listen.subtopics} />}
 
-                        {activeTab === "#practice" && (
-                            <PracticeTab
-                                accent={accent}
-                                conversationId={id}
-                                setToastMessage={setToastMessage}
-                                setShowToast={setShowToast}
-                            />
-                        )}
+                        {activeTab === "#practice" && <PracticeTab accent={accent} conversationId={id} />}
 
                         {activeTab === "#review" && (
                             <ReviewTab reviews={accentData.reviews} accent={accent} conversationId={id} />
@@ -179,13 +168,6 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                     </Card.Body>
                 </Card>
             )}
-
-            <ToastNotification
-                show={showToast}
-                onClose={() => setShowToast(false)}
-                message={toastMessage}
-                variant="warning"
-            />
         </>
     );
 };

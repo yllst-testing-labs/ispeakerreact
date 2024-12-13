@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Card, Col, ListGroup, Row, Spinner } from "react-bootstrap";
 import { VolumeUp, VolumeUpFill } from "react-bootstrap-icons";
 import { useTranslation } from "react-i18next";
-import ToastNotification from "../general/ToastNotification";
+import { sonnerErrorToast } from "../../utils/sonnerCustomToast";
 
 const ListeningTab = ({ subtopicsBre, subtopicsAme, currentAccent }) => {
     const { t } = useTranslation();
@@ -11,9 +11,6 @@ const ListeningTab = ({ subtopicsBre, subtopicsAme, currentAccent }) => {
     const [playingIndex, setPlayingIndex] = useState(null);
     const [currentAudio, setCurrentAudio] = useState(null);
     const [loadingIndex, setLoadingIndex] = useState(null);
-
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
 
     const subtopics = currentAccent === "american" ? subtopicsAme : subtopicsBre;
 
@@ -76,7 +73,7 @@ const ListeningTab = ({ subtopicsBre, subtopicsAme, currentAccent }) => {
                         setCurrentAudio(null);
                         setPlayingIndex(null);
                         console.log("Audio loading error");
-                        alert(t("toast.audioPlayFailed"));
+                        sonnerErrorToast(t("toast.audioPlayFailed"));
                     };
 
                     setCurrentAudio(audio);
@@ -86,8 +83,7 @@ const ListeningTab = ({ subtopicsBre, subtopicsAme, currentAccent }) => {
                         console.log("Audio loading aborted");
                     } else {
                         console.error("Error loading audio:", error);
-                        setToastMessage(t("toast.audioPlayFailed"));
-                        setShowToast(true);
+                        sonnerErrorToast(t("toast.audioPlayFailed"));
                     }
                     setLoadingIndex(null);
                     setCurrentAudio(null);
@@ -165,12 +161,6 @@ const ListeningTab = ({ subtopicsBre, subtopicsAme, currentAccent }) => {
                     </Col>
                 ))}
             </Row>
-            <ToastNotification
-                show={showToast}
-                onClose={() => setShowToast(false)}
-                message={toastMessage}
-                variant="warning"
-            />
         </>
     );
 };

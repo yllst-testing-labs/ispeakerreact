@@ -4,8 +4,9 @@ import { Floppy, PlayCircle, RecordCircle, StopCircle, Trash } from "react-boots
 import { useTranslation } from "react-i18next";
 import { checkRecordingExists, openDatabase, playRecording, saveRecording } from "../../utils/databaseOperations";
 import { isElectron } from "../../utils/isElectron";
+import { sonnerErrorToast, sonnerSuccessToast, sonnerWarningToast } from "../../utils/sonnerCustomToast";
 
-const PracticeTab = ({ accent, examId, taskData, tips, setToastMessage, setShowToast }) => {
+const PracticeTab = ({ accent, examId, taskData, tips }) => {
     const { t } = useTranslation();
 
     const [textValues, setTextValues] = useState(() => taskData.map(() => ""));
@@ -77,14 +78,12 @@ const PracticeTab = ({ accent, examId, taskData, tips, setToastMessage, setShowT
             const request = store.put({ id: textKey, text: textValues[index] });
 
             request.onsuccess = () => {
-                setToastMessage(t("toast.textSaveSuccess"));
-                setShowToast(true);
+                sonnerSuccessToast(t("toast.textSaveSuccess"));
             };
             request.onerror = (error) => {
                 console.error("Error saving text: ", error);
                 isElectron() && window.electron.log("error", `Error saving text: ${error}`);
-                setToastMessage(t("toast.textSaveFailed") + error.message);
-                setShowToast(true);
+                sonnerErrorToast(t("toast.textSaveFailed") + error.message);
             };
         } catch (error) {
             console.error("Error saving text: ", error);
@@ -108,20 +107,17 @@ const PracticeTab = ({ accent, examId, taskData, tips, setToastMessage, setShowT
                     return updated;
                 });
                 console.log("Text cleared successfully.");
-                setToastMessage(t("toast.textClearSuccess"));
-                setShowToast(true);
+                sonnerSuccessToast(t("toast.textClearSuccess"));
             };
             request.onerror = (error) => {
                 console.error("Error clearing text: ", error);
                 isElectron() && window.electron.log("error", `Error clearing text: ${error}`);
-                setToastMessage(t("toast.textClearFailed") + error.message);
-                setShowToast(true);
+                sonnerErrorToast(t("toast.textClearFailed") + error.message);
             };
         } catch (error) {
             console.error("Error clearing text: ", error);
             isElectron() && window.electron.log("error", `Error clearing text: ${error}`);
-            setToastMessage(t("toast.textClearFailed") + error.message);
-            setShowToast(true);
+            sonnerErrorToast(t("toast.textClearFailed") + error.message);
         }
     };
 
@@ -146,9 +142,9 @@ const PracticeTab = ({ accent, examId, taskData, tips, setToastMessage, setShowT
                             const audioBlob = new Blob(audioChunks, { type: event.data.type });
                             const recordingKey = `${accent}-exam-${examId}-${index}`;
                             saveRecording(audioBlob, recordingKey, event.data.type);
-                            setToastMessage(t("toast.recordingSuccess"));
+                            sonnerSuccessToast(t("toast.recordingSuccess"));
                             isElectron() && window.electron.log("log", `Recording saved: ${recordingKey}`);
-                            setShowToast(true);
+
                             setRecordingExists((prev) => {
                                 const updatedExists = [...prev];
                                 updatedExists[index] = true;
@@ -163,15 +159,13 @@ const PracticeTab = ({ accent, examId, taskData, tips, setToastMessage, setShowT
                             mediaRecorder.stop();
                             setIsRecording(false);
                             setActiveTaskIndex(null);
-                            setToastMessage(t("toast.recordingExceeded"));
-                            setShowToast(true);
+                            sonnerWarningToast(t("toast.recordingExceeded"));
                         }
                     }, 15 * 60 * 1000); // 15 minutes limit
                 })
                 .catch((error) => {
-                    setToastMessage(t("toast.recordingFailed") + error.message);
+                    sonnerErrorToast(t("toast.recordingFailed") + error.message);
                     isElectron() && window.electron.log("error", `Recording failed: ${error}`);
-                    setShowToast(true);
                 });
         } else {
             mediaRecorder.stop();
@@ -207,7 +201,7 @@ const PracticeTab = ({ accent, examId, taskData, tips, setToastMessage, setShowT
                     }
                 },
                 (error) => {
-                    setToastMessage(t("toast.playbackError") + error.message);
+                    sonnerErrorToast(t("toast.playbackError") + error.message);
                     isElectron() && window.electron.log("error", `Error during playback: ${error}`);
                     setIsRecordingPlaying(false);
                     setActiveTaskIndex(null);

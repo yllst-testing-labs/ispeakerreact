@@ -10,7 +10,7 @@ import { useTheme } from "../../utils/ThemeContext/useTheme";
 const TopNavBar = () => {
     const { t } = useTranslation();
     const { theme } = useTheme();
-    const [currentTheme, setCurrentTheme] = useState(theme);
+    const [, setCurrentTheme] = useState(theme);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
@@ -42,7 +42,7 @@ const TopNavBar = () => {
         ? `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background-darkmode.svg`
         : `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background.svg`;
 
-    const navbarClass = isDarkMode ? "bg-slate-600/50" : "bg-lime-300/50";
+    const navbarClass = isDarkMode ? "bg-slate-600 md:bg-slate-600/50" : "bg-lime-300 md:bg-lime-300/50";
 
     const menuItems = [
         { to: "/", icon: <House />, label: t("navigation.home") },
@@ -55,7 +55,7 @@ const TopNavBar = () => {
 
     return (
         <nav
-            className={`navbar sticky top-0 z-[300] w-full backdrop-blur-md backdrop-brightness-125 backdrop-saturate-200 flex-none ${navbarClass}`}>
+            className={`navbar sticky top-0 z-[300] w-full backdrop-blur-none md:backdrop-blur-md backdrop-brightness-100 md:backdrop-brightness-125 backdrop-saturate-200 flex-none ${navbarClass}`}>
             <div className="navbar md:navbar-start">
                 {/* Mobile Drawer */}
                 <div className="lg:hidden">

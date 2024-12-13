@@ -10,7 +10,7 @@ import { useTheme } from "../../utils/ThemeContext/useTheme";
 const TopNavBar = () => {
     const { t } = useTranslation();
     const { theme } = useTheme();
-    const [currentTheme, setCurrentTheme] = useState(theme);
+    const [, setCurrentTheme] = useState(theme);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {

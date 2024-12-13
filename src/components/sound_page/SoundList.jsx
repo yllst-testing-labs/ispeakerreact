@@ -11,9 +11,20 @@ import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offli
 
 const PracticeSound = lazy(() => import("./PracticeSound"));
 
-const SoundCard = ({ sound, index, accent, handlePracticeClick, getBadgeColor, getReviewText, t }) => {
+const SoundCard = ({
+    sound,
+    index,
+    selectedAccent,
+    handlePracticeClick,
+    getBadgeColor,
+    getReviewText,
+    getReviewKey,
+    reviews,
+    t,
+}) => {
     const badgeColor = getBadgeColor(sound, index);
-    const reviewText = badgeColor ? getReviewText(reviews[getReviewKey(sound, index)]) : null;
+    const reviewKey = getReviewKey(sound, index);
+    const reviewText = badgeColor ? getReviewText(reviews[reviewKey]) : null;
 
     return (
         <div className="indicator">
@@ -26,7 +37,7 @@ const SoundCard = ({ sound, index, accent, handlePracticeClick, getBadgeColor, g
                 <div className="card-actions px-6">
                     <button
                         className="btn btn-primary w-full"
-                        onClick={() => handlePracticeClick(sound, accent, index)}
+                        onClick={() => handlePracticeClick(sound, selectedAccent, index)}
                         aria-label={t("sound_page.practiceBtn", { sound: he.decode(sound.phoneme) })}>
                         {t("sound_page.practiceBtn")}
                     </button>
@@ -52,12 +63,19 @@ const SoundList = () => {
     const [reviewsUpdateTrigger, setReviewsUpdateTrigger] = useState(0);
 
     useEffect(() => {
-        const ispeakerData = JSON.parse(localStorage.getItem("ispeaker") || "{}");
-        const accentReviews = ispeakerData.soundReview?.[selectedAccent] || {};
-        setReviews(accentReviews);
+        const fetchReviews = () => {
+            const ispeakerData = JSON.parse(localStorage.getItem("ispeaker") || "{}");
+            const accentReviews = ispeakerData.soundReview?.[selectedAccent] || {};
+            setReviews(accentReviews);
+        };
+        fetchReviews();
     }, [selectedAccent, reviewsUpdateTrigger]);
 
     const triggerReviewsUpdate = () => setReviewsUpdateTrigger((prev) => prev + 1);
+
+    const handlePracticeClick = (sound, accent, index) => {
+        setSelectedSound({ sound, accent, index });
+    };
 
     const handleGoBack = () => {
         setSelectedSound(null);
@@ -81,7 +99,18 @@ const SoundList = () => {
         );
     };
 
-    const getReviewText = (review) => t(`sound_page.review${review?.charAt(0).toUpperCase() + review?.slice(1)}`);
+    const getReviewText = (review) => {
+        switch (review) {
+            case "good":
+                return t("sound_page.reviewGood");
+            case "neutral":
+                return t("sound_page.reviewNeutral");
+            case "bad":
+                return t("sound_page.reviewBad");
+            default:
+                return "";
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -111,7 +140,7 @@ const SoundList = () => {
         };
 
         fetchData();
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         document.title = `${t("navigation.sounds")} | iSpeakerReact v${__APP_VERSION__}`;
@@ -134,8 +163,8 @@ const SoundList = () => {
                 {selectedSound ? (
                     <Suspense fallback={isElectron() ? null : <LoadingOverlay />}>
                         <PracticeSound
-                            sound={selectedSound}
-                            accent={selectedAccent}
+                            sound={selectedSound.sound}
+                            accent={selectedSound.accent}
                             soundsData={soundsData}
                             index={selectedSound.index}
                             onBack={handleGoBack}
@@ -175,16 +204,18 @@ const SoundList = () => {
                                             </ul>
                                         </div>
                                     </div>
-                                    <div className="mt-4 flex flex-wrap justify-center gap-7 mb-10">
+                                    <div className="grid grid-cols-2 md:flex md:flex-wrap justify-center gap-5 place-items-center my-4">
                                         {filteredSounds.map((sound, index) => (
                                             <SoundCard
                                                 key={index}
                                                 sound={sound}
                                                 index={index}
-                                                accent={selectedAccent}
-                                                handlePracticeClick={setSelectedSound}
+                                                selectedAccent={selectedAccent}
+                                                handlePracticeClick={handlePracticeClick}
                                                 getBadgeColor={getBadgeColor}
                                                 getReviewText={getReviewText}
+                                                reviews={reviews}
+                                                getReviewKey={getReviewKey}
                                                 t={t}
                                             />
                                         ))}

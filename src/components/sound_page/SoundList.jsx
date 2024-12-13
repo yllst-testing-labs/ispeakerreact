@@ -8,44 +8,9 @@ import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
 import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
+import SoundCardList from "./SoundCardList";
 
 const PracticeSound = lazy(() => import("./PracticeSound"));
-
-const SoundCard = ({
-    sound,
-    index,
-    selectedAccent,
-    handlePracticeClick,
-    getBadgeColor,
-    getReviewText,
-    getReviewKey,
-    reviews,
-    t,
-}) => {
-    const badgeColor = getBadgeColor(sound, index);
-    const reviewKey = getReviewKey(sound, index);
-    const reviewText = badgeColor ? getReviewText(reviews[reviewKey]) : null;
-
-    return (
-        <div className="indicator">
-            {badgeColor && <span className={`indicator-item indicator-center badge ${badgeColor}`}>{reviewText}</span>}
-            <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6">
-                <div className="card-body items-center text-center flex-grow">
-                    <h2 className="card-title">{he.decode(sound.phoneme)}</h2>
-                    <p>{sound.example_word}</p>
-                </div>
-                <div className="card-actions px-6">
-                    <button
-                        className="btn btn-primary w-full"
-                        onClick={() => handlePracticeClick(sound, selectedAccent, index)}
-                        aria-label={t("sound_page.practiceBtn", { sound: he.decode(sound.phoneme) })}>
-                        {t("sound_page.practiceBtn")}
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const SoundList = () => {
     const { t } = useTranslation();
@@ -180,7 +145,7 @@ const SoundList = () => {
                                 <>
                                     <div className="sticky top-[calc(5rem)] z-10 py-8 bg-base-100">
                                         <div className="flex justify-center">
-                                            <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
+                                            <ul className="menu menu-horizontal bg-base-200 dark:bg-base-100 rounded-box w-auto">
                                                 <li>
                                                     <button
                                                         type="button"
@@ -206,7 +171,7 @@ const SoundList = () => {
                                     </div>
                                     <div className="grid grid-cols-2 md:flex md:flex-wrap justify-center gap-5 place-items-center my-4">
                                         {filteredSounds.map((sound, index) => (
-                                            <SoundCard
+                                            <SoundCardList
                                                 key={index}
                                                 sound={sound}
                                                 index={index}

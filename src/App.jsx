@@ -15,7 +15,18 @@ const ExercisePage = lazy(() => import("./components/exercise_page/ExercisePage"
 const SettingsPage = lazy(() => import("./components/setting_page/Settings"));
 
 const RouterComponent = isElectron() ? HashRouter : BrowserRouter;
-const baseUrl = import.meta.env.BASE_URL;
+// Ensure baseUrl does not add unnecessary slashes
+const baseUrl = isElectron()
+    ? ""
+    : (() => {
+          switch (import.meta.env.BASE_URL) {
+              case "/":
+              case "./":
+                  return ""; // Use no basename for "/" or "./"
+              default:
+                  return import.meta.env.BASE_URL;
+          }
+      })();
 
 const AppContent = () => {
     const { theme } = useTheme();

@@ -30,17 +30,12 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const btnVariant = isOverlay ? "" : isCorrect === null ? "outline" : isCorrect ? "success" : "error";
+    const btnVariant = isOverlay ? "" : isCorrect === null ? "btn-outline" : isCorrect ? "btn-success" : "btn-error";
 
-    const trueFalse = isOverlay ? (
-        ""
-    ) : isCorrect === null ? (
-        ""
-    ) : isCorrect ? (
-        <BsCheckCircleFill className="h-5 w-5" />
-    ) : (
-        <BsXCircleFill className="h-5 w-5" />
-    );
+    const renderTrueFalseIcon = () => {
+        if (isOverlay || isCorrect === null) return null;
+        return isCorrect ? <BsCheckCircleFill className="h-5 w-5" /> : <BsXCircleFill className="h-5 w-5" />;
+    };
 
     return (
         <button
@@ -52,11 +47,11 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
             style={style}
             {...attributes}
             {...listeners}
-            className={`btn no-animation btn-${btnVariant} text-lg ${item ? "min-w-full " : ""} ${
+            className={`btn no-animation ${btnVariant} text-lg ${item ? "min-w-full " : ""} ${
                 isDragging && !disabled ? " opacity-50" : ""
             } ${disabled ? "pointer-events-none" : ""} ${isOverlay ? "z-2 shadow-lg" : ""}`}>
             {he.decode(word?.text || item?.value)}
-            {trueFalse}
+            {renderTrueFalseIcon()}
         </button>
     );
 };

@@ -27,9 +27,9 @@ const SoundCard = ({
     const reviewText = badgeColor ? getReviewText(reviews[reviewKey]) : null;
 
     return (
-        <div className="indicator" style={{ willChange: "box-shadow" }}>
+        <div className="indicator">
             {badgeColor && <span className={`indicator-item indicator-center badge ${badgeColor}`}>{reviewText}</span>}
-            <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6">
+            <div className="card card-bordered dark:border-slate-600 flex flex-col justify-between h-auto pb-6">
                 <div className="card-body items-center text-center flex-grow">
                     <h2 className="card-title">{he.decode(sound.phoneme)}</h2>
                     <p>{sound.example_word}</p>

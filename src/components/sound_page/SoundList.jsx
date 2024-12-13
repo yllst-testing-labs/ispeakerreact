@@ -27,7 +27,7 @@ const SoundCard = ({
     const reviewText = badgeColor ? getReviewText(reviews[reviewKey]) : null;
 
     return (
-        <div className="indicator">
+        <div className="indicator" style={{ willChange: "box-shadow" }}>
             {badgeColor && <span className={`indicator-item indicator-center badge ${badgeColor}`}>{reviewText}</span>}
             <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6">
                 <div className="card-body items-center text-center flex-grow">

@@ -1,7 +1,7 @@
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { isElectron } from "../../utils/isElectron";
 
-export const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) => {
+const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) => {
     return (
         <div className={`${iframeLoadingStates.modalIframe ? "overflow-hidden" : ""}`}>
             <div className="card card-bordered dark:border-slate-600 shadow-md w-full mb-6">
@@ -46,3 +46,5 @@ export const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeL
         </div>
     );
 };
+
+export default WatchVideoCard

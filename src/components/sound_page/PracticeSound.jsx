@@ -13,7 +13,7 @@ import { useRecordingFunction } from "./hooks/useRecordingFunction";
 import { useSoundVideoMapping } from "./hooks/useSoundVideoMapping";
 import ReviewCard from "./ReviewCard";
 import SoundPracticeCard from "./SoundPracticeCard";
-import { WatchVideoCard } from "./WatchVideoCard";
+import WatchVideoCard from "./WatchVideoCard";
 
 const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
     const { t } = useTranslation();
@@ -61,6 +61,10 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
             modalIframe: true, // Reset the modal iframe loading state to true when modal is opened
         }));
         document.getElementById("sound_video_modal").showModal();
+    };
+
+    const handleClose = () => {
+        document.getElementById("sound_video_modal").close();
     };
 
     // iframe loading
@@ -323,7 +327,9 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     )}
                     <div className="modal-action">
                         <form method="dialog">
-                            <button type="button" className="btn">{t("sound_page.closeBtn")}</button>
+                            <button type="button" className="btn" onClick={handleClose}>
+                                {t("sound_page.closeBtn")}
+                            </button>
                         </form>
                     </div>
                 </div>

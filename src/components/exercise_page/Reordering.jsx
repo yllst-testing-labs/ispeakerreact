@@ -271,7 +271,7 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                 </div>
                 <div className="divider divider-secondary m-0"></div>
 
-                <div className="flex justify-center my-3">
+                <div className="flex justify-center my-3 w-full">
                     <button
                         type="button"
                         title={t("exercise_page.buttons.playAudioBtn")}
@@ -288,7 +288,7 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                     </button>
                 </div>
 
-                <div className="flex flex-row flex-wrap gap-2 justify-center my-3">
+                <div className="flex flex-row flex-wrap flex-grow gap-2 justify-center my-3">
                     <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
@@ -323,7 +323,7 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
 
                 {showAlert && (
                     <div className="flex justify-center">
-                        <div role="alert" className="alert alert-info w-full lg:w-1/2 flex my-4 gap-1 md:gap-2">
+                        <div role="alert" className="alert alert-info w-full lg:w-4/5 xl:w-3/5 flex my-4 gap-1 md:gap-2">
                             <IoInformationCircleOutline className="h-6 w-6 " />
                             <div className="w-4/5 lg:w-auto">
                                 <h3>{t("exercise_page.result.correctAnswer")}</h3>

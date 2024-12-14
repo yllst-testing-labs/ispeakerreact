@@ -69,8 +69,8 @@ const ExercisePage = () => {
         return (
             <>
                 {/* Tooltip for larger screens */}
-                <div className="tooltip dark:tooltip-accent hidden sm:inline" data-tip={info}>
-                    <IoInformationCircleOutline className="h-5 w-5 cursor-pointer hover:text-primary" />
+                <div className="tooltip tooltip-secondary dark:tooltip-accent hidden sm:inline" data-tip={info}>
+                    <IoInformationCircleOutline className="h-5 w-5 cursor-pointer hover:text-primary dark:hover:text-accent" />
                 </div>
 
                 {/* Modal trigger button for small screens */}
@@ -103,7 +103,7 @@ const ExercisePage = () => {
                         return (
                             <div key={index} className="flex items-center space-x-2">
                                 <a
-                                    className="link hover:link-primary"
+                                    className="link hover:link-primary dark:hover:link-accent"
                                     onClick={() => handleSelectExercise({ ...exercise, file }, heading)}>
                                     {t(exercise.titleKey) || exercise.title}
                                 </a>

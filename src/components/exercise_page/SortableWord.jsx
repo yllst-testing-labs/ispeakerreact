@@ -34,7 +34,11 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
 
     const renderTrueFalseIcon = () => {
         if (isOverlay || isCorrect === null) return null;
-        return isCorrect ? <BsCheckCircleFill className="h-6 w-6" /> : <BsXCircleFill className="h-6 w-6" />;
+        return isCorrect ? (
+            <BsCheckCircleFill className="h-6 w-6 ms-1 inline-block" />
+        ) : (
+            <BsXCircleFill className="h-6 w-6 ms-1 inline-block" />
+        );
     };
 
     return !disabled ? (
@@ -54,13 +58,15 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
             {renderTrueFalseIcon()}
         </button>
     ) : (
-        <div
-            className={`flex w-full text-lg justify-center lg:w-4/5 xl:w-3/5 alert ${
-                isCorrect ? "alert-success" : "alert-error"
+        <button
+            type="button"
+            className={`btn w-full h-[unset] text-lg justify-center lg:w-4/5 xl:w-3/5 pointer-events-none ${
+                isCorrect ? "btn-success" : "btn-error"
             }`}>
-            <p className="font-bold text-center">{he.decode(word?.text || item?.value)}</p>
-            {renderTrueFalseIcon()}
-        </div>
+            <p className="font-bold text-center">
+                {he.decode(word?.text || item?.value)} {renderTrueFalseIcon()}
+            </p>
+        </button>
     );
 };
 

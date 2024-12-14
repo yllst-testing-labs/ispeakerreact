@@ -3,9 +3,9 @@ import { isElectron } from "../../utils/isElectron";
 
 const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) => {
     return (
-        <div className={`${iframeLoadingStates.modalIframe ? "overflow-hidden" : ""}`}>
-            <div className="card card-bordered dark:border-slate-600 shadow-md w-full mb-6">
-                <div className="card-body">
+        <div className="card card-bordered dark:border-slate-600 shadow-md w-full mb-6">
+            <div className="card-body">
+                <div className={`${iframeLoadingStates.modalIframe ? "overflow-hidden" : ""}`}>
                     <div className="aspect-video">
                         <div className="w-full h-full">
                             {isElectron() && videoUrl?.isLocal && videoUrl.value.includes("http://localhost") ? (
@@ -33,18 +33,18 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
                             )}
                         </div>
                     </div>
-                    {isElectron() && !videoUrl?.value.includes("http://localhost") ? (
-                        <div role="alert" className="alert mt-5">
-                            <IoInformationCircleOutline className="h-6 w-6" />
-                            <span>{t("alert.alertOnlineVideo")}</span>
-                        </div>
-                    ) : (
-                        ""
-                    )}
                 </div>
+                {isElectron() && !videoUrl?.value.includes("http://localhost") ? (
+                    <div role="alert" className="alert mt-5">
+                        <IoInformationCircleOutline className="h-6 w-6" />
+                        <span>{t("alert.alertOnlineVideo")}</span>
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
         </div>
     );
 };
 
-export default WatchVideoCard
+export default WatchVideoCard;

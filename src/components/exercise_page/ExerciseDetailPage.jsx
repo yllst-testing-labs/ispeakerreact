@@ -360,7 +360,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
 
                             <button
                                 type="button"
-                                className="btn btn-neutral md:hidden block"
+                                className="btn btn-neutral dark:btn-outline md:hidden block"
                                 onClick={() => document.getElementById("instructionModal").showModal()}>
                                 {t("exercise_page.buttons.expandBtn")}
                             </button>

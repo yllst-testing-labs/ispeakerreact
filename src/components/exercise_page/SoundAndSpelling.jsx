@@ -205,31 +205,32 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                         )}
                     </div>
 
-                    <div className="flex flex-row gap-3">
-                        {shuffledOptions.map((option, index) => (
-                            <button
-                                className={`btn btn-${
-                                    selectedOption
-                                        ? selectedOption.index === index
-                                            ? "primary"
-                                            : "outline"
-                                        : "outline"
-                                } font-bold text-lg ${buttonsDisabled ? "pointer-events-none" : ""}`}
-                                key={index}
-                                onClick={() => handleOptionClick(option.answer === "true", index)}>
-                                {option.value}
-                            </button>
-                        ))}
+                    <div className="flex flex-row flex-wrap justify-center gap-3">
+                        {shuffledOptions.map((option, index) => {
+                            const isSelected = selectedOption?.index === index;
+                            return (
+                                <button
+                                    type="button"
+                                    className={`btn ${isSelected ? "btn-primary" : "btn-outline"} font-bold text-lg ${
+                                        buttonsDisabled ? "pointer-events-none" : ""
+                                    }`}
+                                    key={index}
+                                    onClick={() => handleOptionClick(option.answer === "true", index)}
+                                    disabled={!!selectedOption && !isSelected}>
+                                    {option.value}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
                 <div className="card-actions justify-center">
                     <div className="flex flex-wrap justify-center my-3 gap-2">
                         {currentQuestionIndex < shuffledQuiz.length - 1 && (
-                            <button className="btn btn-accent" onClick={handleNextQuiz}>
+                            <button type="button" className="btn btn-accent" onClick={handleNextQuiz}>
                                 <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
                             </button>
                         )}
-                        <button className="btn btn-error" onClick={handleQuit}>
+                        <button type="button" className="btn btn-error" onClick={handleQuit}>
                             <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
                         </button>
                     </div>

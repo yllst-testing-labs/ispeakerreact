@@ -2,13 +2,17 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
 
+// Emoji SVGs import
+import UKFlagEmoji from "../../emojiSvg/emoji_u1f1ec_1f1e7.svg";
+import USFlagEmoji from "../../emojiSvg/emoji_u1f1fa_1f1f8.svg";
+
 const AccentDropdown = ({ onAccentChange }) => {
     const [selectedAccent, setSelectedAccent] = AccentLocalStorage();
     const { t } = useTranslation();
 
     const selectedAccentOptions = [
-        { name: `${t("accent.accentAmerican")}`, value: "american", emoji: "🇺🇸" },
-        { name: `${t("accent.accentBritish")}`, value: "british", emoji: "🇬🇧" },
+        { name: `${t("accent.accentAmerican")}`, value: "american", emoji: USFlagEmoji },
+        { name: `${t("accent.accentBritish")}`, value: "british", emoji: UKFlagEmoji },
     ];
 
     useEffect(() => {
@@ -28,9 +32,10 @@ const AccentDropdown = ({ onAccentChange }) => {
                 <p className="font-semibold">{t("accent.accentSettings")}:</p>
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn m-1 btn-accent">
-                        <span className="noto-color-emoji">
-                            {selectedAccentOptions.find((item) => item.value === selectedAccent).emoji}
-                        </span>{" "}
+                        <img
+                            src={selectedAccentOptions.find((item) => item.value === selectedAccent).emoji}
+                            className="inline-block h-6 w-6"
+                        />
                         {selectedAccentOptions.find((item) => item.value === selectedAccent).name}
                     </div>
                     <ul
@@ -44,7 +49,7 @@ const AccentDropdown = ({ onAccentChange }) => {
                                         selectedAccent === item.value ? "btn-active" : ""
                                     } btn btn-sm btn-block btn-ghost justify-start`}
                                     onClick={() => handleAccentChange(item.value)}>
-                                    <span className="noto-color-emoji">{item.emoji}</span> {item.name}
+                                    <img src={item.emoji} className="inline-block h-6 w-6" /> {item.name}
                                 </button>
                             </li>
                         ))}

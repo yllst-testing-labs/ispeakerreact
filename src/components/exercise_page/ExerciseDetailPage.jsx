@@ -7,6 +7,15 @@ import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
 import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 
+// Emoji SVGs import
+import seedlingEmoji from "../../emojiSvg/emoji_u1f331.svg";
+import partyPopperEmoji from "../../emojiSvg/emoji_u1f389.svg";
+import thumbUpEmoji from "../../emojiSvg/emoji_u1f44d.svg";
+import flexedBicepsEmoji from "../../emojiSvg/emoji_u1f4aa.svg";
+import smilingFaceWithSmilingEyesEmoji from "../../emojiSvg/emoji_u1f60a.svg";
+import rocketEmoji from "../../emojiSvg/emoji_u1f680.svg";
+import railwayPathEmoji from "../../emojiSvg/emoji_u1f6e4.svg";
+
 // Lazy load the quiz components
 const DictationQuiz = lazy(() => import("./DictationQuiz"));
 const MatchUp = lazy(() => import("./MatchUp"));
@@ -28,8 +37,6 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
     const [timer, setTimer] = useState(null);
     const [timeIsUp, setTimeIsUp] = useState(false);
     const [onMatchFinished, setOnMatchFinished] = useState(false); // Track if all cards in Memory Match are matched
-
-    const [openInstructions, setOpenInstructions] = useState(false);
 
     const [isloading, setIsLoading] = useState(true);
 
@@ -217,9 +224,10 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
     const getEncouragementMessage = () => {
         if (totalAnswered === 0)
             return (
-                <>
-                    {t("exercise_page.encouragementMsg.level0")} <span className="noto-color-emoji">🚀</span>
-                </>
+                <div className="inline-flex items-center">
+                    {t("exercise_page.encouragementMsg.level0")}
+                    <img src={rocketEmoji} className="inline ms-2 h-6 w-6 align-middle" />
+                </div>
             );
 
         const percentage = (score / totalAnswered) * 100;
@@ -246,19 +254,19 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
         }
 
         const emojis = {
-            6: "🎉",
-            5: "👍",
-            4: "😊",
-            3: "💪",
-            2: "🌱",
-            1: "🛤️",
+            6: partyPopperEmoji,
+            5: thumbUpEmoji,
+            4: smilingFaceWithSmilingEyesEmoji,
+            3: flexedBicepsEmoji,
+            2: seedlingEmoji,
+            1: railwayPathEmoji,
         };
 
         return (
-            <>
-                {t(`exercise_page.encouragementMsg.level${level}`)}{" "}
-                <span className="noto-color-emoji">{emojis[level]}</span>
-            </>
+            <div className="inline-flex items-center">
+                {t(`exercise_page.encouragementMsg.level${level}`)}
+                <img src={emojis[level]} className="inline h-6 w-6 ms-2 align-middle" />
+            </div>
         );
     };
 
@@ -412,7 +420,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                                             totalAnswered,
                                                         })}
                                                     </p>
-                                                    <p>{encouragementMessage}</p>
+                                                    {encouragementMessage}
                                                     <p>{t("exercise_page.result.answerBottom")}</p>
                                                 </>
                                             ) : (
@@ -447,7 +455,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                             <p>{t("exercise_page.result.answerResult", { score, totalAnswered })}</p>
                                         )}
 
-                                        <p>{getEncouragementMessage()}</p>
+                                        {getEncouragementMessage()}
 
                                         {score === 0 && totalAnswered === 0 ? (
                                             ""

@@ -42,7 +42,7 @@ const TopNavBar = () => {
         ? `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background-darkmode.svg`
         : `${import.meta.env.BASE_URL}images/logos/ispeakerreact-no-background.svg`;
 
-    const navbarClass = isDarkMode ? "bg-slate-600/50" : "bg-lime-300/50";
+    const navbarClass = isDarkMode ? "bg-slate-600/50" : "bg-lime-300/75";
 
     const menuItems = [
         { to: "/", icon: <House />, label: t("navigation.home") },

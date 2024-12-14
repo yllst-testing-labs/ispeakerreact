@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import Container from "../../ui/Container";
@@ -16,6 +16,23 @@ const ExercisePage = () => {
     const [loading, setLoading] = useState(true);
     const [selectedAccent, setSelectedAccent] = AccentLocalStorage();
     const [selectedExercise, setSelectedExercise] = useState(null);
+
+    const modalRef = useRef(null);
+    const [modalInfo, setModalInfo] = useState(null);
+
+    const handleShowModal = (info) => {
+        setModalInfo(info);
+        if (modalRef.current) {
+            modalRef.current.showModal();
+        }
+    };
+
+    const handleCloseModal = () => {
+        if (modalRef.current) {
+            modalRef.current.close();
+        }
+        setModalInfo(null);
+    };
 
     const selectedAccentOptions = [
         { name: "American English", value: "american" },
@@ -48,7 +65,7 @@ const ExercisePage = () => {
         return exercise.infoKey ? t(exercise.infoKey) : t(defaultInfoKey);
     };
 
-    const TooltipIcon = ({ info, modalId }) => {
+    const TooltipIcon = ({ info, onClick }) => {
         return (
             <>
                 {/* Tooltip for larger screens */}
@@ -56,37 +73,19 @@ const ExercisePage = () => {
                     <IoInformationCircleOutline className="h-5 w-5 cursor-pointer hover:text-primary" />
                 </div>
 
-                {/* Modal for small screens */}
+                {/* Modal trigger button for small screens */}
                 <button
                     type="button"
                     title={t("exercise_page.buttons.expandBtn")}
-                    className="btn btn-sm btn-info sm:hidden inline focus:ring-2">
-                    <IoInformationCircleOutline
-                        className="h-5 w-5 cursor-pointer"
-                        onClick={() => document.getElementById(modalId).showModal()}
-                    />
+                    className="btn btn-circle btn-sm sm:hidden focus:ring-2"
+                    onClick={onClick}>
+                    <IoInformationCircleOutline className="h-5 w-5 cursor-pointer" />
                 </button>
-                <dialog id={modalId} className="modal">
-                    <div className="modal-box">
-                        <h3 className="font-bold text-lg">{t("exercise_page.modalInfoHeader")}</h3>
-                        <p className="py-4">{info}</p>
-                        <div className="modal-action">
-                            <form method="dialog">
-                                <button
-                                    type="button"
-                                    className="btn"
-                                    onClick={() => document.getElementById(modalId).close()}>
-                                    {t("sound_page.closeBtn")}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </dialog>
             </>
         );
     };
 
-    const ExerciseCard = ({ heading, titles, infoKey, file }) => (
+    const ExerciseCard = ({ heading, titles, infoKey, file, onShowModal }) => (
         <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto w-full md:w-1/3 lg:w-1/4">
             <div className="card-body flex-grow">
                 <div className="font-semibold card-title">{t(heading)}</div>
@@ -99,6 +98,8 @@ const ExercisePage = () => {
                     })
                     .map((exercise, index) => {
                         const modalId = `exerciseInfoModal-${heading}-${index}`;
+                        const info = getInfoText(exercise, infoKey);
+
                         return (
                             <div key={index} className="flex items-center space-x-2">
                                 <a
@@ -106,7 +107,7 @@ const ExercisePage = () => {
                                     onClick={() => handleSelectExercise({ ...exercise, file }, heading)}>
                                     {t(exercise.titleKey) || exercise.title}
                                 </a>
-                                <TooltipIcon info={getInfoText(exercise, infoKey)} modalId={modalId} />
+                                <TooltipIcon info={info} modalId={modalId} onClick={() => onShowModal(info)} />
                             </div>
                         );
                     })}
@@ -196,10 +197,27 @@ const ExercisePage = () => {
                                         titles={section.titles}
                                         infoKey={section.infoKey}
                                         file={section.file}
+                                        onShowModal={handleShowModal}
                                     />
                                 ))}
                             </div>
                         )}
+
+                        {
+                            <dialog ref={modalRef} className="modal">
+                                <div className="modal-box">
+                                    <h3 className="font-bold text-lg">{t("exercise_page.modalInfoHeader")}</h3>
+                                    <p className="py-4">{modalInfo}</p>
+                                    <div className="modal-action">
+                                        <form method="dialog">
+                                            <button type="button" className="btn" onClick={handleCloseModal}>
+                                                {t("sound_page.closeBtn")}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
+                        }
                     </>
                 )}
             </Container>

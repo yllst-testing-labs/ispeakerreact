@@ -224,9 +224,9 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
     const getEncouragementMessage = () => {
         if (totalAnswered === 0)
             return (
-                <div className="inline-flex items-center">
+                <div>
                     {t("exercise_page.encouragementMsg.level0")}
-                    <img src={rocketEmoji} className="inline ms-2 h-6 w-6 align-middle" />
+                    <img src={rocketEmoji} className="inline h-5 w-5 ms-2" />
                 </div>
             );
 
@@ -263,9 +263,9 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
         };
 
         return (
-            <div className="inline-flex items-center">
+            <div>
                 {t(`exercise_page.encouragementMsg.level${level}`)}
-                <img src={emojis[level]} className="inline h-6 w-6 ms-2 align-middle" />
+                <img src={emojis[level]} className="inline h-5 w-5 ms-2" />
             </div>
         );
     };

@@ -30,14 +30,20 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const btnVariant = isOverlay ? "" : isCorrect === null ? "btn-outline" : isCorrect ? "btn-success" : "btn-error";
+    const btnVariant = isOverlay
+        ? ""
+        : isCorrect === null
+          ? "btn-outline"
+          : isCorrect
+            ? "btn-success"
+            : "btn-error";
 
     const renderTrueFalseIcon = () => {
         if (isOverlay || isCorrect === null) return null;
         return isCorrect ? (
-            <BsCheckCircleFill className="h-6 w-6 ms-1 inline-block" />
+            <BsCheckCircleFill className="ms-1 inline-block h-6 w-6" />
         ) : (
-            <BsXCircleFill className="h-6 w-6 ms-1 inline-block" />
+            <BsXCircleFill className="ms-1 inline-block h-6 w-6" />
         );
     };
 
@@ -51,19 +57,21 @@ const SortableWord = ({ word, item, isCorrect, disabled, isOverlay }) => {
             style={style}
             {...attributes}
             {...listeners}
-            className={`btn no-animation ${btnVariant} text-lg ${item ? "min-w-full " : ""} ${
-                isDragging && !disabled ? " opacity-50" : ""
-            } ${disabled ? "pointer-events-none" : ""} ${isOverlay ? "z-2 shadow-lg" : ""}`}>
+            className={`btn no-animation h-[unset] break-all ${btnVariant} text-lg ${item ? "min-w-full" : ""} ${
+                isDragging && !disabled ? "opacity-50" : ""
+            } ${disabled ? "pointer-events-none" : ""} ${isOverlay ? "z-2 shadow-lg" : ""}`}
+        >
             {he.decode(word?.text || item?.value)}
             {renderTrueFalseIcon()}
         </button>
     ) : (
         <button
             type="button"
-            className={`btn w-full h-[unset] text-lg justify-center lg:w-4/5 xl:w-3/5 pointer-events-none ${
-                isCorrect ? "btn-success" : "btn-error"
-            }`}>
-            <p className="font-bold text-center">
+            className={`btn h-[unset] w-full justify-center break-all text-lg ${
+                item ? "" : "lg:w-4/5 xl:w-3/4"
+            } pointer-events-none ${isCorrect ? "btn-success" : "btn-error"}`}
+        >
+            <p className="text-center font-bold">
                 {he.decode(word?.text || item?.value)} {renderTrueFalseIcon()}
             </p>
         </button>

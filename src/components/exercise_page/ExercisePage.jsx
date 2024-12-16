@@ -198,7 +198,7 @@ const ExercisePage = () => {
                 ) : (
                     <>
                         <AccentDropdown onAccentChange={setSelectedAccent} />
-                        <p className="py-4">{t("exercise_page.exerciseSubheading")}</p>
+                        <p className="my-4">{t("exercise_page.exerciseSubheading")}</p>
                         {loading ? (
                             <LoadingOverlay />
                         ) : (

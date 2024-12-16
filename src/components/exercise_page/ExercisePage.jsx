@@ -105,7 +105,7 @@ const ExercisePage = () => {
                         const info = getInfoText(exercise, infoKey);
 
                         return (
-                            <div key={index} className="flex items-center space-x-2">
+                            <div key={index} className="mb-2 flex items-center space-x-2">
                                 <a
                                     className="link hover:link-primary dark:hover:link-accent"
                                     onClick={() =>
@@ -202,7 +202,7 @@ const ExercisePage = () => {
                         {loading ? (
                             <LoadingOverlay />
                         ) : (
-                            <div className="mb-10 flex flex-wrap justify-center gap-7">
+                            <div className="my-10 flex flex-wrap justify-center gap-7">
                                 {data.map((section, index) => (
                                     <ExerciseCard
                                         key={index}
@@ -216,27 +216,25 @@ const ExercisePage = () => {
                             </div>
                         )}
 
-                        {
-                            <dialog ref={modalRef} className="modal">
-                                <div className="modal-box">
-                                    <h3 className="text-lg font-bold">
-                                        {t("exercise_page.modalInfoHeader")}
-                                    </h3>
-                                    <p className="py-4">{modalInfo}</p>
-                                    <div className="modal-action">
-                                        <form method="dialog">
-                                            <button
-                                                type="button"
-                                                className="btn"
-                                                onClick={handleCloseModal}
-                                            >
-                                                {t("sound_page.closeBtn")}
-                                            </button>
-                                        </form>
-                                    </div>
+                        <dialog ref={modalRef} className="modal">
+                            <div className="modal-box">
+                                <h3 className="text-lg font-bold">
+                                    {t("exercise_page.modalInfoHeader")}
+                                </h3>
+                                <p className="py-4">{modalInfo}</p>
+                                <div className="modal-action">
+                                    <form method="dialog">
+                                        <button
+                                            type="button"
+                                            className="btn"
+                                            onClick={handleCloseModal}
+                                        >
+                                            {t("sound_page.closeBtn")}
+                                        </button>
+                                    </form>
                                 </div>
-                            </dialog>
-                        }
+                            </div>
+                        </dialog>
                     </>
                 )}
             </Container>

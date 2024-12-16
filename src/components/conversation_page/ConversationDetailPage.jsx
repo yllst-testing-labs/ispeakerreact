@@ -115,7 +115,7 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
 
     return (
         <>
-            <h3 className="mb-2 mt-4 text-xl font-semibold">
+            <h3 className="mb-2 mt-4 text-2xl font-semibold">
                 {t("conversationPage.topicHeading")} {t(title)}
             </h3>
             <p>

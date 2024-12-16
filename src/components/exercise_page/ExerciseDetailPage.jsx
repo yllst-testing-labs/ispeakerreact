@@ -43,14 +43,18 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
     const { t } = useTranslation();
 
     const getInstructionKey = (exerciseKey, exerciseId) => {
-        if (exerciseKey === "sound_n_spelling") return `exercise_page.exerciseInstruction.sound_n_spelling.sound`;
+        if (exerciseKey === "sound_n_spelling")
+            return `exercise_page.exerciseInstruction.sound_n_spelling.sound`;
         return `exercise_page.exerciseInstruction.${exerciseKey}.${exerciseId}`;
     };
 
     const fetchInstructions = useCallback(
         (exerciseKey, exerciseId, ipaSound) => {
             const instructionKey = getInstructionKey(exerciseKey, exerciseId);
-            const instructions = t(instructionKey, { ipaSound: ipaSound || "", returnObjects: true });
+            const instructions = t(instructionKey, {
+                ipaSound: ipaSound || "",
+                returnObjects: true,
+            });
             return Array.isArray(instructions) ? instructions : []; // Ensure it's always an array
         },
         [t]
@@ -63,7 +67,8 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
             const timerValue =
                 exerciseKey === "memory_match"
                     ? savedSettings?.timerSettings?.memory_match || 4 // Use a default value for memory match
-                    : (savedSettings?.timerSettings?.enabled === true && savedSettings?.timerSettings?.[exerciseKey]) ||
+                    : (savedSettings?.timerSettings?.enabled === true &&
+                          savedSettings?.timerSettings?.[exerciseKey]) ||
                       0; // For other exercises
 
             setTimer(timerValue);
@@ -71,7 +76,8 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
             let selectedAccentData;
             let combinedQuizzes = [];
 
-            const ipaSound = (exerciseKey === "sound_n_spelling" && exerciseDetails.exercise.trim()) || "";
+            const ipaSound =
+                (exerciseKey === "sound_n_spelling" && exerciseDetails.exercise.trim()) || "";
             const loadInstructions = fetchInstructions(exerciseKey, id, ipaSound);
 
             if (id === "random") {
@@ -81,7 +87,9 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                             selectedAccentData = exercise.british_american[0];
                         } else {
                             selectedAccentData =
-                                accent === "American English" ? exercise.american?.[0] : exercise.british?.[0];
+                                accent === "American English"
+                                    ? exercise.american?.[0]
+                                    : exercise.british?.[0];
                         }
 
                         if (selectedAccentData) {
@@ -104,7 +112,9 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                     selectedAccentData = exerciseDetails.british_american[0];
                 } else {
                     selectedAccentData =
-                        accent === "American English" ? exerciseDetails.american?.[0] : exerciseDetails.british?.[0];
+                        accent === "American English"
+                            ? exerciseDetails.american?.[0]
+                            : exerciseDetails.british?.[0];
                 }
 
                 setInstructions(loadInstructions || selectedAccentData?.instructions);
@@ -113,7 +123,9 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                     selectedAccentData = exerciseDetails.british_american[0];
                 } else {
                     selectedAccentData =
-                        accent === "American English" ? exerciseDetails.american?.[0] : exerciseDetails.british?.[0];
+                        accent === "American English"
+                            ? exerciseDetails.american?.[0]
+                            : exerciseDetails.british?.[0];
                 }
 
                 if (selectedAccentData) {
@@ -144,7 +156,9 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                     const cachedData = JSON.parse(cachedDataText);
 
                     const exerciseKey = file.replace("exercise_", "").replace(".json", "");
-                    const exerciseDetails = cachedData[exerciseKey]?.find((exercise) => exercise.id === id);
+                    const exerciseDetails = cachedData[exerciseKey]?.find(
+                        (exercise) => exercise.id === id
+                    );
 
                     setCurrentExerciseType(exerciseKey);
 
@@ -226,7 +240,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
             return (
                 <div>
                     {t("exercise_page.encouragementMsg.level0")}
-                    <img src={rocketEmoji} className="inline h-5 w-5 ms-2" />
+                    <img src={rocketEmoji} className="ms-2 inline h-5 w-5" />
                 </div>
             );
 
@@ -265,12 +279,13 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
         return (
             <div>
                 {t(`exercise_page.encouragementMsg.level${level}`)}
-                <img src={emojis[level]} className="inline h-5 w-5 ms-2" />
+                <img src={emojis[level]} className="ms-2 inline h-5 w-5" />
             </div>
         );
     };
 
-    const encouragementMessage = quizCompleted && totalAnswered > 0 ? getEncouragementMessage() : null;
+    const encouragementMessage =
+        quizCompleted && totalAnswered > 0 ? getEncouragementMessage() : null;
 
     const renderQuizComponent = () => {
         // Remove "exercise_" prefix and ".json" suffix
@@ -315,33 +330,42 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                 <LoadingOverlay />
             ) : (
                 <>
-                    <h3 className="mt-4 font-semibold text-2xl">{t(heading)}</h3>
+                    <h3 className="mt-4 text-2xl font-semibold">{t(heading)}</h3>
                     <p className="mb-6 text-lg">{title}</p>
-                    <div className="flex flex-wrap md:flex-nowrap gap-8">
+                    <div className="flex flex-wrap gap-8 md:flex-nowrap">
                         <div className="w-full md:w-1/3">
                             <p className="mb-4">
                                 <strong>{t("accent.accentSettings")}:</strong>{" "}
-                                {accent === "American English" ? t("accent.accentAmerican") : t("accent.accentBritish")}
+                                {accent === "American English"
+                                    ? t("accent.accentAmerican")
+                                    : t("accent.accentBritish")}
                             </p>
 
                             <dialog id="instructionModal" className="modal">
                                 <div className="modal-box">
-                                    <h3 className="font-bold text-lg">{t("exercise_page.buttons.instructionBtn")}</h3>
+                                    <h3 className="text-lg font-bold">
+                                        {t("exercise_page.buttons.instructionBtn")}
+                                    </h3>
                                     <div className="py-4">
-                                        {instructions && Array.isArray(instructions) && instructions.length > 0 ? (
+                                        {instructions &&
+                                        Array.isArray(instructions) &&
+                                        instructions.length > 0 ? (
                                             instructions.map((instruction, index) => (
                                                 <p
                                                     key={index}
                                                     className={`mb-2 ${
-                                                        index === instructions.length - 1 ? " mb-0" : ""
-                                                    }`}>
+                                                        index === instructions.length - 1
+                                                            ? "mb-0"
+                                                            : ""
+                                                    }`}
+                                                >
                                                     {instruction}
                                                 </p>
                                             ))
                                         ) : (
                                             <p className="mb-0">
-                                                [Instructions for this type of exercise is not yet translated. Please
-                                                update accordingly.]
+                                                [Instructions for this type of exercise is not yet
+                                                translated. Please update accordingly.]
                                             </p>
                                         )}
                                     </div>
@@ -350,7 +374,12 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                             <button
                                                 type="button"
                                                 className="btn"
-                                                onClick={() => document.getElementById("instructionModal").close()}>
+                                                onClick={() =>
+                                                    document
+                                                        .getElementById("instructionModal")
+                                                        .close()
+                                                }
+                                            >
                                                 {t("sound_page.closeBtn")}
                                             </button>
                                         </form>
@@ -360,49 +389,67 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
 
                             <button
                                 type="button"
-                                className="btn btn-neutral dark:btn-outline md:hidden block"
-                                onClick={() => document.getElementById("instructionModal").showModal()}>
+                                className="btn btn-neutral block dark:btn-outline md:hidden"
+                                onClick={() =>
+                                    document.getElementById("instructionModal").showModal()
+                                }
+                            >
                                 {t("exercise_page.buttons.expandBtn")}
                             </button>
 
-                            <div className="collapse collapse-arrow bg-base-200 dark:bg-slate-700 hidden md:grid">
+                            <div className="collapse collapse-arrow hidden bg-base-200 md:grid dark:bg-slate-700">
                                 <input type="checkbox" />
-                                <button type="button" className="collapse-title font-semibold text-start">
+                                <button
+                                    type="button"
+                                    className="collapse-title text-start font-semibold"
+                                >
                                     {t("exercise_page.buttons.expandBtn")}
                                 </button>
                                 <div className="collapse-content">
-                                    {instructions && Array.isArray(instructions) && instructions.length > 0 ? (
+                                    {instructions &&
+                                    Array.isArray(instructions) &&
+                                    instructions.length > 0 ? (
                                         instructions.map((instruction, index) => (
                                             <p
                                                 key={index}
-                                                className={`mb-2 ${index === instructions.length - 1 ? " mb-0" : ""}`}>
+                                                className={`mb-2 ${index === instructions.length - 1 ? "mb-0" : ""}`}
+                                            >
                                                 {instruction}
                                             </p>
                                         ))
                                     ) : (
                                         <p className="mb-0">
-                                            [Instructions for this type of exercise is not yet translated. Please update
-                                            accordingly.]
+                                            [Instructions for this type of exercise is not yet
+                                            translated. Please update accordingly.]
                                         </p>
                                     )}
                                 </div>
                             </div>
 
-                            <button type="button" className="btn btn-secondary my-8" onClick={onBack}>
-                                <BsChevronLeft className="h-5 w-5" /> {t("exercise_page.buttons.backBtn")}
+                            <button
+                                type="button"
+                                className="btn btn-secondary my-8"
+                                onClick={onBack}
+                            >
+                                <BsChevronLeft className="h-5 w-5" />{" "}
+                                {t("exercise_page.buttons.backBtn")}
                             </button>
                         </div>
 
                         <div className="w-full md:w-2/3">
-                            <div className="card card-bordered dark:border-slate-600 shadow-md">
+                            <div className="card card-bordered shadow-md dark:border-slate-600">
                                 {timeIsUp || quizCompleted || onMatchFinished ? (
                                     <>
                                         <div className="card-body">
-                                            <div className="font-semibold card-title">
+                                            <div className="card-title font-semibold">
                                                 {t("exercise_page.result.cardHeading")}
                                             </div>
                                             <div className="divider divider-secondary m-0"></div>
-                                            {onMatchFinished ? <p>{t("exercise_page.result.matchUpFinished")}</p> : ""}
+                                            {onMatchFinished ? (
+                                                <p>{t("exercise_page.result.matchUpFinished")}</p>
+                                            ) : (
+                                                ""
+                                            )}
                                             {timeIsUp && !onMatchFinished ? (
                                                 <p>{t("exercise_page.result.timeUp")}</p>
                                             ) : (
@@ -430,7 +477,8 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                                 <button
                                                     type="button"
                                                     className="btn btn-accent mt-4"
-                                                    onClick={handleQuizRestart}>
+                                                    onClick={handleQuizRestart}
+                                                >
                                                     <PiArrowsCounterClockwise className="h-5 w-5" />{" "}
                                                     {t("exercise_page.buttons.restartBtn")}
                                                 </button>
@@ -445,14 +493,21 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                             {timeIsUp || quizCompleted || currentExerciseType == "memory_match" ? (
                                 ""
                             ) : (
-                                <div className="card card-bordered dark:border-slate-600 shadow-md mt-4">
+                                <div className="card card-bordered mt-4 shadow-md dark:border-slate-600">
                                     <div className="card-body">
-                                        <div className="font-semibold card-title">{t("sound_page.reviewCard")}</div>
+                                        <div className="card-title font-semibold">
+                                            {t("sound_page.reviewCard")}
+                                        </div>
                                         <div className="divider divider-secondary m-0"></div>
                                         {score === 0 && totalAnswered === 0 ? (
                                             ""
                                         ) : (
-                                            <p>{t("exercise_page.result.answerResult", { score, totalAnswered })}</p>
+                                            <p>
+                                                {t("exercise_page.result.answerResult", {
+                                                    score,
+                                                    totalAnswered,
+                                                })}
+                                            </p>
                                         )}
 
                                         {getEncouragementMessage()}

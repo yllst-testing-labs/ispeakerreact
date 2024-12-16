@@ -19,7 +19,9 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () => setTimeIsUp(true));
+    const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () =>
+        setTimeIsUp(true)
+    );
 
     const { t } = useTranslation();
 
@@ -38,7 +40,9 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
 
         // Set the question text and audio source
         setCurrentQuestionText(quizData.question[0].text);
-        setCurrentAudioSrc(`${import.meta.env.BASE_URL}media/exercise/mp3/${quizData.audio.src}.mp3`);
+        setCurrentAudioSrc(
+            `${import.meta.env.BASE_URL}media/exercise/mp3/${quizData.audio.src}.mp3`
+        );
 
         setButtonsDisabled(false);
         setSelectedOption(null);
@@ -112,7 +116,9 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                 setIsLoading(false);
                 setIsPlaying(false);
                 console.error("Error playing audio.");
-                alert("There was an error loading the audio file. Please check your connection or try again later.");
+                alert(
+                    "There was an error loading the audio file. Please check your connection or try again later."
+                );
             };
         }
     };
@@ -123,7 +129,10 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
         setSelectedOption({ index, isCorrect });
 
         // Replace the underscore with the selected answer
-        const updatedQuestionText = currentQuestionText.replace("_____", shuffledOptions[index].value);
+        const updatedQuestionText = currentQuestionText.replace(
+            "_____",
+            shuffledOptions[index].value
+        );
         setCurrentQuestionText(updatedQuestionText);
 
         onAnswer(isCorrect ? 1 : 0, "single");
@@ -150,13 +159,13 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
     return (
         <>
             <div className="card-body">
-                <div className="font-semibold text-lg">
+                <div className="text-lg font-semibold">
                     {timer > 0 ? (
                         <div className="flex items-center">
                             <div className="flex-1 md:flex-none">
                                 {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
                             </div>
-                            <div className="flex justify-end ms-auto">
+                            <div className="ms-auto flex justify-end">
                                 {t("exercise_page.timer")} {formatTime()}
                             </div>
                         </div>
@@ -174,7 +183,8 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                             title={t("exercise_page.buttons.playAudioBtn")}
                             className="btn btn-circle btn-success"
                             onClick={handleAudioPlay}
-                            disabled={isLoading}>
+                            disabled={isLoading}
+                        >
                             {isLoading ? (
                                 <span className="loading loading-spinner loading-md"></span>
                             ) : isPlaying ? (
@@ -186,13 +196,14 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                     </div>
 
                     <div
-                        className={`px-6 py-3 rounded-lg flex gap-2 items-center text-xl ${
+                        className={`flex items-center gap-2 rounded-lg px-6 py-3 text-xl ${
                             selectedOption
                                 ? selectedOption.isCorrect
                                     ? "bg-success text-success-content"
                                     : "bg-error text-error-content"
                                 : ""
-                        }`}>
+                        }`}
+                    >
                         {he.decode(currentQuestionText)}
                         {selectedOption ? (
                             selectedOption.isCorrect ? (
@@ -211,12 +222,15 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                             return (
                                 <button
                                     type="button"
-                                    className={`btn ${isSelected ? "btn-primary" : "btn-outline"} font-bold text-lg ${
+                                    className={`btn ${isSelected ? "btn-primary" : "btn-outline"} text-lg font-bold ${
                                         buttonsDisabled ? "pointer-events-none" : ""
                                     }`}
                                     key={index}
-                                    onClick={() => handleOptionClick(option.answer === "true", index)}
-                                    disabled={!!selectedOption && !isSelected}>
+                                    onClick={() =>
+                                        handleOptionClick(option.answer === "true", index)
+                                    }
+                                    disabled={!!selectedOption && !isSelected}
+                                >
                                     {option.value}
                                 </button>
                             );
@@ -224,14 +238,20 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                     </div>
                 </div>
                 <div className="card-actions justify-center">
-                    <div className="flex flex-wrap justify-center my-3 gap-2">
+                    <div className="my-3 flex flex-wrap justify-center gap-2">
                         {currentQuestionIndex < shuffledQuiz.length - 1 && (
-                            <button type="button" className="btn btn-accent" onClick={handleNextQuiz}>
-                                <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
+                            <button
+                                type="button"
+                                className="btn btn-accent"
+                                onClick={handleNextQuiz}
+                            >
+                                <LiaChevronCircleRightSolid className="h-6 w-6" />{" "}
+                                {t("exercise_page.buttons.nextBtn")}
                             </button>
                         )}
                         <button type="button" className="btn btn-error" onClick={handleQuit}>
-                            <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
+                            <LiaTimesCircle className="h-6 w-6" />{" "}
+                            {t("exercise_page.buttons.quitBtn")}
                         </button>
                     </div>
                 </div>

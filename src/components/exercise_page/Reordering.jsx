@@ -31,7 +31,9 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
     const [currentAudioSrc, setCurrentAudioSrc] = useState("");
     const [shuffledQuizArray, setShuffledQuizArray] = useState([]);
 
-    const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () => setTimeIsUp(true));
+    const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () =>
+        setTimeIsUp(true)
+    );
 
     const { t } = useTranslation();
 
@@ -57,7 +59,9 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
 
         const shuffledPairs = ShuffleArray(pairedData);
         const shuffledWords = shuffledPairs.map((pair) => pair.word);
-        const correctAnswer = shuffledPairs.map((pair) => pair.answer).join(splitType === "sentence" ? " " : "");
+        const correctAnswer = shuffledPairs
+            .map((pair) => pair.answer)
+            .join(splitType === "sentence" ? " " : "");
 
         let itemsToShuffle;
         if (splitType === "sentence") {
@@ -74,7 +78,9 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
         setShuffledItems(shuffledItemsArray);
         setButtonsDisabled(false);
 
-        setCurrentAudioSrc(`${import.meta.env.BASE_URL}media/exercise/mp3/${shuffledPairs[0].audio}.mp3`);
+        setCurrentAudioSrc(
+            `${import.meta.env.BASE_URL}media/exercise/mp3/${shuffledPairs[0].audio}.mp3`
+        );
         setCorrectAnswer(correctAnswer);
     }, []);
 
@@ -165,7 +171,9 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                 setIsLoading(false); // Stop loading spinner
                 setIsPlaying(false); // Reset playing state
                 console.error("Error playing audio.");
-                alert("There was an error loading the audio file. Please check your connection or try again later.");
+                alert(
+                    "There was an error loading the audio file. Please check your connection or try again later."
+                );
             };
         }
     };
@@ -192,7 +200,9 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
         const splitType = currentSplitType;
 
         // Join the shuffled items into a single string
-        let joinedItems = shuffledItems.map((item) => item.value).join(splitType === "sentence" ? " " : "");
+        let joinedItems = shuffledItems
+            .map((item) => item.value)
+            .join(splitType === "sentence" ? " " : "");
 
         // Normalize user answer
         let normalizedUserAnswer = joinedItems
@@ -253,13 +263,13 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
     return (
         <>
             <div className="card-body">
-                <div className="font-semibold text-lg">
+                <div className="text-lg font-semibold">
                     {timer > 0 ? (
                         <div className="flex items-center">
                             <div className="flex-1 md:flex-none">
                                 {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
                             </div>
-                            <div className="flex justify-end ms-auto">
+                            <div className="ms-auto flex justify-end">
                                 {t("exercise_page.timer")} {formatTime()}
                             </div>
                         </div>
@@ -271,13 +281,14 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                 </div>
                 <div className="divider divider-secondary m-0"></div>
 
-                <div className="flex justify-center my-3 w-full">
+                <div className="my-3 flex w-full justify-center">
                     <button
                         type="button"
                         title={t("exercise_page.buttons.playAudioBtn")}
                         className="btn btn-circle btn-success"
                         onClick={handleAudioPlay}
-                        disabled={isLoading}>
+                        disabled={isLoading}
+                    >
                         {isLoading ? (
                             <span className="loading loading-spinner loading-md"></span>
                         ) : isPlaying ? (
@@ -288,13 +299,17 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                     </button>
                 </div>
 
-                <div className="flex flex-row flex-wrap flex-grow gap-2 justify-center my-3">
+                <div className="my-3 flex flex-grow flex-row flex-wrap justify-center gap-2">
                     <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
                         onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}>
-                        <SortableContext items={shuffledItems} strategy={horizontalListSortingStrategy}>
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={shuffledItems}
+                            strategy={horizontalListSortingStrategy}
+                        >
                             {shuffledItems.map((item) => (
                                 <SortableWord
                                     key={item.id}
@@ -310,7 +325,8 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                                     key={activeId}
                                     word={{
                                         text: he.encode(
-                                            shuffledItems.find((item) => item.id === activeId)?.value || ""
+                                            shuffledItems.find((item) => item.id === activeId)
+                                                ?.value || ""
                                         ),
                                         id: activeId,
                                     }}
@@ -323,31 +339,42 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
 
                 {showAlert && (
                     <div className="flex justify-center">
-                        <div role="alert" className="alert alert-info w-full lg:w-4/5 xl:w-3/5 flex my-4 gap-1 md:gap-2">
-                            <IoInformationCircleOutline className="h-6 w-6 " />
+                        <div
+                            role="alert"
+                            className="alert alert-info my-4 flex w-full gap-1 md:gap-2 lg:w-4/5 xl:w-3/5"
+                        >
+                            <IoInformationCircleOutline className="h-6 w-6" />
                             <div className="w-4/5 lg:w-auto">
                                 <h3>{t("exercise_page.result.correctAnswer")}</h3>
-                                <p className="italic font-bold text-xl">{correctAnswer}</p>
+                                <p className="text-xl font-bold italic">{correctAnswer}</p>
                             </div>
                         </div>
                     </div>
                 )}
                 <div className="card-actions justify-center">
-                    <div className="flex flex-wrap justify-center my-3 gap-2">
+                    <div className="my-3 flex flex-wrap justify-center gap-2">
                         <button
                             type="button"
                             className="btn btn-primary"
                             onClick={handleSubmit}
-                            disabled={buttonsDisabled}>
-                            <LiaCheckCircle className="h-6 w-6" /> {t("exercise_page.buttons.checkBtn")}
+                            disabled={buttonsDisabled}
+                        >
+                            <LiaCheckCircle className="h-6 w-6" />{" "}
+                            {t("exercise_page.buttons.checkBtn")}
                         </button>
                         {currentQuestionIndex < quiz.length - 1 && (
-                            <button type="button" className="btn btn-accent" onClick={handleNextQuiz}>
-                                <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
+                            <button
+                                type="button"
+                                className="btn btn-accent"
+                                onClick={handleNextQuiz}
+                            >
+                                <LiaChevronCircleRightSolid className="h-6 w-6" />{" "}
+                                {t("exercise_page.buttons.nextBtn")}
                             </button>
                         )}
                         <button type="button" className="btn btn-error" onClick={handleQuit}>
-                            <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
+                            <LiaTimesCircle className="h-6 w-6" />{" "}
+                            {t("exercise_page.buttons.quitBtn")}
                         </button>
                     </div>
                 </div>

@@ -34,7 +34,9 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
     const [buttonsDisabled, setButtonsDisabled] = useState(false);
     const [originalPairs, setOriginalPairs] = useState([]);
     const [activeId, setActiveId] = useState(null);
-    const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () => setTimeIsUp(true));
+    const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () =>
+        setTimeIsUp(true)
+    );
 
     const audioRef = useRef(null);
 
@@ -151,7 +153,9 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                     return newLoadingState;
                 });
                 console.error("Error loading the audio file:", audioSrc);
-                alert("There was an error loading the audio file. Please check your connection or try again later.");
+                alert(
+                    "There was an error loading the audio file. Please check your connection or try again later."
+                );
             };
         }
     };
@@ -194,7 +198,9 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
             const wordText = word.text.toLowerCase();
 
             // Compare the shuffled pair with the original pair using the word text
-            const isCorrect = originalPairs.some((pair) => pair.audio === audioSrc && pair.word === wordText);
+            const isCorrect = originalPairs.some(
+                (pair) => pair.audio === audioSrc && pair.word === wordText
+            );
 
             updatedCorrectArray[index] = isCorrect;
 
@@ -237,13 +243,13 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
     return (
         <>
             <div className="card-body">
-                <div className="font-semibold text-lg">
+                <div className="text-lg font-semibold">
                     {timer > 0 ? (
                         <div className="flex items-center">
                             <div className="flex-1 md:flex-none">
                                 {t("exercise_page.questionNo")} #{currentQuestionIndex + 1}
                             </div>
-                            <div className="flex justify-end ms-auto">
+                            <div className="ms-auto flex justify-end">
                                 {t("exercise_page.timer")} {formatTime()}
                             </div>
                         </div>
@@ -253,19 +259,20 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                         </p>
                     )}
                 </div>
-                <div className="divider divider-secondary mt-0 mb-3"></div>
-                <div className="flex justify-center items-center gap-4 my-3">
+                <div className="divider divider-secondary mb-3 mt-0"></div>
+                <div className="my-3 flex items-center justify-center gap-4">
                     {/* Audio Buttons Column */}
-                    <div className="flex w-auto lg:w-2/5 2xl:w-1/3 justify-end">
-                        <div className="flex flex-col gap-4 items-center">
+                    <div className="flex w-auto justify-end lg:w-2/5 2xl:w-1/3">
+                        <div className="flex flex-col items-center gap-4">
                             {audioItems.map((audio, index) => (
                                 <div key={index}>
                                     <button
                                         type="button"
                                         title={t("exercise_page.buttons.playAudioBtn")}
-                                        className="btn btn-success btn-circle"
+                                        className="btn btn-circle btn-success"
                                         onClick={() => handleAudioPlay(audio.src, index)}
-                                        disabled={isLoading[index]}>
+                                        disabled={isLoading[index]}
+                                    >
                                         {isLoading[index] ? (
                                             <span className="loading loading-spinner loading-md"></span>
                                         ) : isPlaying === index ? (
@@ -286,11 +293,13 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                             collisionDetection={closestCenter}
                             autoScroll={{ layoutShiftCompensation: false, enable: false }}
                             onDragStart={handleDragStart}
-                            onDragEnd={handleDragEnd}>
-                            <div className="flex flex-col justify-start gap-4 w-full lg:w-3/4">
+                            onDragEnd={handleDragEnd}
+                        >
+                            <div className="flex w-full flex-col justify-start gap-4 lg:w-3/4">
                                 <SortableContext
                                     items={shuffledWords.map((word) => word.id)}
-                                    strategy={verticalListSortingStrategy}>
+                                    strategy={verticalListSortingStrategy}
+                                >
                                     {shuffledWords.map((word, index) => (
                                         <SortableWord
                                             key={word.id}
@@ -306,7 +315,9 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                                         <SortableWord
                                             word={{
                                                 id: activeId,
-                                                text: shuffledWords.find((item) => item.id === activeId)?.text,
+                                                text: shuffledWords.find(
+                                                    (item) => item.id === activeId
+                                                )?.text,
                                             }}
                                             isOverlay={true} // Pass a prop to indicate it's in the overlay
                                         />
@@ -318,21 +329,29 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                 </div>
 
                 <div className="card-actions justify-center">
-                    <div className="flex flex-wrap justify-center my-3 gap-2">
+                    <div className="my-3 flex flex-wrap justify-center gap-2">
                         <button
                             type="button"
                             className="btn btn-primary"
                             onClick={handleSubmit}
-                            disabled={buttonsDisabled}>
-                            <LiaCheckCircle className="h-6 w-6" /> {t("exercise_page.buttons.checkBtn")}
+                            disabled={buttonsDisabled}
+                        >
+                            <LiaCheckCircle className="h-6 w-6" />{" "}
+                            {t("exercise_page.buttons.checkBtn")}
                         </button>
                         {currentQuestionIndex < shuffledQuiz.length - 1 && (
-                            <button type="button" className="btn btn-accent" onClick={handleNextQuiz}>
-                                <LiaChevronCircleRightSolid className="h-6 w-6" /> {t("exercise_page.buttons.nextBtn")}
+                            <button
+                                type="button"
+                                className="btn btn-accent"
+                                onClick={handleNextQuiz}
+                            >
+                                <LiaChevronCircleRightSolid className="h-6 w-6" />{" "}
+                                {t("exercise_page.buttons.nextBtn")}
                             </button>
                         )}
                         <button type="button" className="btn btn-error" onClick={handleQuit}>
-                            <LiaTimesCircle className="h-6 w-6" /> {t("exercise_page.buttons.quitBtn")}
+                            <LiaTimesCircle className="h-6 w-6" />{" "}
+                            {t("exercise_page.buttons.quitBtn")}
                         </button>
                     </div>
                 </div>

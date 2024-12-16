@@ -69,7 +69,10 @@ const ExercisePage = () => {
         return (
             <>
                 {/* Tooltip for larger screens */}
-                <div className="tooltip tooltip-secondary dark:tooltip-accent hidden sm:inline" data-tip={info}>
+                <div
+                    className="tooltip tooltip-secondary hidden dark:tooltip-accent sm:inline"
+                    data-tip={info}
+                >
                     <IoInformationCircleOutline className="h-5 w-5 cursor-pointer hover:text-primary dark:hover:text-accent" />
                 </div>
 
@@ -77,8 +80,9 @@ const ExercisePage = () => {
                 <button
                     type="button"
                     title={t("exercise_page.buttons.expandBtn")}
-                    className="btn btn-circle btn-sm sm:hidden focus:ring-2"
-                    onClick={onClick}>
+                    className="btn btn-circle btn-sm focus:ring-2 sm:hidden"
+                    onClick={onClick}
+                >
                     <IoInformationCircleOutline className="h-5 w-5 cursor-pointer" />
                 </button>
             </>
@@ -86,9 +90,9 @@ const ExercisePage = () => {
     };
 
     const ExerciseCard = ({ heading, titles, infoKey, file, onShowModal }) => (
-        <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto w-full md:w-1/3 lg:w-1/4">
+        <div className="card card-bordered flex h-auto w-full flex-col justify-between shadow-md md:w-1/3 lg:w-1/4 dark:border-slate-600">
             <div className="card-body flex-grow">
-                <div className="font-semibold card-title">{t(heading)}</div>
+                <div className="card-title font-semibold">{t(heading)}</div>
                 <div className="divider divider-secondary m-0"></div>
                 {titles
                     .filter(({ american, british }) => {
@@ -104,10 +108,17 @@ const ExercisePage = () => {
                             <div key={index} className="flex items-center space-x-2">
                                 <a
                                     className="link hover:link-primary dark:hover:link-accent"
-                                    onClick={() => handleSelectExercise({ ...exercise, file }, heading)}>
+                                    onClick={() =>
+                                        handleSelectExercise({ ...exercise, file }, heading)
+                                    }
+                                >
                                     {t(exercise.titleKey) || exercise.title}
                                 </a>
-                                <TooltipIcon info={info} modalId={modalId} onClick={() => onShowModal(info)} />
+                                <TooltipIcon
+                                    info={info}
+                                    modalId={modalId}
+                                    onClick={() => onShowModal(info)}
+                                />
                             </div>
                         );
                     })}
@@ -150,7 +161,9 @@ const ExercisePage = () => {
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-                alert("Error while loading the data for this section. Please check your Internet connection.");
+                alert(
+                    "Error while loading the data for this section. Please check your Internet connection."
+                );
             }
         };
         fetchData();
@@ -171,7 +184,7 @@ const ExercisePage = () => {
         <>
             <TopNavBar />
             <Container>
-                <h1 className="py-6 text-3xl md:text-4xl font-bold">{t("navigation.exercises")}</h1>
+                <h1 className="py-6 text-3xl font-bold md:text-4xl">{t("navigation.exercises")}</h1>
                 {selectedExercise ? (
                     <ExerciseDetailPage
                         heading={selectedExercise.heading}
@@ -189,7 +202,7 @@ const ExercisePage = () => {
                         {loading ? (
                             <LoadingOverlay />
                         ) : (
-                            <div className="flex flex-wrap justify-center gap-7 mb-10">
+                            <div className="mb-10 flex flex-wrap justify-center gap-7">
                                 {data.map((section, index) => (
                                     <ExerciseCard
                                         key={index}
@@ -206,11 +219,17 @@ const ExercisePage = () => {
                         {
                             <dialog ref={modalRef} className="modal">
                                 <div className="modal-box">
-                                    <h3 className="font-bold text-lg">{t("exercise_page.modalInfoHeader")}</h3>
+                                    <h3 className="text-lg font-bold">
+                                        {t("exercise_page.modalInfoHeader")}
+                                    </h3>
                                     <p className="py-4">{modalInfo}</p>
                                     <div className="modal-action">
                                         <form method="dialog">
-                                            <button type="button" className="btn" onClick={handleCloseModal}>
+                                            <button
+                                                type="button"
+                                                className="btn"
+                                                onClick={handleCloseModal}
+                                            >
                                                 {t("sound_page.closeBtn")}
                                             </button>
                                         </form>

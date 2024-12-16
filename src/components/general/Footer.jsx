@@ -2,12 +2,16 @@ import LogoLightOrDark from "./LogoLightOrDark";
 
 const Footer = () => {
     return (
-        <footer className="footer bg-base-200 text-base-content md:p-10 p-6 pb-20">
+        <footer className="footer bg-base-200 p-6 pb-20 text-base-content md:p-10">
             <aside>
                 <LogoLightOrDark width="100" height="100" />
                 <p>
                     Created by{" "}
-                    <a className="link after:content-['_↗']" href="https://yell0wsuit.page" target="_blank">
+                    <a
+                        className="link after:content-['_↗']"
+                        href="https://yell0wsuit.page"
+                        target="_blank"
+                    >
                         yell0wsuit
                     </a>
                     <br />
@@ -15,7 +19,8 @@ const Footer = () => {
                     <a
                         className="link after:content-['_↗']"
                         href="https://github.com/yllst-testing-labs/ispeakerreact/graphs/contributors"
-                        target="_blank">
+                        target="_blank"
+                    >
                         See contributors
                     </a>
                 </p>
@@ -28,9 +33,10 @@ const Footer = () => {
             <nav>
                 <h6 className="footer-title">More English learning materials</h6>
                 <a
-                    className="link link-hover after:content-['_↗']"
+                    className="link-hover link after:content-['_↗']"
                     href="https://yell0wsuit.github.io/docugrammar/"
-                    target="_blank">
+                    target="_blank"
+                >
                     DocuGrammar
                 </a>
                 <p className="text-xs text-stone-700 dark:text-stone-400">

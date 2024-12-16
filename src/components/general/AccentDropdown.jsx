@@ -31,25 +31,31 @@ const AccentDropdown = ({ onAccentChange }) => {
             <div className="flex items-center space-x-4">
                 <p className="font-semibold">{t("accent.accentSettings")}:</p>
                 <div className="dropdown">
-                    <div tabIndex={0} role="button" className="btn m-1 btn-accent">
+                    <div tabIndex={0} role="button" className="btn btn-accent m-1">
                         <img
-                            src={selectedAccentOptions.find((item) => item.value === selectedAccent).emoji}
+                            src={
+                                selectedAccentOptions.find((item) => item.value === selectedAccent)
+                                    .emoji
+                            }
                             className="inline-block h-6 w-6"
                         />
                         {selectedAccentOptions.find((item) => item.value === selectedAccent).name}
                     </div>
                     <ul
                         tabIndex={0}
-                        className="dropdown-content menu border dark:border-slate-600 bg-base-100 rounded-box z-[300] w-52 p-2 shadow-md">
+                        className="menu dropdown-content z-[300] w-52 rounded-box border bg-base-100 p-2 shadow-md dark:border-slate-600"
+                    >
                         {selectedAccentOptions.map((item) => (
                             <li key={item.value}>
                                 <button
                                     type="button"
                                     className={`${
                                         selectedAccent === item.value ? "btn-active" : ""
-                                    } btn btn-sm btn-block btn-ghost justify-start`}
-                                    onClick={() => handleAccentChange(item.value)}>
-                                    <img src={item.emoji} className="inline-block h-6 w-6" /> {item.name}
+                                    } btn btn-ghost btn-sm btn-block justify-start`}
+                                    onClick={() => handleAccentChange(item.value)}
+                                >
+                                    <img src={item.emoji} className="inline-block h-6 w-6" />{" "}
+                                    {item.name}
                                 </button>
                             </li>
                         ))}

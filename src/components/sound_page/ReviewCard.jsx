@@ -27,31 +27,55 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
     };
 
     return (
-        <div className="card card-bordered dark:border-slate-600 shadow-md flex flex-col justify-between h-auto pb-6">
+        <div className="card card-bordered flex h-auto flex-col justify-between pb-6 shadow-md dark:border-slate-600">
             <div className="card-body">
                 <p className="mb-2 text-center">
                     {t("sound_page.reviewInstructions", { phoneme: he.decode(sound.phoneme) })}
                 </p>
-                <div className="flex flex-row justify-center items-center space-x-4">
+                <div className="flex flex-row items-center justify-center space-x-4">
                     <a onClick={() => handleReviewClick("good")}>
                         {review === "good" ? (
-                            <BsEmojiSmileFill size={52} role="button" className={`${emojiStyle("good")}`} />
+                            <BsEmojiSmileFill
+                                size={52}
+                                role="button"
+                                className={`${emojiStyle("good")}`}
+                            />
                         ) : (
-                            <BsEmojiSmile size={52} role="button" className={`${emojiStyle("good")}`} />
+                            <BsEmojiSmile
+                                size={52}
+                                role="button"
+                                className={`${emojiStyle("good")}`}
+                            />
                         )}
                     </a>
                     <a onClick={() => handleReviewClick("neutral")}>
                         {review === "neutral" ? (
-                            <BsEmojiNeutralFill size={52} role="button" className={`${emojiStyle("neutral")}`} />
+                            <BsEmojiNeutralFill
+                                size={52}
+                                role="button"
+                                className={`${emojiStyle("neutral")}`}
+                            />
                         ) : (
-                            <BsEmojiNeutral size={52} role="button" className={`${emojiStyle("neutral")}`} />
+                            <BsEmojiNeutral
+                                size={52}
+                                role="button"
+                                className={`${emojiStyle("neutral")}`}
+                            />
                         )}
                     </a>
                     <a onClick={() => handleReviewClick("bad")}>
                         {review === "bad" ? (
-                            <BsEmojiFrownFill size={52} role="button" className={`${emojiStyle("bad")}`} />
+                            <BsEmojiFrownFill
+                                size={52}
+                                role="button"
+                                className={`${emojiStyle("bad")}`}
+                            />
                         ) : (
-                            <BsEmojiFrown size={52} role="button" className={`${emojiStyle("bad")}`} />
+                            <BsEmojiFrown
+                                size={52}
+                                role="button"
+                                className={`${emojiStyle("bad")}`}
+                            />
                         )}
                     </a>
                 </div>

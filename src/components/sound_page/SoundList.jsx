@@ -28,9 +28,13 @@ const SoundCard = ({
 
     return (
         <div className="indicator">
-            {badgeColor && <span className={`indicator-item indicator-center badge ${badgeColor}`}>{reviewText}</span>}
-            <div className="card card-bordered shadow-md dark:border-slate-600 flex flex-col justify-between h-auto pb-6">
-                <div className="card-body items-center text-center flex-grow">
+            {badgeColor && (
+                <span className={`badge indicator-item indicator-center ${badgeColor}`}>
+                    {reviewText}
+                </span>
+            )}
+            <div className="card card-bordered flex h-auto flex-col justify-between pb-6 shadow-md dark:border-slate-600">
+                <div className="card-body flex-grow items-center text-center">
                     <h2 className="card-title">{he.decode(sound.phoneme)}</h2>
                     <p>{sound.example_word}</p>
                 </div>
@@ -38,7 +42,10 @@ const SoundCard = ({
                     <button
                         className="btn btn-primary w-full"
                         onClick={() => handlePracticeClick(sound, selectedAccent, index)}
-                        aria-label={t("sound_page.practiceBtn", { sound: he.decode(sound.phoneme) })}>
+                        aria-label={t("sound_page.practiceBtn", {
+                            sound: he.decode(sound.phoneme),
+                        })}
+                    >
                         {t("sound_page.practiceBtn")}
                     </button>
                 </div>
@@ -83,7 +90,9 @@ const SoundList = () => {
     };
 
     const getReviewKey = (sound, index) => {
-        const type = soundsData.consonants.some((s) => s.phoneme === sound.phoneme) ? "consonant" : "vowel";
+        const type = soundsData.consonants.some((s) => s.phoneme === sound.phoneme)
+            ? "consonant"
+            : "vowel";
         return `${type}${index + 1}`;
     };
 
@@ -116,13 +125,16 @@ const SoundList = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const cachedDataBlob = !isElectron() && (await getFileFromIndexedDB("sounds_data.json", "json"));
+                const cachedDataBlob =
+                    !isElectron() && (await getFileFromIndexedDB("sounds_data.json", "json"));
 
                 if (cachedDataBlob) {
                     const cachedData = JSON.parse(await cachedDataBlob.text());
                     setSoundsData(cachedData);
                 } else {
-                    const response = await fetch(`${import.meta.env.BASE_URL}json/sounds_data.json`);
+                    const response = await fetch(
+                        `${import.meta.env.BASE_URL}json/sounds_data.json`
+                    );
                     const data = await response.json();
                     setSoundsData(data);
 
@@ -147,7 +159,8 @@ const SoundList = () => {
     }, [t]);
 
     const filteredSounds = useMemo(() => {
-        const currentTabData = activeTab === "tab1" ? soundsData.consonants : soundsData.vowels_n_diphthongs;
+        const currentTabData =
+            activeTab === "tab1" ? soundsData.consonants : soundsData.vowels_n_diphthongs;
         return currentTabData.filter(
             (sound) =>
                 (selectedAccent === "british" && sound.b_s === "yes") ||
@@ -159,7 +172,7 @@ const SoundList = () => {
         <>
             <TopNavBar />
             <Container>
-                <h1 className="py-6 text-3xl md:text-4xl font-bold">{t("navigation.sounds")}</h1>
+                <h1 className="py-6 text-3xl font-bold md:text-4xl">{t("navigation.sounds")}</h1>
                 {selectedSound ? (
                     <Suspense fallback={isElectron() ? null : <LoadingOverlay />}>
                         <PracticeSound
@@ -178,16 +191,19 @@ const SoundList = () => {
                                 <LoadingOverlay />
                             ) : (
                                 <>
-                                    <div className="sticky top-[calc(5rem)] z-10 py-8 bg-base-100">
+                                    <div className="sticky top-[calc(5rem)] z-10 bg-base-100 py-8">
                                         <div className="flex justify-center">
-                                            <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
+                                            <ul className="menu menu-horizontal w-auto rounded-box bg-base-200 dark:bg-slate-600">
                                                 <li>
                                                     <button
                                                         type="button"
                                                         onClick={() => setActiveTab("tab1")}
                                                         className={`md:text-base ${
-                                                            activeTab === "tab1" ? "active font-semibold" : ""
-                                                        }`}>
+                                                            activeTab === "tab1"
+                                                                ? "active font-semibold"
+                                                                : ""
+                                                        }`}
+                                                    >
                                                         {t("sound_page.consonants")}
                                                     </button>
                                                 </li>
@@ -196,15 +212,18 @@ const SoundList = () => {
                                                         type="button"
                                                         onClick={() => setActiveTab("tab2")}
                                                         className={`md:text-base ${
-                                                            activeTab === "tab2" ? "active font-semibold" : ""
-                                                        }`}>
+                                                            activeTab === "tab2"
+                                                                ? "active font-semibold"
+                                                                : ""
+                                                        }`}
+                                                    >
                                                         {t("sound_page.vowels_dipthongs")}
                                                     </button>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap justify-center gap-5 place-items-center my-4">
+                                    <div className="my-4 flex flex-wrap place-items-center justify-center gap-5">
                                         {filteredSounds.map((sound, index) => (
                                             <SoundCard
                                                 key={index}

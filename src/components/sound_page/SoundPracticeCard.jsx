@@ -16,27 +16,37 @@ const SoundCardItem = ({
 }) => {
     const isRecordingDisabled = activeRecordingCard !== null || isRecordingPlaying;
     const isPlayingDisabled =
-        (isRecordingPlaying && activePlaybackCard !== id) || !isRecordingAvailable(id) || activeRecordingCard !== null;
+        (isRecordingPlaying && activePlaybackCard !== id) ||
+        !isRecordingAvailable(id) ||
+        activeRecordingCard !== null;
 
     const recordIconClasses = `me-2${
-        activeRecordingCard === id ? " text-success" : isRecordingDisabled ? " pointer-events-none opacity-25" : ""
+        activeRecordingCard === id
+            ? " text-success"
+            : isRecordingDisabled
+              ? " pointer-events-none opacity-25"
+              : ""
     }`;
     const playIconClasses = `me-2${
         isRecordingPlaying && activePlaybackCard !== id
             ? " pointer-events-none opacity-25"
             : isRecordingPlayingActive(id)
-            ? " text-success"
-            : isPlayingDisabled
-            ? " pointer-events-none opacity-25"
-            : ""
+              ? " text-success"
+              : isPlayingDisabled
+                ? " pointer-events-none opacity-25"
+                : ""
     }`;
 
     return (
         <div className="flex flex-wrap">
-            <div className="card card-bordered dark:border-slate-600 mb-2 w-full">
+            <div className="card card-bordered mb-2 w-full dark:border-slate-600">
                 <div className="card-body">
-                    <div className="flex flex-col md:flex-row items-center md:space-x-4 space-y-4 md:space-y-0">
-                        <button type="button" className="btn btn-ghost" onClick={() => handleShow(id)}>
+                    <div className="flex flex-col items-center space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+                        <button
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={() => handleShow(id)}
+                        >
                             <img src={imgPhonemeThumbSrc} alt="Phoneme Thumbnail" />
                         </button>
                         <span dangerouslySetInnerHTML={{ __html: he.decode(textContent) }}></span>
@@ -53,7 +63,9 @@ const SoundCardItem = ({
                                 size={24}
                                 role="button"
                                 className={playIconClasses}
-                                onClick={() => (isRecordingAvailable(id) ? handlePlayRecording(id) : null)}
+                                onClick={() =>
+                                    isRecordingAvailable(id) ? handlePlayRecording(id) : null
+                                }
                                 disabled={isRecordingPlaying && activePlaybackCard !== id}
                             />
                         </div>
@@ -101,7 +113,12 @@ const SoundPracticeCard = ({
             {items.map(
                 (item) =>
                     item.shouldShow && (
-                        <SoundCardItem key={item.id} id={item.id} textContent={item.textContent} {...commonProps} />
+                        <SoundCardItem
+                            key={item.id}
+                            id={item.id}
+                            textContent={item.textContent}
+                            {...commonProps}
+                        />
                     )
             )}
         </>

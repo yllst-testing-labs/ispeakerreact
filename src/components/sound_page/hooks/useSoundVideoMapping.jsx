@@ -14,8 +14,8 @@ export function useSoundVideoMapping(type, accent, soundsData, phonemeIndex) {
                         ? "consonants_b"
                         : "consonants_a"
                     : accent === "british"
-                    ? "vowels_b"
-                    : "vowels_a";
+                      ? "vowels_b"
+                      : "vowels_a";
 
             const videoArray = soundsData[videoArrayKey];
             const videoBlockStartIndex = phonemeIndex * 5;

@@ -2,7 +2,11 @@ import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { saveRecording } from "../../../utils/databaseOperations";
 import { isElectron } from "../../../utils/isElectron";
-import { sonnerErrorToast, sonnerSuccessToast, sonnerWarningToast } from "../../../utils/sonnerCustomToast";
+import {
+    sonnerErrorToast,
+    sonnerSuccessToast,
+    sonnerWarningToast,
+} from "../../../utils/sonnerCustomToast";
 
 export function useRecordingFunction(
     activeRecordingCard,
@@ -73,7 +77,10 @@ export function useRecordingFunction(
                                 const audioBlob = new Blob(audioChunks, { type: mimeType });
                                 saveRecording(audioBlob, recordingDataIndex, mimeType);
                                 sonnerSuccessToast(t("toast.recordingSuccess"));
-                                setRecordingAvailability((prev) => ({ ...prev, [recordingDataIndex]: true }));
+                                setRecordingAvailability((prev) => ({
+                                    ...prev,
+                                    [recordingDataIndex]: true,
+                                }));
                                 audioChunks = [];
                             }
                         });
@@ -90,7 +97,8 @@ export function useRecordingFunction(
                     })
                     .catch((err) => {
                         console.error("Error accessing the microphone.", err);
-                        isElectron() && window.electron.log("error", `Error accessing the microphone: ${err}`);
+                        isElectron() &&
+                            window.electron.log("error", `Error accessing the microphone: ${err}`);
                         sonnerErrorToast(`${t("toast.recordingFailed")} ${err.message}`);
                         setIsRecording(false);
                         setActiveRecordingCard(null);

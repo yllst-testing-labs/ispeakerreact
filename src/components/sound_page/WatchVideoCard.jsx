@@ -3,18 +3,22 @@ import { isElectron } from "../../utils/isElectron";
 
 const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) => {
     return (
-        <div className="card card-bordered dark:border-slate-600 shadow-md w-full mb-6">
+        <div className="card card-bordered mb-6 w-full shadow-md dark:border-slate-600">
             <div className="card-body">
                 <div className={`${iframeLoadingStates.modalIframe ? "overflow-hidden" : ""}`}>
                     <div className="aspect-video">
-                        <div className="w-full h-full">
-                            {isElectron() && videoUrl?.isLocal && videoUrl.value.includes("http://localhost") ? (
-                                <video controls className="w-full h-full">
+                        <div className="h-full w-full">
+                            {isElectron() &&
+                            videoUrl?.isLocal &&
+                            videoUrl.value.includes("http://localhost") ? (
+                                <video controls className="h-full w-full">
                                     <source src={videoUrl.value} type="video/mp4" />
                                 </video>
                             ) : (
                                 <>
-                                    {iframeLoadingStates.mainIframe && <div className="skeleton h-full w-full"></div>}
+                                    {iframeLoadingStates.mainIframe && (
+                                        <div className="skeleton h-full w-full"></div>
+                                    )}
                                     <iframe
                                         src={videoUrl?.value}
                                         title="Phoneme Video"
@@ -28,7 +32,8 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
                                                 ? { visibility: "hidden" }
                                                 : { visibility: "visible" }
                                         }
-                                        className="w-full h-full"></iframe>
+                                        className="h-full w-full"
+                                    ></iframe>
                                 </>
                             )}
                         </div>

@@ -37,7 +37,12 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
 
     const { index: phonemeIndex, type } = findPhonemeDetails(sound.phoneme);
 
-    const { videoUrls, videoUrl, videoLoading } = useSoundVideoMapping(type, accent, soundsData, phonemeIndex);
+    const { videoUrls, videoUrl, videoLoading } = useSoundVideoMapping(
+        type,
+        accent,
+        soundsData,
+        phonemeIndex
+    );
 
     const imgPhonemeThumbSrc =
         accent === "american"
@@ -93,20 +98,21 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
     const [currentAudioSource, setCurrentAudioSource] = useState(null); // For AudioContext source node
     const [currentAudioElement, setCurrentAudioElement] = useState(null); // For Audio element (fallback)
 
-    const { getRecordingKey, isRecordingPlayingActive, isRecordingAvailable, handleRecording } = useRecordingFunction(
-        activeRecordingCard,
-        setActiveRecordingCard,
-        setIsRecording,
-        setMediaRecorder,
-        setRecordingAvailability,
-        isRecording,
-        mediaRecorder,
-        findPhonemeDetails,
-        sound,
-        accent,
-        recordingAvailability,
-        playingRecordings
-    );
+    const { getRecordingKey, isRecordingPlayingActive, isRecordingAvailable, handleRecording } =
+        useRecordingFunction(
+            activeRecordingCard,
+            setActiveRecordingCard,
+            setIsRecording,
+            setMediaRecorder,
+            setRecordingAvailability,
+            isRecording,
+            mediaRecorder,
+            findPhonemeDetails,
+            sound,
+            accent,
+            recordingAvailability,
+            playingRecordings
+        );
 
     useEffect(() => {
         // Assume checkRecordingExists is a function that checks if a recording exists and returns a promise that resolves to a boolean
@@ -172,23 +178,28 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
 
     return (
         <>
-            <div className="flex flex-wrap lg:flex-nowrap gap-5">
+            <div className="flex flex-wrap gap-5 lg:flex-nowrap">
                 <div className="w-full lg:w-1/4">
-                    <h3 className="text-2xl font-semibold mb-2">
+                    <h3 className="mb-2 text-2xl font-semibold">
                         {t("sound_page.soundTop")} {he.decode(sound.phoneme)}
                     </h3>
                     <p className="mb-4">
                         {t("accent.accentSettings")}:{" "}
-                        {accent == "american" ? t("accent.accentAmerican") : t("accent.accentBritish")}
+                        {accent == "american"
+                            ? t("accent.accentAmerican")
+                            : t("accent.accentBritish")}
                     </p>
                     {accentData && (
                         <>
-                            <p className="font-semibold mb-2">{t("sound_page.exampleWords")}</p>
+                            <p className="mb-2 font-semibold">{t("sound_page.exampleWords")}</p>
                             {["initial", "medial", "final"].map((position) => (
                                 <p
-                                    className="italic mb-2"
+                                    className="mb-2 italic"
                                     key={position}
-                                    dangerouslySetInnerHTML={{ __html: he.decode(accentData[position]) }}></p>
+                                    dangerouslySetInnerHTML={{
+                                        __html: he.decode(accentData[position]),
+                                    }}
+                                ></p>
                             ))}
                         </>
                     )}
@@ -200,14 +211,15 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     <div className="sticky top-[calc(5rem)] z-10 bg-base-100 py-4">
                         <div className="flex flex-col items-center">
                             {/* Menu */}
-                            <ul className="menu menu-horizontal bg-base-200 dark:bg-slate-600 rounded-box w-auto">
+                            <ul className="menu menu-horizontal w-auto rounded-box bg-base-200 dark:bg-slate-600">
                                 <li>
                                     <button
                                         type="button"
                                         onClick={() => setActiveTab("watchTab")}
                                         className={`md:text-base ${
                                             activeTab === "watchTab" ? "active font-semibold" : ""
-                                        }`}>
+                                        }`}
+                                    >
                                         <MdOutlineOndemandVideo className="md:h-6 md:w-6" /> Watch
                                     </button>
                                 </li>
@@ -217,7 +229,8 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                         onClick={() => setActiveTab("practieTab")}
                                         className={`md:text-base ${
                                             activeTab === "practieTab" ? "active font-semibold" : ""
-                                        }`}>
+                                        }`}
+                                    >
                                         <MdKeyboardVoice className="md:h-6 md:w-6" /> Practice
                                     </button>
                                 </li>
@@ -227,7 +240,8 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                         onClick={() => setActiveTab("reviewTab")}
                                         className={`md:text-base ${
                                             activeTab === "reviewTab" ? "active font-semibold" : ""
-                                        }`}>
+                                        }`}
+                                    >
                                         <MdChecklist className="md:h-6 md:w-6" /> Review
                                     </button>
                                 </li>
@@ -246,7 +260,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                             />
                         )}
                         {activeTab === "practieTab" && (
-                            <div className="card card-bordered dark:border-slate-600 shadow-md w-full mb-6">
+                            <div className="card card-bordered mb-6 w-full shadow-md dark:border-slate-600">
                                 <div className="card-body">
                                     <p className="mb-2">
                                         <Trans
@@ -277,7 +291,12 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                             </div>
                         )}
                         {activeTab === "reviewTab" && (
-                            <ReviewCard sound={sound} accent={accent} index={index} soundsData={soundsData} />
+                            <ReviewCard
+                                sound={sound}
+                                accent={accent}
+                                index={index}
+                                soundsData={soundsData}
+                            />
                         )}
                     </div>
                 </div>
@@ -287,15 +306,16 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                 <div
                     className={`modal-box w-full max-w-3xl ${
                         iframeLoadingStates.modalIframe ? "overflow-hidden" : ""
-                    }`}>
-                    <h3 className="font-bold text-lg">
+                    }`}
+                >
+                    <h3 className="text-lg font-bold">
                         {t("sound_page.clipModalTitle")} #{selectedVideoModalIndex}
                     </h3>
                     <div className="py-4">
                         <div className="aspect-video">
-                            <div className="w-full h-full">
+                            <div className="h-full w-full">
                                 {isElectron() && selectedVideoUrl.includes("localhost:8998") ? (
-                                    <video controls className="w-full h-full">
+                                    <video controls className="h-full w-full">
                                         <source src={selectedVideoUrl} type="video/mp4" />
                                     </video>
                                 ) : (
@@ -310,9 +330,12 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                                 allowFullScreen
                                                 onLoad={() => handleIframeLoad("modalIframe")}
                                                 style={{
-                                                    visibility: iframeLoadingStates.modalIframe ? "hidden" : "visible",
+                                                    visibility: iframeLoadingStates.modalIframe
+                                                        ? "hidden"
+                                                        : "visible",
                                                 }}
-                                                className="w-full h-full"></iframe>
+                                                className="h-full w-full"
+                                            ></iframe>
                                         </>
                                     )
                                 )}

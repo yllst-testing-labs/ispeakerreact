@@ -1,10 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import { Floppy, PlayCircle, RecordCircle, StopCircle, Trash } from "react-bootstrap-icons";
+import { BsFloppy, BsPlayCircle, BsRecordCircle, BsStopCircle, BsTrash } from "react-icons/bs";
+
 import { useTranslation } from "react-i18next";
-import { checkRecordingExists, openDatabase, playRecording, saveRecording } from "../../utils/databaseOperations";
+import {
+    checkRecordingExists,
+    openDatabase,
+    playRecording,
+    saveRecording,
+} from "../../utils/databaseOperations";
 import { isElectron } from "../../utils/isElectron";
-import { sonnerErrorToast, sonnerSuccessToast, sonnerWarningToast } from "../../utils/sonnerCustomToast";
+import {
+    sonnerErrorToast,
+    sonnerSuccessToast,
+    sonnerWarningToast,
+} from "../../utils/sonnerCustomToast";
 
 const PracticeTab = ({ accent, conversationId }) => {
     const { t } = useTranslation();
@@ -128,7 +137,8 @@ const PracticeTab = ({ accent, conversationId }) => {
                             const audioBlob = new Blob(audioChunks, { type: event.data.type });
                             saveRecording(audioBlob, recordingKey, event.data.type);
                             sonnerSuccessToast(t("toast.recordingSuccess"));
-                            isElectron() && window.electron.log("log", `Recording saved: ${recordingKey}`);
+                            isElectron() &&
+                                window.electron.log("log", `Recording saved: ${recordingKey}`);
 
                             setRecordingExists(true);
                             audioChunks = [];
@@ -136,13 +146,16 @@ const PracticeTab = ({ accent, conversationId }) => {
                     });
 
                     // Auto-stop after 15 minutes
-                    setTimeout(() => {
-                        if (mediaRecorder.state !== "inactive") {
-                            mediaRecorder.stop();
-                            sonnerWarningToast(t("toast.recordingExceeded"));
-                            setIsRecording(false);
-                        }
-                    }, 15 * 60 * 1000);
+                    setTimeout(
+                        () => {
+                            if (mediaRecorder.state !== "inactive") {
+                                mediaRecorder.stop();
+                                sonnerWarningToast(t("toast.recordingExceeded"));
+                                setIsRecording(false);
+                            }
+                        },
+                        15 * 60 * 1000
+                    );
                 })
                 .catch((error) => {
                     sonnerErrorToast(t("toast.recordingFailed") + error.message);
@@ -195,57 +208,88 @@ const PracticeTab = ({ accent, conversationId }) => {
     };
 
     return (
-        <>
-            {t("tabConversationExam.practiceConversationText", { returnObjects: true }).map((text, index) => (
-                <p key={index}>{text}</p>
-            ))}
+        <div className="container-lg mx-auto">
+            {t("tabConversationExam.practiceConversationText", { returnObjects: true }).map(
+                (text, index) => (
+                    <p className="mb-2" key={index}>
+                        {text}
+                    </p>
+                )
+            )}
 
-            <Form>
-                <Form.Group controlId="practiceText" className="mb-2">
-                    <Form.Label>{t("tabConversationExam.practiceConversationBox")}</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        rows={3}
-                        ref={textAreaRef}
-                        value={textValue}
-                        onChange={(e) => setTextValue(e.target.value)}
-                        onInput={autoExpand}
-                    />
-                </Form.Group>
-                <Button variant="primary" onClick={handleSaveText} disabled={!textValue}>
-                    <Floppy /> {t("buttonConversationExam.saveBtn")}
-                </Button>
-                <Button variant="danger" onClick={handleClearText} className="ms-2">
-                    <Trash /> {t("buttonConversationExam.clearBtn")}
-                </Button>
-            </Form>
+            <label className="form-control my-4">
+                <div className="label">
+                    <span className="label-text">
+                        {t("tabConversationExam.practiceConversationBox")}
+                    </span>
+                </div>
+                <textarea
+                    className="textarea textarea-bordered"
+                    ref={textAreaRef}
+                    value={textValue}
+                    onChange={(e) => setTextValue(e.target.value)}
+                    onInput={autoExpand}
+                ></textarea>
+            </label>
+
+            <div className="flex justify-center gap-2">
+                <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleSaveText}
+                    disabled={!textValue}
+                >
+                    <BsFloppy className="h-5 w-5" /> {t("buttonConversationExam.saveBtn")}
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-error"
+                    onClick={handleClearText}
+                    disabled={!textValue}
+                >
+                    <BsTrash className="h-5 w-5" /> {t("buttonConversationExam.clearBtn")}
+                </button>
+            </div>
+
+            <div className="divider"></div>
 
             <div className="mt-4">
-                <p>{t("tabConversationExam.recordSectionText")}</p>
-                <Button variant="primary" onClick={handleRecording}>
-                    {isRecording ? (
-                        <>
-                            <StopCircle /> {t("buttonConversationExam.stopRecordBtn")}
-                        </>
-                    ) : (
-                        <>
-                            <RecordCircle /> {t("buttonConversationExam.recordBtn")}
-                        </>
-                    )}
-                </Button>
-                <Button variant="success" onClick={handlePlayRecording} disabled={!recordingExists} className="ms-2">
-                    {isRecordingPlaying ? (
-                        <>
-                            <StopCircle /> {t("buttonConversationExam.stopPlayBtn")}
-                        </>
-                    ) : (
-                        <>
-                            <PlayCircle /> {t("buttonConversationExam.playBtn")}
-                        </>
-                    )}
-                </Button>
+                <p className="mb-4">{t("tabConversationExam.recordSectionText")}</p>
+                <div className="flex justify-center gap-2">
+                    <button type="button" className="btn btn-primary" onClick={handleRecording}>
+                        {isRecording ? (
+                            <>
+                                <BsStopCircle className="h-5 w-5" />{" "}
+                                {t("buttonConversationExam.stopRecordBtn")}
+                            </>
+                        ) : (
+                            <>
+                                <BsRecordCircle className="h-5 w-5" />{" "}
+                                {t("buttonConversationExam.recordBtn")}
+                            </>
+                        )}
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-accent"
+                        onClick={handlePlayRecording}
+                        disabled={!recordingExists}
+                    >
+                        {isRecordingPlaying ? (
+                            <>
+                                <BsStopCircle className="h-5 w-5" />{" "}
+                                {t("buttonConversationExam.stopPlayBtn")}
+                            </>
+                        ) : (
+                            <>
+                                <BsPlayCircle className="h-5 w-5" />{" "}
+                                {t("buttonConversationExam.playBtn")}
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 

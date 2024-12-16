@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 const ReviewTab = ({ reviews, accent, conversationId }) => {
@@ -50,19 +49,22 @@ const ReviewTab = ({ reviews, accent, conversationId }) => {
     };
 
     return (
-        <Form>
+        <div className="container-lg mx-auto">
             {reviews.map((review, index) => (
-                <Form.Check
-                    key={index}
-                    id={`review-${index}`}
-                    type="checkbox"
-                    label={t(review.text)}
-                    checked={!!reviewState[index + 1]}
-                    onChange={() => handleCheckboxChange(index + 1)}
-                    className="mb-2"
-                />
+                <div key={index} className="mb-2">
+                    <label htmlFor={`review-${index}`} className="cursor-pointer">
+                        <span>{t(review.text)}</span>
+                        <input
+                            id={`review-${index}`}
+                            type="checkbox"
+                            className="checkbox checkbox-sm ms-2 align-text-bottom"
+                            checked={!!reviewState[index + 1]}
+                            onChange={() => handleCheckboxChange(index + 1)}
+                        />
+                    </label>
+                </div>
             ))}
-        </Form>
+        </div>
     );
 };
 

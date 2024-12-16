@@ -57,6 +57,7 @@
         "taskCard": "Task",
         "watchCard": "Watch the video",
         "studyCard": "Study",
+        "studyExpandBtn": "Transcription and key languages",
         "imageFullSizeModal": "Full size view",
         "practiceConversationText": [
             "Practice writing your own conversation.",
@@ -325,6 +326,8 @@
     "conversationPage": {
         "selectType": "Select a conversation type to get started",
         "topicHeading": "Topic: ",
+        "conversationModalInfo": "Conversation info",
+        "expandInfoBtn": "See conversation info",
         "discussionAndOpinion": {
             "heading": "Discussion and opinion",
             "agreeingTitle": "Agreeing",
@@ -534,6 +537,7 @@
     "examPage": {
         "selectType": "Select an exam task to get started.",
         "taskInfo": "Task info",
+        "examModalInfo": "Exam info",
         "groupTask": {
             "heading": "Group tasks",
             "discussingOpinions": {

@@ -7,6 +7,7 @@ export default {
     theme: {
         extend: {},
     },
+    safelist: ["not-italic"],
     plugins: [typography, daisyui],
     daisyui: {
         themes: [

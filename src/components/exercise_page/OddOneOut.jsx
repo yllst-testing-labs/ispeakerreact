@@ -120,9 +120,9 @@ const OddOneOut = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                                 {he.decode(option.value)}
                                 {submitted ? (
                                     submitted && option.answer === "true" ? (
-                                        <BsCheckCircleFill className="ms-1" />
+                                        <BsCheckCircleFill />
                                     ) : (
-                                        <BsXCircleFill className="ms-1" />
+                                        <BsXCircleFill />
                                     )
                                 ) : (
                                     ""

@@ -1,7 +1,7 @@
 import he from "he";
 import { useCallback, useEffect, useState } from "react";
-import { BsChevronLeft, BsRecordCircleFill } from "react-icons/bs";
-import { IoChevronBackOutline } from "react-icons/io5";
+import { BsRecordCircleFill } from "react-icons/bs";
+import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
 import { MdChecklist, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 
 import { Trans, useTranslation } from "react-i18next";
@@ -307,17 +307,13 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
             </div>
 
             <dialog id="sound_video_modal" className="modal">
-                <div
-                    className={`modal-box w-full max-w-3xl ${
-                        iframeLoadingStates.modalIframe ? "overflow-hidden" : ""
-                    }`}
-                >
+                <div className="modal-box w-full max-w-3xl">
                     <h3 className="text-lg font-bold">
                         {t("sound_page.clipModalTitle")} #{selectedVideoModalIndex}
                     </h3>
                     <div className="py-4">
                         <div className="aspect-video">
-                            <div className="h-full w-full">
+                            <div className="relative h-full w-full">
                                 {isElectron() && selectedVideoUrl.includes("localhost:8998") ? (
                                     <video controls className="h-full w-full">
                                         <source src={selectedVideoUrl} type="video/mp4" />
@@ -326,19 +322,18 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                     selectedVideoUrl && (
                                         <>
                                             {iframeLoadingStates.modalIframe && (
-                                                <div className="skeleton h-full w-full"></div>
+                                                <div className="skeleton absolute inset-0 h-full w-full"></div>
                                             )}
                                             <iframe
                                                 src={selectedVideoUrl}
                                                 title="Phoneme Video"
                                                 allowFullScreen
                                                 onLoad={() => handleIframeLoad("modalIframe")}
-                                                style={{
-                                                    visibility: iframeLoadingStates.modalIframe
-                                                        ? "hidden"
-                                                        : "visible",
-                                                }}
-                                                className="h-full w-full"
+                                                className={`h-full w-full transition-opacity duration-300 ${
+                                                    iframeLoadingStates.modalIframe
+                                                        ? "opacity-0"
+                                                        : "opacity-100"
+                                                }`}
                                             ></iframe>
                                         </>
                                     )
@@ -348,7 +343,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     </div>
                     {isElectron() && !selectedVideoUrl.startsWith("http://localhost") && (
                         <div role="alert" className="alert mt-5">
-                            <BsChevronLeft className="h-6 w-6" />
+                            <IoInformationCircleOutline className="h-6 w-6" />
                             <span>{t("alert.alertOnlineVideo")}</span>
                         </div>
                     )}

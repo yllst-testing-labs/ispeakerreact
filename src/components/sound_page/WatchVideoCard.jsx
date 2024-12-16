@@ -7,7 +7,7 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
             <div className="card-body">
                 <div className={`${iframeLoadingStates.modalIframe ? "overflow-hidden" : ""}`}>
                     <div className="aspect-video">
-                        <div className="h-full w-full">
+                        <div className="relative h-full w-full">
                             {isElectron() &&
                             videoUrl?.isLocal &&
                             videoUrl.value.includes("http://localhost") ? (
@@ -17,7 +17,7 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
                             ) : (
                                 <>
                                     {iframeLoadingStates.mainIframe && (
-                                        <div className="skeleton h-full w-full"></div>
+                                        <div className="skeleton absolute inset-0 h-full w-full"></div>
                                     )}
                                     <iframe
                                         src={videoUrl?.value}
@@ -27,12 +27,11 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
                                         onLoad={() => {
                                             handleIframeLoad("mainIframe");
                                         }}
-                                        style={
+                                        className={`h-full w-full transition-opacity duration-300 ${
                                             iframeLoadingStates.mainIframe
-                                                ? { visibility: "hidden" }
-                                                : { visibility: "visible" }
-                                        }
-                                        className="h-full w-full"
+                                                ? "opacity-0"
+                                                : "opacity-100"
+                                        }`}
                                     ></iframe>
                                 </>
                             )}

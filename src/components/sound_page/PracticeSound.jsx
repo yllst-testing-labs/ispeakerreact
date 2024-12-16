@@ -189,6 +189,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                             ? t("accent.accentAmerican")
                             : t("accent.accentBritish")}
                     </p>
+                    <div className="divider divider-secondary"></div>
                     {accentData && (
                         <>
                             <p className="mb-2 font-semibold">{t("sound_page.exampleWords")}</p>
@@ -220,7 +221,8 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                             activeTab === "watchTab" ? "active font-semibold" : ""
                                         }`}
                                     >
-                                        <MdOutlineOndemandVideo className="md:h-6 md:w-6" /> Watch
+                                        <MdOutlineOndemandVideo className="h-6 w-6" />{" "}
+                                        {t("buttonConversationExam.watchBtn")}
                                     </button>
                                 </li>
                                 <li>
@@ -231,7 +233,8 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                             activeTab === "practieTab" ? "active font-semibold" : ""
                                         }`}
                                     >
-                                        <MdKeyboardVoice className="md:h-6 md:w-6" /> Practice
+                                        <MdKeyboardVoice className="h-6 w-6" />{" "}
+                                        {t("buttonConversationExam.practiceBtn")}
                                     </button>
                                 </li>
                                 <li>
@@ -242,7 +245,8 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                             activeTab === "reviewTab" ? "active font-semibold" : ""
                                         }`}
                                     >
-                                        <MdChecklist className="md:h-6 md:w-6" /> Review
+                                        <MdChecklist className="h-6 w-6" />{" "}
+                                        {t("buttonConversationExam.reviewBtn")}
                                     </button>
                                 </li>
                             </ul>

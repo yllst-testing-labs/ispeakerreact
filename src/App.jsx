@@ -31,7 +31,8 @@ const baseUrl = isElectron()
 const AppContent = () => {
     const { theme } = useTheme();
     const toastTheme =
-        theme === "dark" || (theme === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        theme === "dark" ||
+        (theme === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches)
             ? "dark"
             : "light";
 
@@ -83,7 +84,12 @@ const AppContent = () => {
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </RouterComponent>
-            <Toaster position="bottom-center" duration="7000" theme={toastTheme} />
+            <Toaster
+                className="flex justify-center"
+                position="bottom-center"
+                duration="7000"
+                theme={toastTheme}
+            />
         </>
     );
 };

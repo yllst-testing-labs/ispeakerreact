@@ -256,7 +256,12 @@ const PracticeTab = ({ accent, conversationId }) => {
             <div className="mt-4">
                 <p className="mb-4">{t("tabConversationExam.recordSectionText")}</p>
                 <div className="flex justify-center gap-2">
-                    <button type="button" className="btn btn-primary" onClick={handleRecording}>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleRecording}
+                        disabled={isRecordingPlaying}
+                    >
                         {isRecording ? (
                             <>
                                 <BsStopCircle className="h-5 w-5" />{" "}
@@ -273,7 +278,7 @@ const PracticeTab = ({ accent, conversationId }) => {
                         type="button"
                         className="btn btn-accent"
                         onClick={handlePlayRecording}
-                        disabled={!recordingExists}
+                        disabled={!recordingExists || isRecording}
                     >
                         {isRecordingPlaying ? (
                             <>

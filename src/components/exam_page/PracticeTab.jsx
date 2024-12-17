@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import { Floppy, PlayCircle, RecordCircle, StopCircle, Trash } from "react-bootstrap-icons";
-import { IoCheckmark, IoCloseOutline } from "react-icons/io5";
 import { BsFloppy, BsPlayCircle, BsRecordCircle, BsStopCircle, BsTrash } from "react-icons/bs";
+import { IoCheckmark, IoCloseOutline } from "react-icons/io5";
 
 import { useTranslation } from "react-i18next";
 import {
@@ -310,7 +308,7 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                                     ></textarea>
                                 </label>
 
-                                <div className="flex justify-center gap-2">
+                                <div className="flex flex-wrap justify-center gap-2">
                                     <button
                                         type="button"
                                         className="btn btn-primary"
@@ -337,14 +335,15 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                                     <p className="mb-4">
                                         {t("tabConversationExam.recordSectionText")}
                                     </p>
-                                    <div className="flex justify-center gap-2">
+                                    <div className="flex flex-wrap justify-center gap-2">
                                         <button
                                             type="button"
                                             className="btn btn-primary"
                                             onClick={() => handleRecording(taskIndex)}
                                             disabled={
-                                                activeTaskIndex !== null &&
-                                                activeTaskIndex !== taskIndex
+                                                isRecordingPlaying ||
+                                                (activeTaskIndex !== null &&
+                                                    activeTaskIndex !== taskIndex)
                                             }
                                         >
                                             {isRecording && activeTaskIndex === taskIndex ? (
@@ -364,6 +363,7 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                                             className="btn btn-accent"
                                             onClick={() => handlePlayRecording(taskIndex)}
                                             disabled={
+                                                isRecording ||
                                                 (activeTaskIndex !== null &&
                                                     activeTaskIndex !== taskIndex) ||
                                                 !recordingExists[taskIndex]

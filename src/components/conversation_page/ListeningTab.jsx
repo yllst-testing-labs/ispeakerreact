@@ -104,11 +104,11 @@ const ListeningTab = ({ sentences }) => {
 
     return (
         <>
-            <div className="flex flex-wrap justify-center gap-4 md:flex-nowrap">
+            <div className="flex flex-wrap justify-center gap-4 lg:flex-nowrap">
                 {sentences.map((subtopic, index) => (
                     <div
                         key={index}
-                        className="card card-bordered w-full shadow-md md:w-1/2 dark:border-slate-600"
+                        className="card card-bordered w-full shadow-md lg:w-1/2 dark:border-slate-600"
                     >
                         <div className="card-body px-4 md:px-8">
                             <div className="card-title font-semibold">{t(subtopic.title)}</div>

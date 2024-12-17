@@ -224,7 +224,7 @@ const PracticeTab = ({ accent, conversationId }) => {
                     </span>
                 </div>
                 <textarea
-                    className="textarea textarea-bordered"
+                    className="textarea textarea-bordered text-base"
                     ref={textAreaRef}
                     value={textValue}
                     onChange={(e) => setTextValue(e.target.value)}

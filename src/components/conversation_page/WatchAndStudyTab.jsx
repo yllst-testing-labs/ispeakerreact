@@ -21,45 +21,47 @@ const WatchAndStudyTab = ({ videoUrl, dialog, skillCheckmark }) => {
     return (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-                <div className="card-title font-semibold">{t("tabConversationExam.watchCard")}</div>
+                <div className="text-xl font-semibold">{t("tabConversationExam.watchCard")}</div>
                 <div className="divider divider-secondary mb-4 mt-0"></div>
-                <div className="aspect-video">
-                    <div className="relative h-full w-full">
-                        {isElectron() && videoUrl && videoUrl.startsWith("http://localhost") ? (
-                            <video controls className="h-full w-full">
-                                <source src={videoUrl} type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>
-                        ) : (
-                            <>
-                                {iframeLoading && (
-                                    <div className="skeleton absolute inset-0 h-full w-full"></div>
-                                )}
-                                <iframe
-                                    src={videoUrl}
-                                    title="Conversation video"
-                                    loading="lazy"
-                                    allowFullScreen
-                                    onLoad={handleIframeLoad}
-                                    className={`h-full w-full transition-opacity duration-300 ${
-                                        iframeLoading ? "opacity-0" : "opacity-100"
-                                    }`}
-                                ></iframe>
-                            </>
-                        )}
+                <div className="top-[calc(14rem)] bg-base-100 md:sticky md:z-10">
+                    <div className="aspect-video">
+                        <div className="relative h-full w-full">
+                            {isElectron() && videoUrl && videoUrl.startsWith("http://localhost") ? (
+                                <video controls className="h-full w-full">
+                                    <source src={videoUrl} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            ) : (
+                                <>
+                                    {iframeLoading && (
+                                        <div className="skeleton absolute inset-0 h-full w-full"></div>
+                                    )}
+                                    <iframe
+                                        src={videoUrl}
+                                        title="Conversation video"
+                                        loading="lazy"
+                                        allowFullScreen
+                                        onLoad={handleIframeLoad}
+                                        className={`h-full w-full transition-opacity duration-300 ${
+                                            iframeLoading ? "opacity-0" : "opacity-100"
+                                        }`}
+                                    ></iframe>
+                                </>
+                            )}
+                        </div>
                     </div>
+                    {isElectron() && !videoUrl.startsWith("http://localhost") ? (
+                        <div role="alert" className="alert mt-5">
+                            <IoInformationCircleOutline className="h-6 w-6" />
+                            <span>{t("alert.alertOnlineVideo")}</span>
+                        </div>
+                    ) : (
+                        ""
+                    )}
                 </div>
-                {isElectron() && !videoUrl.startsWith("http://localhost") ? (
-                    <div role="alert" className="alert mt-5">
-                        <IoInformationCircleOutline className="h-6 w-6" />
-                        <span>{t("alert.alertOnlineVideo")}</span>
-                    </div>
-                ) : (
-                    ""
-                )}
             </div>
             <div>
-                <div className="card-title font-semibold">{t("tabConversationExam.studyCard")}</div>
+                <div className="text-xl font-semibold">{t("tabConversationExam.studyCard")}</div>
                 <div className="divider divider-secondary mb-4 mt-0"></div>
                 <div className="collapse collapse-arrow bg-base-200 dark:bg-slate-700">
                     <input type="checkbox" />

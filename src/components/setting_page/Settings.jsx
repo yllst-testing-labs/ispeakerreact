@@ -39,46 +39,53 @@ const SettingsPage = () => {
         <>
             <TopNavBar />
             <Container>
-                <div className="flex justify-center">
-                    <div className="flex-2">
+                <div className="my-8 flex justify-center">
+                    <div className="w-full md:w-2/3 lg:w-1/2">
                         {currentPage === "settings" && (
                             <>
-                                <h1 className="fw-semibold">{t("settingPage.heading")}</h1>
+                                <h1 className="text-3xl font-semibold md:text-4xl">
+                                    {t("settingPage.heading")}
+                                </h1>
+                                <div className="divider divider-secondary"></div>
                                 <div className="mt-4">
                                     {isElectron() && (
                                         <>
-                                            <hr className="my-4" />
                                             <AppInfo />
+                                            <div className="divider"></div>
                                         </>
                                     )}
                                     <ExerciseTimer key={`exercise-timer-${resetFlag}`} />
-                                    <hr className="my-4" />
+                                    <div className="divider"></div>
                                     <AppearanceSettings key={`appearance-${resetFlag}`} />
                                     {isElectron() && (
                                         <>
-                                            <hr className="my-4" />
-                                            <VideoDownloadMenu onClick={handleVideoDownloadMenuPage} />
+                                            <div className="divider"></div>
+                                            <VideoDownloadMenu
+                                                onClick={handleVideoDownloadMenuPage}
+                                            />
                                         </>
                                     )}
                                     {!isElectron() && (
                                         <>
-                                            <hr className="my-4" />
+                                            <div className="divider"></div>
                                             <CachingSettings key={resetFlag} />
                                         </>
                                     )}
                                     {isElectron() && (
                                         <>
-                                            <hr className="my-4" />
+                                            <div className="divider"></div>
                                             <LogSettings />
                                         </>
                                     )}
-                                    <hr className="my-4" />
+                                    <div className="divider"></div>
                                     <ResetSettings onReset={handleReset} />
                                 </div>
                             </>
                         )}
 
-                        {currentPage === "video-download" && <VideoDownloadSubPage onGoBack={handleGoBackToSettings} />}
+                        {currentPage === "video-download" && (
+                            <VideoDownloadSubPage onGoBack={handleGoBackToSettings} />
+                        )}
                     </div>
                 </div>
             </Container>

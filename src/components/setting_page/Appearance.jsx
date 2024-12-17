@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../utils/ThemeContext/useTheme";
+import { sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 
 const AppearanceSettings = () => {
     const { t } = useTranslation();
@@ -7,6 +8,7 @@ const AppearanceSettings = () => {
 
     const handleThemeSelect = (selectedTheme) => {
         setTheme(selectedTheme);
+        sonnerSuccessToast(t("settingPage.changeSaved"));
     };
 
     const getThemeOptionLabel = (currentTheme) => {
@@ -24,53 +26,62 @@ const AppearanceSettings = () => {
 
     return (
         <>
-            <h4 className="font-semibold text-xl mb-4">{t("settingPage.appearanceSettings.appearanceHeading")}</h4>
-            <div className="card card-bordered shadow-md w-full mb-6">
-                <div className="card-body px-4 py-2">
-                    <div className="flex flex-row items-center">
-                        <p>{t("settingPage.appearanceSettings.themeOption")}</p>
-                        <div className="dropdown">
-                            <div tabIndex={0} role="button" className="btn m-1">
-                                {getThemeOptionLabel(theme)}
-                            </div>
-                            <ul
-                                tabIndex={0}
-                                className="dropdown-content menu border-slate-50 bg-base-100 rounded-box z-[300] w-52 p-2 shadow-md">
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleThemeSelect("light")}
-                                        className={`${
-                                            theme === "light" ? "btn-active" : ""
-                                        } btn btn-sm btn-block btn-ghost justify-start`}
-                                        aria-pressed={theme === "light"}>
-                                        {t("settingPage.appearanceSettings.themeLight")}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleThemeSelect("dark")}
-                                        className={`${
-                                            theme === "dark" ? "btn-active" : ""
-                                        } btn btn-sm btn-block btn-ghost justify-start`}
-                                        aria-pressed={theme === "dark"}>
-                                        {t("settingPage.appearanceSettings.themeDark")}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleThemeSelect("auto")}
-                                        className={`${
-                                            theme === "auto" ? "btn-active" : ""
-                                        } btn btn-sm btn-block btn-ghost justify-start`}
-                                        aria-pressed={theme === "auto"}>
-                                        {t("settingPage.appearanceSettings.themeAuto")}
-                                    </button>
-                                </li>
-                            </ul>
+            <h4 className="mb-4 text-xl font-semibold">
+                {t("settingPage.appearanceSettings.appearanceHeading")}
+            </h4>
+
+            <div className="grid gap-x-8 gap-y-6 px-8 sm:grid-cols-2">
+                <div className="flex items-center">
+                    <p className="text-base font-semibold">
+                        {t("settingPage.appearanceSettings.themeOption")}
+                    </p>
+                </div>
+                <div className="flex justify-end">
+                    <div className="dropdown dropdown-end">
+                        <div tabIndex={0} role="button" className="btn">
+                            {getThemeOptionLabel(theme)}
                         </div>
+                        <ul
+                            tabIndex={0}
+                            className="menu dropdown-content z-[300] w-52 rounded-box border-slate-50 bg-base-100 p-2 shadow-md"
+                        >
+                            <li>
+                                <button
+                                    type="button"
+                                    onClick={() => handleThemeSelect("light")}
+                                    className={`${
+                                        theme === "light" ? "btn-active" : ""
+                                    } btn btn-ghost btn-sm btn-block justify-start`}
+                                    aria-pressed={theme === "light"}
+                                >
+                                    {t("settingPage.appearanceSettings.themeLight")}
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    type="button"
+                                    onClick={() => handleThemeSelect("dark")}
+                                    className={`${
+                                        theme === "dark" ? "btn-active" : ""
+                                    } btn btn-ghost btn-sm btn-block justify-start`}
+                                    aria-pressed={theme === "dark"}
+                                >
+                                    {t("settingPage.appearanceSettings.themeDark")}
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    type="button"
+                                    onClick={() => handleThemeSelect("auto")}
+                                    className={`${
+                                        theme === "auto" ? "btn-active" : ""
+                                    } btn btn-ghost btn-sm btn-block justify-start`}
+                                    aria-pressed={theme === "auto"}
+                                >
+                                    {t("settingPage.appearanceSettings.themeAuto")}
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

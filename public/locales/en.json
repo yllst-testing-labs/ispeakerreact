@@ -900,6 +900,7 @@
         "checkUpdateBtn": "Check for updates",
         "checkUpdateMSBtn": "Check for updates in Microsoft Store",
         "openGitHubAlertLink": "Open GitHub",
+        "changeSaved": "Changes saved",
         "exerciseSettings": {
             "timerHeading": "Exercise timer",
             "timerOption": "Enable timer",

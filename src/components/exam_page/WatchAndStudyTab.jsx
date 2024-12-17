@@ -249,7 +249,7 @@ const WatchAndStudyTab = ({ videoUrl, taskData, dialog, skills }) => {
                     <div className="relative flex w-full items-center justify-center py-4">
                         {imageLoading && ( // Show skeleton loader if image is loading
                             <div
-                                className={`skeleton absolute h-[600px] w-full max-w-6xl ${imageLoading ? "z-30" : ""}`}
+                                className={`skeleton absolute h-full max-h-[600px] w-full max-w-6xl ${imageLoading ? "z-30" : ""}`}
                             ></div>
                         )}
                         {modalImage && (

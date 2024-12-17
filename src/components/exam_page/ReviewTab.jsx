@@ -31,18 +31,22 @@ const ReviewTab = ({ reviews, examId, accent }) => {
     }, [checkedReviews, examId, accent]);
 
     return (
-        <>
+        <div className="container-lg mx-auto">
             {reviews.map((review, index) => (
-                <Form.Check
-                    key={index}
-                    type="checkbox"
-                    id={`review-${index}`}
-                    label={t(review.text)}
-                    checked={!!checkedReviews[`${examId}-${index}`]}
-                    onChange={() => handleCheckboxChange(index)}
-                />
+                <div key={index} className="mb-2">
+                    <label htmlFor={`review-${index}`} className="cursor-pointer">
+                        <span>{t(review.text)}</span>
+                        <input
+                            id={`review-${index}`}
+                            type="checkbox"
+                            className="checkbox checkbox-sm ms-2 align-text-bottom"
+                            checked={!!checkedReviews[`${examId}-${index}`]}
+                            onChange={() => handleCheckboxChange(index)}
+                        />
+                    </label>
+                </div>
             ))}
-        </>
+        </div>
     );
 };
 

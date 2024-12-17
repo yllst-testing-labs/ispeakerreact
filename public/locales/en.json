@@ -538,6 +538,7 @@
         "selectType": "Select an exam task to get started.",
         "taskInfo": "Task info",
         "examModalInfo": "Exam info",
+        "expandInfoBtn": "See exam info",
         "groupTask": {
             "heading": "Group tasks",
             "discussingOpinions": {

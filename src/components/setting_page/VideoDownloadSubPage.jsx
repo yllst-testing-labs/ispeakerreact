@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ExclamationTriangleFill } from "react-bootstrap-icons";
+import { IoWarningOutline } from "react-icons/io5";
 import { Trans, useTranslation } from "react-i18next";
 import VideoDownloadTable from "./VideoDownloadTable";
 import { BsArrowLeft } from "react-icons/bs";
@@ -111,7 +111,7 @@ const VideoDownloadSubPage = ({ onGoBack }) => {
                     ))}
 
                     <div className="alert alert-warning my-2">
-                        <ExclamationTriangleFill />
+                        <IoWarningOutline className="h-6 w-6" />
                         <div>
                             <h3 className="font-bold">
                                 {t("settingPage.videoDownloadSettings.warningHeading")}

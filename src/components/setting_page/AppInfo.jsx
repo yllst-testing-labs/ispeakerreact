@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { LuExternalLink } from "react-icons/lu";
 import { useTranslation } from "react-i18next";
 import { IoCloseOutline, IoInformationCircleOutline } from "react-icons/io5";
 
@@ -129,7 +129,8 @@ const AppInfo = () => {
                             className="btn btn-primary btn-sm"
                             onClick={openMsStore}
                         >
-                            {t("settingPage.checkUpdateMSBtn")} <BoxArrowUpRight />
+                            {t("settingPage.checkUpdateMSBtn")}{" "}
+                            <LuExternalLink className="h-5 w-5" />
                         </button>
                     ) : (
                         <button

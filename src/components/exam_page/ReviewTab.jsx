@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 const ReviewTab = ({ reviews, examId, accent }) => {

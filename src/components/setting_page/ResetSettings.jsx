@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { isElectron } from "../../utils/isElectron";
 
@@ -84,7 +83,7 @@ const ResetSettings = ({ onReset }) => {
                             disabled={isResettingLocalStorage}
                         >
                             {isResettingLocalStorage && (
-                                <Spinner animation="border" size="sm" className="mr-2" />
+                                <span className="loading loading-spinner loading-md"></span>
                             )}
                             {t("settingPage.resetSettings.resetSettingsData")}
                         </button>
@@ -99,7 +98,7 @@ const ResetSettings = ({ onReset }) => {
                                 disabled={isResettingIndexedDb}
                             >
                                 {isResettingIndexedDb && (
-                                    <Spinner animation="border" size="sm" className="mr-2" />
+                                    <span className="loading loading-spinner loading-md"></span>
                                 )}
                                 {t("settingPage.resetSettings.deleteRecordingData")}
                             </button>
@@ -133,7 +132,7 @@ const ResetSettings = ({ onReset }) => {
                             disabled={isResettingLocalStorage}
                         >
                             {isResettingLocalStorage && (
-                                <Spinner animation="border" size="sm" className="mr-2" />
+                                <span className="loading loading-spinner loading-md"></span>
                             )}
                             {t("settingPage.resetSettings.resetConfirmBtn")}
                         </button>
@@ -167,7 +166,7 @@ const ResetSettings = ({ onReset }) => {
                                 disabled={isResettingIndexedDb}
                             >
                                 {isResettingIndexedDb && (
-                                    <Spinner animation="border" size="sm" className="mr-2" />
+                                    <span className="loading loading-spinner loading-md"></span>
                                 )}
                                 {t("settingPage.resetSettings.resetConfirmBtn")}
                             </button>

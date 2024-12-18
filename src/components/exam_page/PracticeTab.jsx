@@ -348,12 +348,12 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                                         >
                                             {isRecording && activeTaskIndex === taskIndex ? (
                                                 <>
-                                                    <BsStopCircle />{" "}
+                                                    <BsStopCircle className="h-5 w-5" />{" "}
                                                     {t("buttonConversationExam.stopRecordBtn")}
                                                 </>
                                             ) : (
                                                 <>
-                                                    <BsRecordCircle />{" "}
+                                                    <BsRecordCircle className="h-5 w-5" />{" "}
                                                     {t("buttonConversationExam.recordBtn")}
                                                 </>
                                             )}
@@ -371,12 +371,12 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                                         >
                                             {isRecordingPlaying && activeTaskIndex === taskIndex ? (
                                                 <>
-                                                    <BsStopCircle />{" "}
+                                                    <BsStopCircle className="h-5 w-5" />{" "}
                                                     {t("buttonConversationExam.stopPlayBtn")}
                                                 </>
                                             ) : (
                                                 <>
-                                                    <BsPlayCircle />{" "}
+                                                    <BsPlayCircle className="h-5 w-5" />{" "}
                                                     {t("buttonConversationExam.playBtn")}
                                                 </>
                                             )}

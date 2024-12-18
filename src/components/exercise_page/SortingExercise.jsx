@@ -237,13 +237,14 @@ const SortingExercise = ({
                     )}
                 </div>
                 <div className="divider divider-secondary m-0"></div>
-                <DndContext
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                >
-                    <div className="my-3 flex flex-row justify-center gap-2 md:gap-6">
+
+                <div className="my-3 flex flex-row justify-center gap-2 md:gap-6">
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                    >
                         {[itemsLeft, itemsRight].map((items, index) => (
                             <SortableColumn
                                 key={index}
@@ -256,18 +257,19 @@ const SortingExercise = ({
                                 t={t}
                             />
                         ))}
-                    </div>
-                    <DragOverlay>
-                        {activeId ? (
-                            <SortableWord
-                                item={itemsLeft
-                                    .concat(itemsRight)
-                                    .find((item) => item.id === activeId)}
-                                isOverlay
-                            />
-                        ) : null}
-                    </DragOverlay>
-                </DndContext>
+
+                        <DragOverlay>
+                            {activeId ? (
+                                <SortableWord
+                                    item={itemsLeft
+                                        .concat(itemsRight)
+                                        .find((item) => item.id === activeId)}
+                                    isOverlay
+                                />
+                            ) : null}
+                        </DragOverlay>
+                    </DndContext>
+                </div>
 
                 <div className="card-actions justify-center">
                     <div className="my-3 flex flex-wrap justify-center gap-2">

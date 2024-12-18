@@ -250,7 +250,10 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                         task.listItems && t(task.listItems, { returnObjects: true });
 
                     return (
-                        <div className="card card-bordered flex" key={taskIndex}>
+                        <div
+                            className="card card-bordered flex dark:border-slate-600"
+                            key={taskIndex}
+                        >
                             <div className="card-body p-4">
                                 <div className="text-xl font-semibold">
                                     {t("tabConversationExam.taskCard")} {taskIndex + 1}

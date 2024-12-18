@@ -31,7 +31,6 @@ const Snap = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
     const [isDropped, setIsDropped] = useState(false);
     const [result, setResult] = useState(null);
     const [droppedOn, setDroppedOn] = useState(null); // Track where the item is dropped
-    const [isHorizontal, setIsHorizontal] = useState(true);
 
     const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () =>
         setTimeIsUp(true)
@@ -61,18 +60,6 @@ const Snap = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
             loadQuiz(uniqueShuffledQuiz[0]); // Load the first question
         }
     }, [quiz, loadQuiz]);
-
-    // Detect screen size to toggle between horizontal and vertical layout
-    useEffect(() => {
-        const handleResize = () => {
-            setIsHorizontal(window.innerWidth >= 992); // Horizontal for large screens (992px and above)
-        };
-
-        window.addEventListener("resize", handleResize);
-        handleResize(); // Run on mount to set initial value
-
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     const handleDragEnd = (event) => {
         const { over } = event;
@@ -137,7 +124,7 @@ const Snap = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                 style={style}
                 {...attributes}
                 {...listeners}
-                className={`btn btn-primary w-full text-base font-bold ${isDropped ? "z-30" : "z-20"}`}
+                className={`btn btn-primary no-animation w-full text-base font-bold transition-none ${isDropped ? "z-30" : "z-20"}`}
                 disabled={isDropped}
             >
                 {t("exercise_page.dragThisItem")}
@@ -176,7 +163,7 @@ const Snap = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
             <button
                 type="button"
                 ref={setNodeRef}
-                className={`btn btn-outline no-animation w-full text-lg font-bold ${bgColor} pointer-events-none ${
+                className={`btn btn-outline no-animation w-full text-lg font-bold transition-none ${bgColor} pointer-events-none ${
                     isDropped && droppedOn === feedback?.value ? buttonVariant : ""
                 }`}
             >
@@ -219,12 +206,8 @@ const Snap = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                     </p>
                 </div>
 
-                <DndContext onDragEnd={handleDragEnd}>
-                    <div
-                        className={`flex ${
-                            isHorizontal ? "flex-row" : "flex-col"
-                        } justify-center gap-2 align-middle`}
-                    >
+                <div className="flex flex-col items-center justify-center gap-2 align-middle md:flex-row">
+                    <DndContext onDragEnd={handleDragEnd}>
                         {/* Yes drop zone */}
                         <div className="w-full">
                             <DroppableArea
@@ -249,8 +232,8 @@ const Snap = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
                                 droppedOn={droppedOn} // Track where the item is dropped
                             />
                         </div>
-                    </div>
-                </DndContext>
+                    </DndContext>
+                </div>
 
                 <div className="card-actions justify-center">
                     <div className="my-3 flex flex-wrap justify-center gap-2">

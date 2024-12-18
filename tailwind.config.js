@@ -29,7 +29,7 @@ export default {
                     "info-content": "white",
                     success: "oklch(52.73% 0.1371 150.07)",
                     "success-content": "white",
-                    warning: "oklch(75% 0.183 55.934)",
+                    warning: "rgb(251 191 36)",
                     "warning-content": "black",
                     error: "rgb(186, 26, 26)",
                     "error-content": "white",

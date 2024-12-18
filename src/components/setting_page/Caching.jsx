@@ -135,36 +135,28 @@ const CachingSettings = () => {
     };
 
     return (
-        <div>
-            <h4>{t("settingPage.cacheSettings.cacheHeading")}</h4>
-            <Card className="mt-4 mb-4">
-                <Card.Body>
-                    <Form.Group className="px-0 form-switch">
-                        <div className="d-flex justify-content-between align-items-center">
-                            <Form.Label className="fw-semibold mb-0 col-10" htmlFor="cacheJson" role="button">
-                            {t("settingPage.cacheSettings.menuCacheOption")}
-                            </Form.Label>
-                            {isProcessing ? (
-                                <Spinner
-                                    animation="border"
-                                    style={{ width: "1.5rem", height: "1.5rem", marginTop: "0" }}
-                                />
-                            ) : (
-                                <Form.Control
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    id="cacheJson"
-                                    checked={cacheMenuFiles}
-                                    onChange={handleCacheToggle}
-                                    disabled={isProcessing}
-                                    style={{ width: "3rem", height: "1.5rem", marginTop: "0" }}
-                                />
-                            )}
-                        </div>
-                    </Form.Group>
-                    {menuErrorText && <p className="small text-danger mb-0">{menuErrorText}</p>}
-                </Card.Body>
-            </Card>
+        <div className="mt-4">
+            <div className="flex gap-x-8 gap-y-6">
+                <div className="basis-2/3 space-y-1">
+                    <label className="cursor-pointer text-base font-semibold" htmlFor="cacheJson">
+                        {t("settingPage.cacheSettings.menuCacheOption")}
+                    </label>
+                </div>
+                <div className="flex basis-1/3 items-center justify-end">
+                    {isProcessing ? (
+                        <div className="loading loading-spinner loading-md"></div>
+                    ) : (
+                        <input
+                            type="checkbox"
+                            className="toggle"
+                            id="cacheJson"
+                            checked={cacheMenuFiles}
+                            onChange={handleCacheToggle}
+                            disabled={isProcessing}
+                        />
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

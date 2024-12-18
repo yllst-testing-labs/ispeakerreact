@@ -26,17 +26,13 @@ const AppearanceSettings = () => {
 
     return (
         <>
-            <h4 className="mb-4 text-xl font-semibold">
-                {t("settingPage.appearanceSettings.appearanceHeading")}
-            </h4>
-
-            <div className="grid gap-x-8 gap-y-6 px-8 sm:grid-cols-2">
-                <div className="flex items-center">
+            <div className="flex flex-row gap-x-8 gap-y-6">
+                <div className="flex basis-1/2 items-center">
                     <p className="text-base font-semibold">
                         {t("settingPage.appearanceSettings.themeOption")}
                     </p>
                 </div>
-                <div className="flex justify-end">
+                <div className="flex basis-1/2 justify-end flex-grow">
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn">
                             {getThemeOptionLabel(theme)}

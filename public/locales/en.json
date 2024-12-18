@@ -113,7 +113,7 @@
         "homophonesExercise": "Homophones",
         "questionNo": "Question",
         "timer": "Time:",
-        "dropLayer": "Drop here...",
+        "dropLayer": "Drop here…",
         "dragThisItem": "Drag this",
         "snapCorrect": "Correct",
         "snapIncorrect": "Incorrect",
@@ -711,7 +711,9 @@
                 "listenHeading1": "Asking for personal information",
                 "listenHeading2": "Giving personal information",
                 "listenHeading3": "Talking about future plans",
-                "practiceQuestion": ["Answer the same questions from the video, giving information about yourself."],
+                "practiceQuestion": [
+                    "Answer the same questions from the video, giving information about yourself."
+                ],
                 "tipDos": [
                     "Use language you know is correct.",
                     "Think of a different way of expressing your idea if you’ve forgotten a word.",
@@ -874,7 +876,9 @@
                 "listenHeading3": "Talking about your skills and work experience",
                 "listenHeading4": "Talking about your hopes for the future",
                 "listenHeading5": "Questions to ask an employer",
-                "practiceQuestion": ["Role-play a job interview, talking about your own skills and experience."],
+                "practiceQuestion": [
+                    "Role-play a job interview, talking about your own skills and experience."
+                ],
                 "tipDos": [
                     "Maintain eye contact when possible.",
                     "Listen carefully to each question and ask for clarification if you aren’t sure what something means.",
@@ -928,19 +932,20 @@
         },
         "videoDownloadSettings": {
             "videoDownloadHeading": "Video downloads",
-            "videoDownloadOption": "Download video files",
+            "videoDownloadOption": "Download video files…",
             "videoPageHeading": "Download video files for offline watching",
             "backToSettingsBtn": "Back to settings",
             "instructionCardHeading": "Instructions",
             "steps": [
                 "<1>Step {{number}}</1>: Click on the “Download” link to download the video file you want to watch offline.",
                 "<1>Step {{number}}</1>: Click on the “Open download folder” button, and move the file(s) you have downloaded into there.",
-                "<1>Step {{number}}</1>: Click on the “Back to settings” button (or any page), and then go back to this page. This is to refresh the state of the file downloaded status.",
+                "<1>Step {{number}}</1>: Click on the “Refresh download status” to refresh the state of the file downloaded status.",
                 "<1>Step {{number}}</1>: Click on the “Verify” button, and wait until the verification process is finished."
             ],
             "warningHeading": "Warning!",
             "warningBody": "Do not manually extract, rename the file(s), or modify the zip file’s content. Doing so will make the verification process fail.",
             "openDownloadBtn": "Open download folder",
+            "refreshDownloadStateBtn": "Refresh download status",
             "downloadTable": {
                 "nameHeading": "Name",
                 "fileSizeTotalHeading": "Total file size",
@@ -982,7 +987,7 @@
             "resetSettingsDataModalMessage": "Are you sure you want to reset iSpeakerReact’s settings and review data? This action cannot be undone.",
             "deleteRecordingData": "Delete saved recordings",
             "deleteRecordingDataModalMessage": "Are you sure you want to delete saved recordings? This action cannot be undone.",
-            "resetModalHeading": "Confirm...",
+            "resetModalHeading": "Confirm…",
             "resetConfirmBtn": "Confirm"
         }
     }

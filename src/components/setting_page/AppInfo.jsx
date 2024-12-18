@@ -76,7 +76,9 @@ const AppInfo = () => {
     };
 
     const openGithubPage = () => {
-        window.electron.openExternal("https://github.com/yell0wsuit/ispeaker/releases/latest");
+        window.electron.openExternal(
+            "https://github.com/yllst-testing-labs/ispeakerreact/releases/latest"
+        );
     };
 
     const openMsStore = () => {
@@ -91,9 +93,9 @@ const AppInfo = () => {
                     {alertMessage.includes("GitHub") ? (
                         <>
                             <p>{alertMessage}</p>
-                            <btn className="btn btn-accent" onClick={openGithubPage}>
+                            <button className="btn btn-accent btn-sm" onClick={openGithubPage}>
                                 {t("settingPage.openGitHubAlertLink")}
-                            </btn>
+                            </button>
                         </>
                     ) : (
                         alertMessage
@@ -109,24 +111,32 @@ const AppInfo = () => {
                 </div>
             )}
             <div className="flex gap-4">
-                <div className="flex items-center justify-center align-middle">
+                <div className="flex items-center justify-center">
                     <img
                         className="object-contain"
                         src={`${import.meta.env.BASE_URL}images/icons/windows11/StoreLogo.scale-200.png`}
                         alt="App logo"
                     />
                 </div>
-                <div className="h-full align-middle">
+                <div className="h-full">
                     <h4 className="text-xl font-semibold">iSpeakerReact</h4>
                     <p className="mb-2 text-slate-600 dark:text-slate-400">
                         Version {currentVersion}
                     </p>
                     {window.electron.isUwp() ? (
-                        <button type="button" className="btn btn-primary" onClick={openMsStore}>
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            onClick={openMsStore}
+                        >
                             {t("settingPage.checkUpdateMSBtn")} <BoxArrowUpRight />
                         </button>
                     ) : (
-                        <button type="button" className="btn btn-primary" onClick={checkForUpdates}>
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            onClick={checkForUpdates}
+                        >
                             {isLoading && <div className="loading loading-spinner loading-sm" />}
                             {t("settingPage.checkUpdateBtn")}
                         </button>

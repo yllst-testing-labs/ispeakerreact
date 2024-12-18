@@ -104,11 +104,8 @@ const ExerciseTimer = () => {
 
     return (
         <div className="mt-4">
-            <h4 className="mb-4 text-xl font-semibold">
-                {t("settingPage.exerciseSettings.timerHeading")}
-            </h4>
-            <div className="grid gap-x-8 gap-y-6 px-8 sm:grid-cols-2">
-                <div className="space-y-1">
+            <div className="flex gap-x-8 gap-y-6">
+                <div className="basis-2/3 space-y-1">
                     <label className="cursor-pointer text-base font-semibold" htmlFor="enableTimer">
                         {t("settingPage.exerciseSettings.timerOption")}
                     </label>
@@ -116,7 +113,7 @@ const ExerciseTimer = () => {
                         {t("settingPage.exerciseSettings.timerDescription")}
                     </p>
                 </div>
-                <div className="flex justify-end">
+                <div className="flex basis-1/3 justify-end">
                     <input
                         type="checkbox"
                         className="toggle"
@@ -127,9 +124,9 @@ const ExerciseTimer = () => {
                 </div>
             </div>
 
-            <div className="my-4 flex flex-row flex-wrap gap-4 px-8">
+            <div className="my-4 flex flex-row flex-wrap justify-center gap-4 px-8">
                 {Object.keys(exerciseNames).map((exercise) => (
-                    <div key={exercise} className="w-1/4">
+                    <div key={exercise} className="basis-full md:basis-1/3 lg:basis-1/4">
                         <label className="form-control w-full max-w-xs">
                             <div className="label">
                                 <span>{exerciseNames[exercise]}</span>

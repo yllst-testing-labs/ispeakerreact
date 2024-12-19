@@ -5,7 +5,6 @@ import { MdChecklist, MdHeadphones, MdKeyboardVoice, MdOutlineOndemandVideo } fr
 import { isElectron } from "../../utils/isElectron";
 import { sonnerErrorToast } from "../../utils/sonnerCustomToast";
 import LoadingOverlay from "../general/LoadingOverlay";
-import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 import ListeningTab from "./ListeningTab";
 import PracticeTab from "./PracticeTab";
 import ReviewTab from "./ReviewTab";
@@ -28,26 +27,6 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
             try {
                 setLoading(true);
 
-                // If it's not an Electron environment, check IndexedDB first
-                if (!isElectron()) {
-                    const cachedDataBlob = await getFileFromIndexedDB(
-                        "examspeaking_data.json",
-                        "json"
-                    );
-
-                    if (cachedDataBlob) {
-                        // Convert Blob to text, then parse the JSON
-                        const cachedDataText = await cachedDataBlob.text();
-                        const cachedData = JSON.parse(cachedDataText);
-
-                        setExamData(cachedData);
-                        setLoading(false);
-                        return;
-                    }
-                }
-
-                setLoading(true);
-
                 // If not in IndexedDB or running in Electron, fetch from the network
                 const response = await fetch(
                     `${import.meta.env.BASE_URL}json/examspeaking_data.json`
@@ -56,12 +35,6 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
 
                 setExamData(data);
                 setLoading(false);
-
-                // Save the fetched data to IndexedDB (excluding Electron)
-                if (!isElectron()) {
-                    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-                    await saveFileToIndexedDB("examspeaking_data.json", blob, "json");
-                }
             } catch (error) {
                 console.error("Error fetching data:", error);
                 alert(

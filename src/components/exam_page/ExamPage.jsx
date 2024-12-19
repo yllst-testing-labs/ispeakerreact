@@ -1,13 +1,11 @@
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
-import { isElectron } from "../../utils/isElectron";
 import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
-import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
-import Container from "../../ui/Container";
 
 const ExamDetailPage = lazy(() => import("./ExamDetailPage"));
 
@@ -110,22 +108,6 @@ const ExamPage = () => {
             try {
                 setLoading(true);
 
-                if (!isElectron()) {
-                    const cachedDataBlob = await getFileFromIndexedDB(
-                        "examspeaking_list.json",
-                        "json"
-                    );
-
-                    if (cachedDataBlob) {
-                        const cachedDataText = await cachedDataBlob.text();
-                        const cachedData = JSON.parse(cachedDataText);
-
-                        setData(cachedData.examList);
-                        setLoading(false);
-                        return;
-                    }
-                }
-
                 const response = await fetch(
                     `${import.meta.env.BASE_URL}json/examspeaking_list.json`
                 );
@@ -133,13 +115,6 @@ const ExamPage = () => {
 
                 setData(fetchedData.examList);
                 setLoading(false);
-
-                if (!isElectron()) {
-                    const blob = new Blob([JSON.stringify(fetchedData)], {
-                        type: "application/json",
-                    });
-                    await saveFileToIndexedDB("examspeaking_list.json", blob, "json");
-                }
             } catch (error) {
                 console.error("Error fetching data:", error);
                 alert(

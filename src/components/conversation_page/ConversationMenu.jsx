@@ -3,11 +3,9 @@ import { useTranslation } from "react-i18next";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
-import { isElectron } from "../../utils/isElectron";
 import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
-import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 
 const ConversationDetailPage = lazy(() => import("./ConversationDetailPage"));
 
@@ -96,22 +94,6 @@ const ConversationListPage = () => {
             try {
                 setLoading(true);
 
-                // Check IndexedDB for cached data
-                if (!isElectron()) {
-                    const cachedDataBlob = await getFileFromIndexedDB(
-                        "conversation_list.json",
-                        "json"
-                    );
-                    if (cachedDataBlob) {
-                        const cachedDataText = await cachedDataBlob.text();
-                        const cachedData = JSON.parse(cachedDataText);
-
-                        setData(cachedData.conversationList);
-                        setLoading(false);
-                        return;
-                    }
-                }
-
                 // Fetch from network
                 const response = await fetch(
                     `${import.meta.env.BASE_URL}json/conversation_list.json`
@@ -120,14 +102,6 @@ const ConversationListPage = () => {
 
                 setData(fetchedData.conversationList);
                 setLoading(false);
-
-                // Save fetched data to IndexedDB
-                if (!isElectron()) {
-                    const blob = new Blob([JSON.stringify(fetchedData)], {
-                        type: "application/json",
-                    });
-                    await saveFileToIndexedDB("conversation_list.json", blob, "json");
-                }
             } catch (error) {
                 console.error("Error fetching data:", error);
                 alert(

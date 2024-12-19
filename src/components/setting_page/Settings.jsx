@@ -5,7 +5,6 @@ import { isElectron } from "../../utils/isElectron";
 import TopNavBar from "../general/TopNavBar";
 import AppearanceSettings from "./Appearance";
 import AppInfo from "./AppInfo";
-import CachingSettings from "./Caching";
 import ExerciseTimer from "./ExerciseTimer";
 import LogSettings from "./LogSettings";
 import ResetSettings from "./ResetSettings";
@@ -63,12 +62,6 @@ const SettingsPage = () => {
                                             <VideoDownloadMenu
                                                 onClick={handleVideoDownloadMenuPage}
                                             />
-                                        </>
-                                    )}
-                                    {!isElectron() && (
-                                        <>
-                                            <div className="divider"></div>
-                                            <CachingSettings />
                                         </>
                                     )}
                                     {isElectron() && (

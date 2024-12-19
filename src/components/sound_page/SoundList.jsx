@@ -1,5 +1,5 @@
 import he from "he";
-import { Suspense, lazy, useEffect, useState, useMemo } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
@@ -7,7 +7,6 @@ import { isElectron } from "../../utils/isElectron";
 import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
-import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 
 const PracticeSound = lazy(() => import("./PracticeSound"));
 
@@ -125,24 +124,9 @@ const SoundList = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const cachedDataBlob =
-                    !isElectron() && (await getFileFromIndexedDB("sounds_data.json", "json"));
-
-                if (cachedDataBlob) {
-                    const cachedData = JSON.parse(await cachedDataBlob.text());
-                    setSoundsData(cachedData);
-                } else {
-                    const response = await fetch(
-                        `${import.meta.env.BASE_URL}json/sounds_data.json`
-                    );
-                    const data = await response.json();
-                    setSoundsData(data);
-
-                    if (!isElectron()) {
-                        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-                        await saveFileToIndexedDB("sounds_data.json", blob, "json");
-                    }
-                }
+                const response = await fetch(`${import.meta.env.BASE_URL}json/sounds_data.json`);
+                const data = await response.json();
+                setSoundsData(data);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 alert(t("sound_page.loadError"));

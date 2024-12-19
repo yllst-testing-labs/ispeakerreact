@@ -248,7 +248,7 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
 
     return (
         <>
-            <div className="flex flex-wrap gap-4 lg:flex-nowrap">
+            <div className="flex flex-wrap justify-center gap-4 lg:flex-nowrap">
                 {taskData.map((task, taskIndex) => {
                     const examLocalizedPara = t(task.para, { returnObjects: true });
                     const examLocalizedListItems =

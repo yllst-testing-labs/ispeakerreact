@@ -3,9 +3,7 @@ import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { BsChevronLeft } from "react-icons/bs";
 import { PiArrowsCounterClockwise } from "react-icons/pi";
-import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
-import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 
 // Emoji SVGs import
 import seedlingEmoji from "../../emojiSvg/emoji_u1f331.svg";
@@ -148,31 +146,6 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
         try {
             setIsLoading(true);
 
-            // Check if the app is not running in Electron and try to fetch data from IndexedDB
-            if (!isElectron()) {
-                const cachedDataBlob = await getFileFromIndexedDB(`${file}`, "json");
-
-                if (cachedDataBlob) {
-                    // Convert Blob to text, then parse the JSON
-                    const cachedDataText = await cachedDataBlob.text();
-                    const cachedData = JSON.parse(cachedDataText);
-
-                    const exerciseKey = file.replace("exercise_", "").replace(".json", "");
-                    const exerciseDetails = cachedData[exerciseKey]?.find(
-                        (exercise) => exercise.id === id
-                    );
-
-                    setCurrentExerciseType(exerciseKey);
-
-                    if (exerciseDetails) {
-                        handleExerciseData(exerciseDetails, cachedData, exerciseKey);
-                    }
-
-                    setIsLoading(false);
-                    return; // Early return if data is served from cache
-                }
-            }
-
             // If no cache or in Electron, fetch data from the network
             const response = await fetch(`${import.meta.env.BASE_URL}json/${file}`);
             if (!response.ok) {
@@ -184,10 +157,6 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
             const exerciseDetails = data[exerciseKey]?.find((exercise) => exercise.id === id);
 
             // Save fetched data to IndexedDB (excluding Electron)
-            if (!isElectron()) {
-                const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-                await saveFileToIndexedDB(`${file}`, blob, "json");
-            }
 
             setCurrentExerciseType(exerciseKey);
 

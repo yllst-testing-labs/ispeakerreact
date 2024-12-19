@@ -4,7 +4,6 @@ import { IoChevronBackOutline } from "react-icons/io5";
 import { MdChecklist, MdHeadphones, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 import { isElectron } from "../../utils/isElectron";
 import LoadingOverlay from "../general/LoadingOverlay";
-import { getFileFromIndexedDB, saveFileToIndexedDB } from "../setting_page/offlineStorageDb";
 import ListeningTab from "./ListeningTab";
 import PracticeTab from "./PracticeTab";
 import ReviewTab from "./ReviewTab";
@@ -25,28 +24,6 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
             try {
                 setLoading(true);
 
-                // If it's not an Electron environment, check IndexedDB first
-                if (!isElectron()) {
-                    const cachedDataBlob = await getFileFromIndexedDB(
-                        "conversation_data.json",
-                        "json"
-                    );
-
-                    if (cachedDataBlob) {
-                        // Convert Blob to text, then parse the JSON
-                        const cachedDataText = await cachedDataBlob.text();
-                        const cachedData = JSON.parse(cachedDataText);
-                        const conversationData = cachedData[id]?.[0];
-                        const accentData = conversationData[accent === "british" ? "BrE" : "AmE"];
-                        setAccentData(accentData);
-
-                        setLoading(false);
-
-                        return;
-                    }
-                }
-
-                // If not in IndexedDB or running in Electron, fetch from the network
                 const response = await fetch(
                     `${import.meta.env.BASE_URL}json/conversation_data.json`
                 );
@@ -64,12 +41,6 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                     console.error("Conversation not found.");
                     setLoading(false);
                     return;
-                }
-
-                // Save the fetched data to IndexedDB (excluding Electron)
-                if (!isElectron()) {
-                    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-                    await saveFileToIndexedDB("conversation_data.json", blob, "json");
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);

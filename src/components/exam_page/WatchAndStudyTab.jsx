@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoCloseOutline, IoInformationCircleOutline } from "react-icons/io5";
 import { isElectron } from "../../utils/isElectron";
@@ -8,14 +8,19 @@ const WatchAndStudyTab = ({ videoUrl, taskData, dialog, skills }) => {
 
     const [modalImage, setModalImage] = useState("");
     const [imageLoading, setImageLoading] = useState(false);
+    const imageModalRef = useRef(null);
     const [iframeLoading, setiFrameLoading] = useState(true);
 
     const handleImageClick = (imageName) => {
-        setImageLoading(true);
-        setModalImage(
-            `${import.meta.env.BASE_URL}images/ispeaker/exam_images/jpg/${imageName}.jpg`
-        );
-        document.getElementById("taskImageModal").showModal();
+        const newImage = `${import.meta.env.BASE_URL}images/ispeaker/exam_images/jpg/${imageName}.jpg`;
+
+        // Only set loading if the image is different
+        if (modalImage !== newImage) {
+            setImageLoading(true);
+            setModalImage(newImage);
+        }
+
+        imageModalRef.current?.showModal();
     };
 
     const handleIframeLoad = () => setiFrameLoading(false);
@@ -236,7 +241,7 @@ const WatchAndStudyTab = ({ videoUrl, taskData, dialog, skills }) => {
                 </div>
             </div>
 
-            <dialog id="taskImageModal" className="modal">
+            <dialog ref={imageModalRef} className="modal">
                 <div className="modal-box w-11/12 max-w-5xl">
                     <form method="dialog">
                         <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
@@ -249,14 +254,14 @@ const WatchAndStudyTab = ({ videoUrl, taskData, dialog, skills }) => {
                     <div className="relative flex w-full items-center justify-center py-4">
                         {imageLoading && ( // Show skeleton loader if image is loading
                             <div
-                                className={`skeleton absolute h-full max-h-[600px] w-full max-w-6xl ${imageLoading ? "z-30" : ""}`}
+                                className={`skeleton absolute h-full max-h-[600px] w-full max-w-6xl ${imageLoading ? "z-30" : "z-0"}`}
                             ></div>
                         )}
                         {modalImage && (
                             <img
                                 src={modalImage}
                                 className={`max-h-[600px] object-contain transition-opacity duration-300 ${
-                                    imageLoading ? "opacity-0" : "opacity-100"
+                                    imageLoading ? "z-0 opacity-0" : "z-30 opacity-100"
                                 }`}
                                 loading="lazy"
                                 onLoad={() => setImageLoading(false)} // Stop loading when image is loaded

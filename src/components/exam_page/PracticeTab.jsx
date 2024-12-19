@@ -28,6 +28,7 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
     const [currentAudioElement, setCurrentAudioElement] = useState(null);
     const [activeTaskIndex, setActiveTaskIndex] = useState(null);
     const textAreaRefs = useRef([]);
+    const imageModalRef = useRef(null);
 
     const [imageLoading, setImageLoading] = useState(false);
     const [modalImage, setModalImage] = useState("");
@@ -231,11 +232,15 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
     };
 
     const handleImageClick = (imageName) => {
-        setImageLoading(true);
-        setModalImage(
-            `${import.meta.env.BASE_URL}images/ispeaker/exam_images/jpg/${imageName}.jpg`
-        );
-        document.getElementById("practiceImageModal").showModal();
+        const newImage = `${import.meta.env.BASE_URL}images/ispeaker/exam_images/jpg/${imageName}.jpg`;
+
+        // Only set loading if the image is different
+        if (modalImage !== newImage) {
+            setImageLoading(true);
+            setModalImage(newImage);
+        }
+
+        imageModalRef.current?.showModal();
     };
 
     const examTipDoLocalized = t(tips.dos, { returnObjects: true });
@@ -436,7 +441,7 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                 </div>
             </div>
 
-            <dialog id="practiceImageModal" className="modal">
+            <dialog ref={imageModalRef} className="modal">
                 <div className="modal-box w-11/12 max-w-5xl">
                     <form method="dialog">
                         <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">

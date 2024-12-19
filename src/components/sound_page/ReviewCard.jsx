@@ -8,6 +8,7 @@ import {
     BsEmojiSmile,
     BsEmojiSmileFill,
 } from "react-icons/bs";
+import { sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 import { useReview } from "./hooks/useReview";
 
 const ReviewCard = ({ sound, accent, index, soundsData }) => {
@@ -33,7 +34,12 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
                     {t("sound_page.reviewInstructions", { phoneme: he.decode(sound.phoneme) })}
                 </p>
                 <div className="flex flex-row items-center justify-center space-x-4">
-                    <a onClick={() => handleReviewClick("good")}>
+                    <a
+                        onClick={() => {
+                            handleReviewClick("good");
+                            sonnerSuccessToast(t("toast.reviewUpdated"));
+                        }}
+                    >
                         {review === "good" ? (
                             <BsEmojiSmileFill
                                 size={52}
@@ -48,7 +54,12 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
                             />
                         )}
                     </a>
-                    <a onClick={() => handleReviewClick("neutral")}>
+                    <a
+                        onClick={() => {
+                            handleReviewClick("neutral");
+                            sonnerSuccessToast(t("toast.reviewUpdated"));
+                        }}
+                    >
                         {review === "neutral" ? (
                             <BsEmojiNeutralFill
                                 size={52}
@@ -63,7 +74,12 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
                             />
                         )}
                     </a>
-                    <a onClick={() => handleReviewClick("bad")}>
+                    <a
+                        onClick={() => {
+                            handleReviewClick("bad");
+                            sonnerSuccessToast(t("toast.reviewUpdated"));
+                        }}
+                    >
                         {review === "bad" ? (
                             <BsEmojiFrownFill
                                 size={52}

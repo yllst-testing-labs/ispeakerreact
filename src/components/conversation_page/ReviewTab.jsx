@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 
 const ReviewTab = ({ reviews, accent, conversationId }) => {
     const { t } = useTranslation();
@@ -46,6 +47,8 @@ const ReviewTab = ({ reviews, accent, conversationId }) => {
                 },
             })
         );
+
+        sonnerSuccessToast(t("toast.reviewUpdated"));
     };
 
     return (

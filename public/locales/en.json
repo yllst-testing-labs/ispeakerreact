@@ -37,7 +37,8 @@
         "textClearSuccess": "Text cleared successfully.",
         "textClearFailed": "Error clearing text. Reason: ",
         "audioPlayFailed": "Unable to play audio due to a network issue. Please check your connection and reload the page.",
-        "loadingError": "Error while loading the data. Please try refreshing the page."
+        "loadingError": "Error while loading the data. Please try refreshing the page.",
+        "reviewUpdated": "Review updated successfully."
     },
     "buttonConversationExam": {
         "watchBtn": "Watch",

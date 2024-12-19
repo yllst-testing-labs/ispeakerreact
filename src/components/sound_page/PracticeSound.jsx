@@ -56,12 +56,19 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
     const [selectedVideoModalIndex, setSelectedVideoModalIndex] = useState("");
 
     const handleShow = (videoIndex) => {
+        const newVideoUrl = videoUrls[videoIndex];
+
+        // Only reset loading if the selected video URL is different
+        if (selectedVideoUrl !== newVideoUrl) {
+            setIframeLoadingStates((prevStates) => ({
+                ...prevStates,
+                modalIframe: true, // Reset loading only if a new video is selected
+            }));
+        }
+
         setSelectedVideoModalIndex(videoIndex);
-        setSelectedVideoUrl(videoUrls[videoIndex]);
-        setIframeLoadingStates((prevStates) => ({
-            ...prevStates,
-            modalIframe: true, // Reset the modal iframe loading state to true when modal is opened
-        }));
+        setSelectedVideoUrl(newVideoUrl);
+
         soundVideoModal.current?.showModal();
     };
 

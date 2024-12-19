@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import Container from "../../ui/Container";
 import { isElectron } from "../../utils/isElectron";
 import TopNavBar from "../general/TopNavBar";
 import AppearanceSettings from "./Appearance";
@@ -38,50 +38,57 @@ const SettingsPage = () => {
     return (
         <>
             <TopNavBar />
-            <div className="p-1 p-md-3">
-                <Row className="justify-content-center">
-                    <Col lg={8}>
+            <Container>
+                <div className="my-8 flex justify-center">
+                    <div className="w-full md:w-2/3 lg:w-1/2" key={resetFlag}>
                         {currentPage === "settings" && (
                             <>
-                                <h1 className="fw-semibold">{t("settingPage.heading")}</h1>
+                                <h1 className="text-3xl font-semibold md:text-4xl">
+                                    {t("settingPage.heading")}
+                                </h1>
+                                <div className="divider divider-secondary"></div>
                                 <div className="mt-4">
                                     {isElectron() && (
                                         <>
-                                            <hr className="my-4" />
                                             <AppInfo />
+                                            <div className="divider"></div>
                                         </>
                                     )}
-                                    <ExerciseTimer key={`exercise-timer-${resetFlag}`} />
-                                    <hr className="my-4" />
-                                    <AppearanceSettings key={`appearance-${resetFlag}`} />
+                                    <ExerciseTimer />
+                                    <div className="divider"></div>
+                                    <AppearanceSettings />
                                     {isElectron() && (
                                         <>
-                                            <hr className="my-4" />
-                                            <VideoDownloadMenu onClick={handleVideoDownloadMenuPage} />
+                                            <div className="divider"></div>
+                                            <VideoDownloadMenu
+                                                onClick={handleVideoDownloadMenuPage}
+                                            />
                                         </>
                                     )}
                                     {!isElectron() && (
                                         <>
-                                            <hr className="my-4" />
-                                            <CachingSettings key={resetFlag} />
+                                            <div className="divider"></div>
+                                            <CachingSettings />
                                         </>
                                     )}
                                     {isElectron() && (
                                         <>
-                                            <hr className="my-4" />
+                                            <div className="divider"></div>
                                             <LogSettings />
                                         </>
                                     )}
-                                    <hr className="my-4" />
+                                    <div className="divider"></div>
                                     <ResetSettings onReset={handleReset} />
                                 </div>
                             </>
                         )}
 
-                        {currentPage === "video-download" && <VideoDownloadSubPage onGoBack={handleGoBackToSettings} />}
-                    </Col>
-                </Row>
-            </div>
+                        {currentPage === "video-download" && (
+                            <VideoDownloadSubPage onGoBack={handleGoBackToSettings} />
+                        )}
+                    </div>
+                </div>
+            </Container>
         </>
     );
 };

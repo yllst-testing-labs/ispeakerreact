@@ -1,5 +1,5 @@
 import he from "he";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BsRecordCircleFill } from "react-icons/bs";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
 import { MdChecklist, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
@@ -22,6 +22,8 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
     const accentKey = accent === "american" ? "a" : "b";
     const accentData = sound[accentKey][0];
 
+    const soundVideoModal = useRef(null);
+
     const findPhonemeDetails = useCallback(
         (phoneme) => {
             let phonemeIndex = soundsData.consonants.findIndex((p) => p.phoneme === phoneme);
@@ -37,12 +39,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
 
     const { index: phonemeIndex, type } = findPhonemeDetails(sound.phoneme);
 
-    const { videoUrls, videoUrl, videoLoading } = useSoundVideoMapping(
-        type,
-        accent,
-        soundsData,
-        phonemeIndex
-    );
+    const { videoUrls, videoUrl } = useSoundVideoMapping(type, accent, soundsData, phonemeIndex);
 
     const imgPhonemeThumbSrc =
         accent === "american"
@@ -65,11 +62,11 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
             ...prevStates,
             modalIframe: true, // Reset the modal iframe loading state to true when modal is opened
         }));
-        document.getElementById("sound_video_modal").showModal();
+        soundVideoModal.current?.showModal();
     };
 
     const handleClose = () => {
-        document.getElementById("sound_video_modal").close();
+        soundVideoModal.current?.close();
     };
 
     // iframe loading
@@ -306,7 +303,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                 </div>
             </div>
 
-            <dialog id="sound_video_modal" className="modal">
+            <dialog ref={soundVideoModal} className="modal">
                 <div className="modal-box w-full max-w-3xl">
                     <h3 className="text-lg font-bold">
                         {t("sound_page.clipModalTitle")} #{selectedVideoModalIndex}

@@ -32,7 +32,7 @@ const AppearanceSettings = () => {
                         {t("settingPage.appearanceSettings.themeOption")}
                     </p>
                 </div>
-                <div className="flex basis-1/2 justify-end flex-grow">
+                <div className="flex flex-grow basis-1/2 justify-end">
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn">
                             {getThemeOptionLabel(theme)}

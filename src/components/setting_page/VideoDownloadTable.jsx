@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
@@ -14,6 +14,9 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
     const [isSuccess, setIsSuccess] = useState(null);
     const [progressText, setProgressText] = useState("Initializing...");
     const [isPercentage, setIsPercentage] = useState(false);
+
+    const verifyModal = useRef(null);
+    const progressModal = useRef(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -60,7 +63,7 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
 
         setShowVerifyModal(true);
 
-        document.getElementById("verifyModal").showModal();
+        verifyModal.current?.showModal();
     };
 
     const handleNextModal = () => {
@@ -68,19 +71,19 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
         setShowProgressModal(true);
         setProgressText("Verifying extracted files...");
         window.electron.ipcRenderer.send("verify-and-extract", selectedZip);
-        document.getElementById("progressModal").showModal();
-        document.getElementById("verifyModal").close();
+        progressModal.current?.showModal();
+        verifyModal.current?.close();
     };
 
     const handleCloseVerifyModal = () => {
         setShowVerifyModal(false);
         setVerifyFiles([]);
-        document.getElementById("verifyModal").close();
+        verifyModal.current?.close();
     };
 
     const handleCloseProgressModal = () => {
         setModalMessage("");
-        document.getElementById("progressModal").close();
+        progressModal.current?.close();
     };
 
     return (
@@ -152,7 +155,7 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
                 </table>
             </div>
 
-            <dialog id="verifyModal" className="modal">
+            <dialog ref={verifyModal} className="modal">
                 <div className="modal-box">
                     <h3 className="text-lg font-bold">
                         {t("settingPage.videoDownloadSettings.verifyModalHeading")}
@@ -192,7 +195,7 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
                 </div>
             </dialog>
 
-            <dialog id="progressModal" className="modal">
+            <dialog ref={progressModal} className="modal">
                 <div className="modal-box">
                     <h3 className="text-lg font-bold">
                         {isSuccess === null

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Suspense, lazy, useCallback, useEffect, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BsChevronLeft } from "react-icons/bs";
 import { PiArrowsCounterClockwise } from "react-icons/pi";
@@ -41,6 +41,8 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
     const [isloading, setIsLoading] = useState(true);
 
     const { t } = useTranslation();
+
+    const instructionModal = useRef(null);
 
     const getInstructionKey = (exerciseKey, exerciseId) => {
         if (exerciseKey === "sound_n_spelling")
@@ -341,7 +343,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                     : t("accent.accentBritish")}
                             </p>
 
-                            <dialog id="instructionModal" className="modal">
+                            <dialog ref={instructionModal} className="modal">
                                 <div className="modal-box">
                                     <h3 className="text-lg font-bold">
                                         {t("exercise_page.buttons.instructionBtn")}
@@ -374,11 +376,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                                             <button
                                                 type="button"
                                                 className="btn"
-                                                onClick={() =>
-                                                    document
-                                                        .getElementById("instructionModal")
-                                                        .close()
-                                                }
+                                                onClick={() => instructionModal.current?.close()}
                                             >
                                                 {t("sound_page.closeBtn")}
                                             </button>
@@ -390,9 +388,7 @@ const ExerciseDetailPage = ({ heading, id, title, accent, file, onBack }) => {
                             <button
                                 type="button"
                                 className="btn btn-neutral block dark:btn-outline md:hidden"
-                                onClick={() =>
-                                    document.getElementById("instructionModal").showModal()
-                                }
+                                onClick={() => instructionModal.current?.showModal()}
                             >
                                 {t("exercise_page.buttons.expandBtn")}
                             </button>

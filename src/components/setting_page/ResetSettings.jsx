@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isElectron } from "../../utils/isElectron";
 
@@ -7,6 +7,9 @@ const ResetSettings = ({ onReset }) => {
 
     const [isResettingLocalStorage, setIsResettingLocalStorage] = useState(false);
     const [isResettingIndexedDb, setIsResettingIndexedDb] = useState(false);
+
+    const localStorageModal = useRef(null);
+    const indexedDbModal = useRef(null);
 
     const resetLocalStorage = () => {
         setIsResettingLocalStorage(true);
@@ -30,7 +33,7 @@ const ResetSettings = ({ onReset }) => {
             deleteRequest.onsuccess = () => {
                 localStorage.clear();
                 setIsResettingLocalStorage(false);
-                document.getElementById("localStorageModal").close();
+                localStorageModal.current?.close();
                 onReset();
             };
             deleteRequest.onerror = () => setIsResettingLocalStorage(false);
@@ -59,7 +62,7 @@ const ResetSettings = ({ onReset }) => {
             const deleteRequest = window.indexedDB.deleteDatabase("iSpeaker_data");
             deleteRequest.onsuccess = () => {
                 setIsResettingIndexedDb(false);
-                document.getElementById("indexedDbModal").close();
+                indexedDbModal.current?.close();
             };
             deleteRequest.onerror = () => setIsResettingIndexedDb(false);
             deleteRequest.onblocked = () => setIsResettingIndexedDb(false);
@@ -79,7 +82,7 @@ const ResetSettings = ({ onReset }) => {
                         <button
                             type="button"
                             className="btn btn-error"
-                            onClick={() => document.getElementById("localStorageModal").showModal()}
+                            onClick={() => localStorageModal.current?.showModal()}
                             disabled={isResettingLocalStorage}
                         >
                             {isResettingLocalStorage && (
@@ -92,9 +95,7 @@ const ResetSettings = ({ onReset }) => {
                             <button
                                 type="button"
                                 className="btn btn-error mt-4"
-                                onClick={() =>
-                                    document.getElementById("indexedDbModal").showModal()
-                                }
+                                onClick={() => indexedDbModal.current?.showModal()}
                                 disabled={isResettingIndexedDb}
                             >
                                 {isResettingIndexedDb && (
@@ -108,7 +109,7 @@ const ResetSettings = ({ onReset }) => {
             </div>
 
             {/* LocalStorage Modal */}
-            <dialog id="localStorageModal" className="modal">
+            <dialog ref={localStorageModal} className="modal">
                 <form method="dialog" className="modal-box">
                     <h3 className="text-lg font-bold">
                         {t("settingPage.resetSettings.resetModalHeading")}
@@ -120,7 +121,7 @@ const ResetSettings = ({ onReset }) => {
                         <button
                             type="button"
                             className="btn"
-                            onClick={() => document.getElementById("localStorageModal").close()}
+                            onClick={() => localStorageModal.current?.close()}
                             disabled={isResettingLocalStorage}
                         >
                             {t("settingPage.exerciseSettings.cancelBtn")}
@@ -142,7 +143,7 @@ const ResetSettings = ({ onReset }) => {
 
             {/* IndexedDB Modal */}
             {!isElectron() && (
-                <dialog id="indexedDbModal" className="modal">
+                <dialog ref={indexedDbModal} className="modal">
                     <form method="dialog" className="modal-box">
                         <h3 className="text-lg font-bold">
                             {t("settingPage.resetSettings.resetModalHeading")}
@@ -154,7 +155,7 @@ const ResetSettings = ({ onReset }) => {
                             <button
                                 type="button"
                                 className="btn"
-                                onClick={() => document.getElementById("indexedDbModal").close()}
+                                onClick={() => indexedDbModal.current?.close()}
                                 disabled={isResettingIndexedDb}
                             >
                                 {t("settingPage.exerciseSettings.cancelBtn")}

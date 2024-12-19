@@ -40,7 +40,7 @@ const SettingsPage = () => {
             <TopNavBar />
             <Container>
                 <div className="my-8 flex justify-center">
-                    <div className="w-full md:w-2/3 lg:w-1/2">
+                    <div className="w-full md:w-2/3 lg:w-1/2" key={resetFlag}>
                         {currentPage === "settings" && (
                             <>
                                 <h1 className="text-3xl font-semibold md:text-4xl">
@@ -54,9 +54,9 @@ const SettingsPage = () => {
                                             <div className="divider"></div>
                                         </>
                                     )}
-                                    <ExerciseTimer key={`exercise-timer-${resetFlag}`} />
+                                    <ExerciseTimer />
                                     <div className="divider"></div>
-                                    <AppearanceSettings key={`appearance-${resetFlag}`} />
+                                    <AppearanceSettings />
                                     {isElectron() && (
                                         <>
                                             <div className="divider"></div>
@@ -68,7 +68,7 @@ const SettingsPage = () => {
                                     {!isElectron() && (
                                         <>
                                             <div className="divider"></div>
-                                            <CachingSettings key={resetFlag} />
+                                            <CachingSettings />
                                         </>
                                     )}
                                     {isElectron() && (

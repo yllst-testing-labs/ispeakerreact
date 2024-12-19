@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
 import { MdChecklist, MdHeadphones, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
@@ -20,6 +20,8 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
 
     const [videoUrl, setVideoUrl] = useState(null);
     const [videoLoading, setVideoLoading] = useState(true);
+
+    const examMainInfoModal = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -128,7 +130,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 <button
                     type="button"
                     className="btn btn-circle btn-ghost btn-sm ms-1 align-middle"
-                    onClick={() => document.getElementById("examMainInfoModal").showModal()}
+                    onClick={() => examMainInfoModal.current?.showModal()}
                 >
                     <IoInformationCircleOutline className="h-6 w-6" />
                 </button>
@@ -228,7 +230,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 </div>
             </div>
 
-            <dialog id="examMainInfoModal" className="modal">
+            <dialog ref={examMainInfoModal} className="modal">
                 <div className="modal-box">
                     <h3 className="text-lg font-bold">{t("examPage.taskInfo")}</h3>
                     <div className="py-4">

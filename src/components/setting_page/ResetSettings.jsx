@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isElectron } from "../../utils/isElectron";
+import { sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 
 const ResetSettings = ({ onReset }) => {
     const { t } = useTranslation();
@@ -11,62 +12,83 @@ const ResetSettings = ({ onReset }) => {
     const localStorageModal = useRef(null);
     const indexedDbModal = useRef(null);
 
+    const checkAndCloseDatabase = async (dbName) => {
+        // Check if the database exists
+        const databases = await window.indexedDB.databases();
+        const exists = databases.some((db) => db.name === dbName);
+
+        if (!exists) {
+            return false; // Database does not exist
+        }
+
+        // If it exists, open and close the database
+        return new Promise((resolve) => {
+            const dbRequest = window.indexedDB.open(dbName);
+            dbRequest.onsuccess = (event) => {
+                const db = event.target.result;
+                db.close();
+                resolve(true); // Database exists and is closed
+            };
+            dbRequest.onerror = () => {
+                resolve(false); // Database exists but couldn't be opened
+            };
+        });
+    };
+
     const resetLocalStorage = () => {
         setIsResettingLocalStorage(true);
 
-        const closeDatabaseConnections = (dbName) => {
-            return new Promise((resolve) => {
-                const dbRequest = window.indexedDB.open(dbName);
-                dbRequest.onsuccess = (event) => {
-                    const db = event.target.result;
-                    db.close();
-                    resolve();
-                };
-                dbRequest.onerror = () => {
-                    resolve();
-                };
-            });
-        };
-
-        closeDatabaseConnections("CacheDatabase").then(() => {
+        checkAndCloseDatabase("CacheDatabase").then(() => {
             const deleteRequest = window.indexedDB.deleteDatabase("CacheDatabase");
             deleteRequest.onsuccess = () => {
                 localStorage.clear();
                 setIsResettingLocalStorage(false);
                 localStorageModal.current?.close();
                 onReset();
+                sonnerSuccessToast(t("settingPage.changeSaved"));
             };
             deleteRequest.onerror = () => setIsResettingLocalStorage(false);
             deleteRequest.onblocked = () => setIsResettingLocalStorage(false);
         });
     };
 
-    const resetIndexedDb = () => {
+    const resetIndexedDb = async () => {
         setIsResettingIndexedDb(true);
 
-        const closeDatabaseConnections = (dbName) => {
-            return new Promise((resolve) => {
-                const dbRequest = window.indexedDB.open(dbName);
-                dbRequest.onsuccess = (event) => {
-                    const db = event.target.result;
-                    db.close();
-                    resolve();
-                };
-                dbRequest.onerror = () => {
-                    resolve();
-                };
-            });
+        // Check if the database exists
+        const exists = await checkAndCloseDatabase("iSpeaker_data");
+
+        if (!exists) {
+            console.log("Database does not exist");
+            setIsResettingIndexedDb(false);
+            indexedDbModal.current?.close();
+            sonnerSuccessToast(t("settingPage.noDataToDelete"));
+            return; // Exit early
+        }
+
+        console.log("Database exists, proceeding to delete...");
+
+        // Proceed to delete the database
+        const deleteRequest = window.indexedDB.deleteDatabase("iSpeaker_data");
+
+        deleteRequest.onsuccess = async () => {
+            console.log("Database deleted successfully");
+            setIsResettingIndexedDb(false);
+            indexedDbModal.current?.close();
         };
 
-        closeDatabaseConnections("iSpeaker_data").then(() => {
-            const deleteRequest = window.indexedDB.deleteDatabase("iSpeaker_data");
-            deleteRequest.onsuccess = () => {
-                setIsResettingIndexedDb(false);
-                indexedDbModal.current?.close();
-            };
-            deleteRequest.onerror = () => setIsResettingIndexedDb(false);
-            deleteRequest.onblocked = () => setIsResettingIndexedDb(false);
-        });
+        deleteRequest.onerror = () => {
+            console.error("Error deleting database");
+            setIsResettingIndexedDb(false);
+            indexedDbModal.current?.close();
+        };
+
+        deleteRequest.onblocked = () => {
+            console.warn("Database deletion is blocked");
+            setIsResettingIndexedDb(false);
+            indexedDbModal.current?.close();
+            window.location.reload(); // Reload the page to close the database
+        };
     };
 
     return (

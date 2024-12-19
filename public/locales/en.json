@@ -906,6 +906,7 @@
         "checkUpdateMSBtn": "Check for updates in Microsoft Store",
         "openGitHubAlertLink": "Open GitHub",
         "changeSaved": "Changes saved",
+        "noDataToDelete": "No data to delete",
         "exerciseSettings": {
             "timerHeading": "Exercise timer",
             "timerOption": "Enable timer",
@@ -984,10 +985,10 @@
         },
         "resetSettings": {
             "resetHeading": "Reset settings",
-            "resetSettingsData": "Reset iSpeakerReact’s settings and review data",
-            "resetSettingsDataModalMessage": "Are you sure you want to reset iSpeakerReact’s settings and review data? This action cannot be undone.",
-            "deleteRecordingData": "Delete saved recordings",
-            "deleteRecordingDataModalMessage": "Are you sure you want to delete saved recordings? This action cannot be undone.",
+            "resetSettingsData": "Reset settings and review data",
+            "resetSettingsDataModalMessage": "Are you sure you want to reset settings and review data? This action cannot be undone.",
+            "deleteRecordingData": "Delete saved texts and recordings",
+            "deleteRecordingDataModalMessage": "Are you sure you want to delete saved texts and recordings? This action cannot be undone.",
             "resetModalHeading": "Confirm…",
             "resetConfirmBtn": "Confirm"
         }

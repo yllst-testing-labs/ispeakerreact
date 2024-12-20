@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
                 manifest: {
                     name: "iSpeakerReact",
                     short_name: "iSpeakerReact",
-                    theme_color: "#ffffff",
+                    theme_color: "#fcfcfc",
                     icons: [
                         {
                             src: "/images/icons/ios/192.png",
@@ -55,7 +55,7 @@ export default defineConfig(({ mode }) => {
                                 cacheName: "app-dynamic-cache",
                                 expiration: {
                                     maxEntries: 100,
-                                    maxAgeSeconds: 7 * 24 * 60 * 60, // Cache for 1 week
+                                    //maxAgeSeconds: 7 * 24 * 60 * 60, // Cache for 1 week
                                 },
                             },
                         },

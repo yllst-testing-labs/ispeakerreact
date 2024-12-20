@@ -18,7 +18,10 @@ const ExerciseTimer = () => {
 
     const [timerSettings, setTimerSettings] = useState(() => {
         const savedSettings = JSON.parse(localStorage.getItem("ispeaker"));
-        return savedSettings?.timerSettings || defaultTimerSettings;
+        if (savedSettings && savedSettings.timerSettings) {
+            return savedSettings.timerSettings;
+        }
+        return defaultTimerSettings;
     });
 
     const [inputEnabled, setInputEnabled] = useState(timerSettings.enabled);
@@ -26,23 +29,24 @@ const ExerciseTimer = () => {
     const [isValid, setIsValid] = useState(true);
     const [isModified, setIsModified] = useState(false);
 
-    // Save settings to localStorage whenever timerSettings change
+    // Automatically save settings to localStorage whenever timerSettings change
     useEffect(() => {
         const savedSettings = JSON.parse(localStorage.getItem("ispeaker")) || {};
         savedSettings.timerSettings = timerSettings;
         localStorage.setItem("ispeaker", JSON.stringify(savedSettings));
     }, [timerSettings]);
 
-    // Sync inputEnabled with timerSettings.enabled
-    useEffect(() => {
-        setInputEnabled(timerSettings.enabled);
-    }, [timerSettings.enabled]);
-
     const handleTimerToggle = (enabled) => {
-        setTimerSettings((prev) => ({ ...prev, enabled }));
+        setTimerSettings((prev) => ({
+            ...prev,
+            enabled,
+        }));
+        setInputEnabled(enabled);
+
         sonnerSuccessToast(t("settingPage.changeSaved"));
     };
 
+    // Validation function to check if the inputs are valid (0-10 numbers only)
     const validateInputs = (settings) => {
         return Object.values(settings).every(
             (value) => value !== "" && !isNaN(value) && value >= 0 && value <= 10
@@ -57,31 +61,36 @@ const ExerciseTimer = () => {
 
     const handleInputChange = (e, settingKey) => {
         const { value } = e.target;
-        if (/^\d*$/.test(value)) {
+        if (/^\d*$/.test(value) && value.length <= 2) {
+            const numValue = value === "" ? "" : parseInt(value, 10);
             setTempSettings((prev) => ({
                 ...prev,
-                [settingKey]: value === "" ? "" : parseInt(value, 10),
+                [settingKey]: numValue,
             }));
         }
     };
 
-    const handleApply = (e) => {
-        e.preventDefault();
+    const handleApply = () => {
         if (validateInputs(tempSettings)) {
-            setTimerSettings((prev) => ({ ...prev, ...tempSettings }));
+            setTimerSettings((prev) => ({
+                ...prev,
+                ...tempSettings, // Apply modified fields
+                enabled: prev.enabled, // Ensure the `enabled` flag is preserved
+            }));
             setIsModified(false);
             sonnerSuccessToast(t("settingPage.changeSaved"));
         }
     };
 
     const handleCancel = () => {
-        setTempSettings(timerSettings);
-        setIsModified(false);
+        setTempSettings(timerSettings); // revert to original settings
+        setIsModified(false); // Reset modified state
     };
 
+    // Update validity and modified state when temporary settings change
     useEffect(() => {
         setIsValid(validateInputs(tempSettings));
-        setIsModified(checkIfModified(tempSettings));
+        setIsModified(checkIfModified(tempSettings)); // Check if values differ from localStorage or defaults
     }, [tempSettings]);
 
     const exerciseNames = {
@@ -123,10 +132,11 @@ const ExerciseTimer = () => {
                             <div className="label">
                                 <span>{exerciseNames[exercise]}</span>
                             </div>
+
                             <input
                                 type="text"
-                                maxLength={2}
                                 value={tempSettings[exercise]}
+                                maxLength={2}
                                 onChange={(e) => handleInputChange(e, exercise)}
                                 className={`input input-bordered w-full max-w-xs ${
                                     tempSettings[exercise] === "" ||
@@ -137,6 +147,7 @@ const ExerciseTimer = () => {
                                 }`}
                                 disabled={!inputEnabled}
                             />
+
                             {tempSettings[exercise] === "" ||
                             tempSettings[exercise] < 0 ||
                             tempSettings[exercise] > 10 ? (

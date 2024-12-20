@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Container from "../../ui/Container";
 import { isElectron } from "../../utils/isElectron";
+import { useTheme } from "../../utils/ThemeContext/useTheme";
 import TopNavBar from "../general/TopNavBar";
 import AppearanceSettings from "./Appearance";
 import AppInfo from "./AppInfo";
@@ -13,6 +14,7 @@ import VideoDownloadSubPage from "./VideoDownloadSubPage";
 
 const SettingsPage = () => {
     const { t } = useTranslation();
+    const { resetTheme } = useTheme();
 
     useEffect(() => {
         document.title = `${t("navigation.settings")} | iSpeakerReact v${__APP_VERSION__}`;
@@ -24,6 +26,7 @@ const SettingsPage = () => {
     const handleReset = () => {
         // Change the key to remount the CachingSettings component
         setResetFlag((prevFlag) => !prevFlag);
+        resetTheme();
     };
 
     const handleVideoDownloadMenuPage = () => {

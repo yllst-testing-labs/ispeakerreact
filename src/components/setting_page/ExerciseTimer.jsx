@@ -125,6 +125,7 @@ const ExerciseTimer = () => {
                             </div>
                             <input
                                 type="text"
+                                maxLength={2}
                                 value={tempSettings[exercise]}
                                 onChange={(e) => handleInputChange(e, exercise)}
                                 className={`input input-bordered w-full max-w-xs ${

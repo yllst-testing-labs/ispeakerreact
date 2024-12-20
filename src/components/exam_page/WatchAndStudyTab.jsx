@@ -126,8 +126,6 @@ const WatchAndStudyTab = ({ videoUrl, subtitleUrl, taskData, dialog, skills }) =
     const examTaskQuestion = t(taskData.para, { returnObjects: true });
     const examTaskList = taskData.listItems && t(taskData.listItems, { returnObjects: true });
 
-    console.log(subtitleUrl);
-
     return (
         <>
             <div className="mb-4">

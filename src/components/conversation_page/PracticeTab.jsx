@@ -232,7 +232,7 @@ const PracticeTab = ({ accent, conversationId }) => {
                 ></textarea>
             </label>
 
-            <div className="flex justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-2">
                 <button
                     type="button"
                     className="btn btn-primary"
@@ -255,7 +255,7 @@ const PracticeTab = ({ accent, conversationId }) => {
 
             <div className="mt-4">
                 <p className="mb-4">{t("tabConversationExam.recordSectionText")}</p>
-                <div className="flex justify-center gap-2">
+                <div className="flex flex-wrap justify-center gap-2">
                     <button
                         type="button"
                         className="btn btn-primary"

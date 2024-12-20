@@ -264,23 +264,25 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
                                     {t("tabConversationExam.taskCard")} {taskIndex + 1}
                                 </div>
                                 <div className="divider divider-secondary mb-4 mt-0"></div>
-                                <div className="flex flex-row flex-wrap justify-center gap-4">
-                                    {task.images.map((image, index) => (
-                                        <div className="flex w-full md:w-[30%]" key={index}>
-                                            <div className="aspect-w-16 aspect-h-9">
-                                                <img
-                                                    className="h-full w-full object-cover"
-                                                    role="button"
-                                                    src={`${
-                                                        import.meta.env.BASE_URL
-                                                    }images/ispeaker/exam_images/webp/${image}.webp`}
-                                                    onClick={() => handleImageClick(image)}
-                                                />
+                                {task.images.length > 0 && (
+                                    <div className="mb-3 flex flex-row flex-wrap justify-center gap-4">
+                                        {task.images.map((image, index) => (
+                                            <div className="flex w-full md:w-[30%]" key={index}>
+                                                <div className="aspect-w-16 aspect-h-9">
+                                                    <img
+                                                        className="h-full w-full object-cover"
+                                                        role="button"
+                                                        src={`${
+                                                            import.meta.env.BASE_URL
+                                                        }images/ispeaker/exam_images/webp/${image}.webp`}
+                                                        onClick={() => handleImageClick(image)}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="mt-3">
+                                        ))}
+                                    </div>
+                                )}
+                                <div>
                                     {examLocalizedPara.map((paragraph, index) => (
                                         <p key={index}>{paragraph}</p>
                                     ))}

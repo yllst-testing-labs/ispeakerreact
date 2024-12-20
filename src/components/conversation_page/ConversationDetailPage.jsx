@@ -84,6 +84,14 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
         fetchVideoUrl();
     }, [accentData, accent]);
 
+    let videoSubtitle = "";
+    let subtitleUrl = "";
+
+    if (accentData) {
+        videoSubtitle = accentData.watch_and_study.subtitle;
+        subtitleUrl = `${import.meta.env.BASE_URL}media/conversation/subtitles/${accent === "british" ? "gb" : "us"}/${videoSubtitle}`;
+    }
+
     return (
         <>
             <h3 className="mb-2 mt-4 text-2xl font-semibold">
@@ -164,6 +172,7 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                             {activeTab === "watchStudyTab" && (
                                 <WatchAndStudyTab
                                     videoUrl={videoUrl}
+                                    subtitleUrl={subtitleUrl}
                                     dialog={accentData.watch_and_study.study.dialog}
                                     skillCheckmark={
                                         accentData.watch_and_study.study.skill_checkmark

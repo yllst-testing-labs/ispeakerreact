@@ -1,12 +1,48 @@
-import { useState } from "react";
+import { MediaPlayer, MediaProvider, Track } from "@vidstack/react";
+import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/layouts/default";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import "@vidstack/react/player/styles/default/theme.css";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { isElectron } from "../../utils/isElectron";
+import { useTheme } from "../../utils/ThemeContext/useTheme";
 
-const WatchAndStudyTab = ({ videoUrl, dialog, skillCheckmark }) => {
+const WatchAndStudyTab = ({ videoUrl, subtitleUrl, dialog, skillCheckmark }) => {
     const { t } = useTranslation();
     const [highlightState, setHighlightState] = useState({});
     const [iframeLoading, setiFrameLoading] = useState(true);
+
+    const { theme } = useTheme();
+    const [, setCurrentTheme] = useState(theme);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const updateTheme = () => {
+            if (theme === "auto") {
+                const systemPrefersDark = mediaQuery.matches;
+                setCurrentTheme(systemPrefersDark ? "dark" : "light");
+                setIsDarkMode(systemPrefersDark);
+            } else {
+                setCurrentTheme(theme);
+                setIsDarkMode(theme === "dark");
+            }
+        };
+
+        // Initial check and listener
+        updateTheme();
+        if (theme === "auto") {
+            mediaQuery.addEventListener("change", updateTheme);
+        }
+
+        return () => {
+            mediaQuery.removeEventListener("change", updateTheme);
+        };
+    }, [theme]);
+
+    const videoColorScheme = isDarkMode ? "dark" : "light";
 
     const handleIframeLoad = () => setiFrameLoading(false);
 
@@ -27,10 +63,21 @@ const WatchAndStudyTab = ({ videoUrl, dialog, skillCheckmark }) => {
                     <div className="aspect-video">
                         <div className="relative h-full w-full">
                             {isElectron() && videoUrl && videoUrl.startsWith("http://localhost") ? (
-                                <video controls className="h-full w-full">
-                                    <source src={videoUrl} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
+                                <MediaPlayer src={videoUrl}>
+                                    <MediaProvider />
+                                    <DefaultVideoLayout
+                                        icons={defaultLayoutIcons}
+                                        colorScheme={videoColorScheme}
+                                    />
+                                    <Track
+                                        src={subtitleUrl}
+                                        kind="subtitles"
+                                        label="English"
+                                        lang="en"
+                                        type="srt"
+                                        default
+                                    />
+                                </MediaPlayer>
                             ) : (
                                 <>
                                     {iframeLoading && (

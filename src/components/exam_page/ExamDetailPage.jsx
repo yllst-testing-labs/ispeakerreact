@@ -96,6 +96,9 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
 
     const examLocalizedDescArray = t(examDetails.description, { returnObjects: true });
 
+    const videoSubtitle = examData[id].watch_and_study.subtitle;
+    const subtitleUrl = `${import.meta.env.BASE_URL}media/exam/subtitles/${videoSubtitle}`;
+
     return (
         <>
             <h3 className="mb-2 mt-4 text-2xl font-semibold">
@@ -177,6 +180,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                     {activeTab === "watchStudyTab" && (
                         <WatchAndStudyTab
                             videoUrl={videoUrl}
+                            subtitleUrl={subtitleUrl}
                             taskData={examDetails.watch_and_study.taskData}
                             dialog={examDetails.watch_and_study.study.dialog}
                             skills={examDetails.watch_and_study.study.skills}

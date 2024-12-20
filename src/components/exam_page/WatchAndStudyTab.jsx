@@ -1,15 +1,51 @@
-import { useRef, useState } from "react";
+import { MediaPlayer, MediaProvider, Track } from "@vidstack/react";
+import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/layouts/default";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import "@vidstack/react/player/styles/default/theme.css";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoCloseOutline, IoInformationCircleOutline } from "react-icons/io5";
 import { isElectron } from "../../utils/isElectron";
+import { useTheme } from "../../utils/ThemeContext/useTheme";
 
-const WatchAndStudyTab = ({ videoUrl, taskData, dialog, skills }) => {
+const WatchAndStudyTab = ({ videoUrl, subtitleUrl, taskData, dialog, skills }) => {
     const { t } = useTranslation();
 
     const [modalImage, setModalImage] = useState("");
     const [imageLoading, setImageLoading] = useState(false);
     const imageModalRef = useRef(null);
     const [iframeLoading, setiFrameLoading] = useState(true);
+
+    const { theme } = useTheme();
+    const [, setCurrentTheme] = useState(theme);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const updateTheme = () => {
+            if (theme === "auto") {
+                const systemPrefersDark = mediaQuery.matches;
+                setCurrentTheme(systemPrefersDark ? "dark" : "light");
+                setIsDarkMode(systemPrefersDark);
+            } else {
+                setCurrentTheme(theme);
+                setIsDarkMode(theme === "dark");
+            }
+        };
+
+        // Initial check and listener
+        updateTheme();
+        if (theme === "auto") {
+            mediaQuery.addEventListener("change", updateTheme);
+        }
+
+        return () => {
+            mediaQuery.removeEventListener("change", updateTheme);
+        };
+    }, [theme]);
+
+    const videoColorScheme = isDarkMode ? "dark" : "light";
 
     const handleImageClick = (imageName) => {
         const newImage = `${import.meta.env.BASE_URL}images/ispeaker/exam_images/jpg/${imageName}.jpg`;
@@ -90,6 +126,8 @@ const WatchAndStudyTab = ({ videoUrl, taskData, dialog, skills }) => {
     const examTaskQuestion = t(taskData.para, { returnObjects: true });
     const examTaskList = taskData.listItems && t(taskData.listItems, { returnObjects: true });
 
+    console.log(subtitleUrl);
+
     return (
         <>
             <div className="mb-4">
@@ -142,10 +180,21 @@ const WatchAndStudyTab = ({ videoUrl, taskData, dialog, skills }) => {
                                 {isElectron() &&
                                 videoUrl &&
                                 videoUrl.startsWith("http://localhost") ? (
-                                    <video controls className="h-full w-full">
-                                        <source src={videoUrl} type="video/mp4" />
-                                        Your browser does not support the video tag.
-                                    </video>
+                                    <MediaPlayer src={videoUrl}>
+                                        <MediaProvider />
+                                        <DefaultVideoLayout
+                                            icons={defaultLayoutIcons}
+                                            colorScheme={videoColorScheme}
+                                        />
+                                        <Track
+                                            src={subtitleUrl}
+                                            kind="subtitles"
+                                            label="English"
+                                            lang="en"
+                                            type="srt"
+                                            default
+                                        />
+                                    </MediaPlayer>
                                 ) : (
                                     <>
                                         {iframeLoading && (

@@ -1,3 +1,7 @@
+import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/layouts/default";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import "@vidstack/react/player/styles/default/theme.css";
 import he from "he";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsRecordCircleFill } from "react-icons/bs";
@@ -7,6 +11,7 @@ import { MdChecklist, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icon
 import { Trans, useTranslation } from "react-i18next";
 import { checkRecordingExists } from "../../utils/databaseOperations";
 import { isElectron } from "../../utils/isElectron";
+import { useTheme } from "../../utils/ThemeContext/useTheme";
 import LoadingOverlay from "../general/LoadingOverlay";
 import { usePlaybackFunction } from "./hooks/usePlaybackFunction";
 import { useRecordingFunction } from "./hooks/useRecordingFunction";
@@ -18,6 +23,37 @@ import WatchVideoCard from "./WatchVideoCard";
 const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState("watchTab");
+
+    const { theme } = useTheme();
+    const [, setCurrentTheme] = useState(theme);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const updateTheme = () => {
+            if (theme === "auto") {
+                const systemPrefersDark = mediaQuery.matches;
+                setCurrentTheme(systemPrefersDark ? "dark" : "light");
+                setIsDarkMode(systemPrefersDark);
+            } else {
+                setCurrentTheme(theme);
+                setIsDarkMode(theme === "dark");
+            }
+        };
+
+        // Initial check and listener
+        updateTheme();
+        if (theme === "auto") {
+            mediaQuery.addEventListener("change", updateTheme);
+        }
+
+        return () => {
+            mediaQuery.removeEventListener("change", updateTheme);
+        };
+    }, [theme]);
+
+    const videoColorScheme = isDarkMode ? "dark" : "light";
 
     const accentKey = accent === "american" ? "a" : "b";
     const accentData = sound[accentKey][0];
@@ -319,9 +355,13 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                         <div className="aspect-video">
                             <div className="relative h-full w-full">
                                 {isElectron() && selectedVideoUrl.includes("localhost:8998") ? (
-                                    <video controls className="h-full w-full">
-                                        <source src={selectedVideoUrl} type="video/mp4" />
-                                    </video>
+                                    <MediaPlayer src={selectedVideoUrl} className="h-full w-full">
+                                        <MediaProvider />
+                                        <DefaultVideoLayout
+                                            icons={defaultLayoutIcons}
+                                            colorScheme={videoColorScheme}
+                                        />
+                                    </MediaPlayer>
                                 ) : (
                                     selectedVideoUrl && (
                                         <>

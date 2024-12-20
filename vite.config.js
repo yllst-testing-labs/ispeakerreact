@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => {
                 workbox: {
                     runtimeCaching: [
                         {
-                            urlPattern: /\.(?:js|css|html|json|png|jpg|jpeg|svg|ico|woff2)$/, // Cache everything except audio
+                            urlPattern: /\.(?:js|css|json|png|jpg|jpeg|svg|ico|woff2)$/, // Cache everything except audio
                             handler: "CacheFirst",
                             options: {
                                 cacheName: "app-dynamic-cache",

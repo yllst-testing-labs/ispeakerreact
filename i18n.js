@@ -11,6 +11,7 @@ i18n.use(HttpApi) // Load translations via HTTP (use with i18next-http-backend)
         fallbackLng: {
             "en-US": ["en"],
             "en-GB": ["en"],
+            "vi-VN": ["vi"],
             default: ["en"],
         },
         load: "languageOnly",

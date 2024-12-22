@@ -11,24 +11,24 @@
         "soundDescription": "Xem video và thực hành phát âm.",
         "exerciseDescription": "Thực hành nghe và đọc nhẩm các từ/câu trong các dạng bài tập.",
         "conversationDescription": "Cải thiện kĩ năng giao tiếp trong nhiều tình huống khác nhau.",
-        "examDescription": "Chuẩn bị cho các dạng bài thi nói thông dụng (IELTS, TOEFL, TOEIC, v.v.).",
+        "examDescription": "Chuẩn bị cho các dạng bài thi nói thông dụng.",
         "settingDescription": "Bật thời gian, chỉnh nền sáng / tối, v.v.",
         "openBtn": "Mở"
     },
     "accent": {
         "accentSettings": "Giọng",
-        "accentAmerican": "Anh - Mỹ",
-        "accentBritish": "Anh - Anh"
+        "accentAmerican": "Tiếng Anh - Mỹ",
+        "accentBritish": "Tiếng Anh - Anh"
     },
     "alert": {
-        "alertOnlineVideo": "Để xem video khi không có mạng, bạn có thể vào menu “Cài đặt” để tải video.",
-        "alertAppNoInternet": "Không có kết nối mạng. Vui lòng kiểm tra lại kết nối và thử lại.",
+        "alertOnlineVideo": "Để xem video khi không có mạng, hãy vào menu “Cài đặt” để tải video.",
+        "alertAppNoInternet": "Không có kết nối mạng. Xin vui lòng kiểm tra kết nối của bạn và thử lại.",
         "appNewVersionGitHub": "Có bản cập nhật mới. Hãy vào trang GitHub (tiếng Anh) của phần mềm này để tải xuống.",
-        "appVersionLatest": "Phiên bản này là mới nhất.",
+        "appVersionLatest": "Bạn đang sử dụng phiên bản mới nhất.",
         "appUpdateError": "Có lỗi khi kiểm tra cập nhật. Hãy thử lại sau."
     },
     "toast": {
-        "recordingExceeded": "Việc thu âm đã dừng do bạn đã vượt quá thời gian thu âm cho phép.",
+        "recordingExceeded": "Thời gian thu âm đã hết. Việc thu âm đã dừng lại.",
         "recordingSuccess": "Đã lưu lại thu âm của bạn.",
         "recordingFailed": "Thu âm thất bại. Lí do (tiếng Anh): ",
         "playbackError": "Có lỗi khi phát lại thu âm. Lí do (tiếng Anh): ",
@@ -36,7 +36,7 @@
         "textSaveFailed": "Có lỗi khi lưu lại ghi chú. Lí do (tiếng Anh): ",
         "textClearSuccess": "Đã xoá ghi chú thành công.",
         "textClearFailed": "Có lỗi khi xoá ghi chú. Lí do (tiếng Anh): ",
-        "audioPlayFailed": "Không thể phát âm thannh do lỗi mạng. Hãy kiểm tra lại kết nối và tải lại trang.",
+        "audioPlayFailed": "Không thể phát âm thanh do lỗi mạng. Hãy kiểm tra lại kết nối và tải lại trang.",
         "loadingError": "Lỗi tải dữ liệu. Hãy thử tải lại trang.",
         "reviewUpdated": "Đánh giá đã được lưu lại."
     },
@@ -51,24 +51,24 @@
         "stopRecordBtn": "Dừng thu âm",
         "playBtn": "Phát lại",
         "stopPlayBtn": "Dừng phát",
-        "conversationBackBtn": "Chọn chủ đề đối thoại khác",
-        "examBackBtn": "Chọn dạng bài kiểm tra khác"
+        "conversationBackBtn": "Quay lại danh sách hội thoại",
+        "examBackBtn": "Quay lại danh sách bài thi"
     },
     "tabConversationExam": {
         "taskCard": "Đề bài",
         "watchCard": "Xem video",
         "studyCard": "Học",
         "studyExpandBtn": "Xem lời thoại và từ khoá",
-        "imageFullSizeModal": "Xem ảnh phóng to",
+        "imageFullSizeModal": "Ảnh phóng to",
         "practiceConversationText": [
             "Thực hành viết lại đoạn hội thoại của riêng mình.",
             "Bạn có thể sử dụng một số thuật ngữ thông dụng trong chủ đề này.",
             "Hãy nhớ lưu lại ghi chú của bạn!"
         ],
-        "practiceConversationBox": "Viết đoạn hội thoại:",
+        "practiceConversationBox": "Đoạn hội thoại của bạn:",
         "practiceExamTextbox": "Ghi chú của bạn:",
         "recordSectionText": "Hãy sử dụng ghi chú ở trên để thu âm lại. Sau đó nghe lại giọng của mình.",
-        "tipCardExam": "Bí quyết khi làm dạng đề này",
+        "tipCardExam": "Bí quyết cho dạng đề này",
         "doCardExam": "Nên làm",
         "dontsCardExam": "Không nên làm"
     },
@@ -76,12 +76,12 @@
         "consonants": "Phụ âm",
         "vowels_dipthongs": "Nguyên âm đơn và kép",
         "practiceBtn": "Luyện tập",
-        "reviewGood": "tốt",
-        "reviewNeutral": "bình thường",
-        "reviewBad": "không tốt",
+        "reviewGood": "đạt",
+        "reviewNeutral": "trung bình",
+        "reviewBad": "chưa đạt",
         "soundTop": "Âm",
-        "exampleWords": "Một số từ chứa ngữ âm này",
-        "backBtn": "Chọn ngữ âm khác",
+        "exampleWords": "Một số từ chứa âm này",
+        "backBtn": "Quay lại danh sách ngữ âm",
         "closeBtn": "Đóng",
         "watchCard": "Xem",
         "practiceCard": "Luyện tập",
@@ -94,46 +94,46 @@
         "exerciseSubheading": "Chọn một bài để bắt đầu.",
         "modalInfoHeader": "Thông tin bài bập",
         "dictationHeading": "Nghe và viết lại",
-        "matchUpHeading": "Nối ghép",
+        "matchUpHeading": "Ghép nối",
         "reorderingHeading": "Sắp xếp",
         "soundSpellingHeading": "Ngữ âm và chính tả",
         "sortingHeading": "Phân loại",
         "oddOneOutHeading": "Chọn đáp án khác",
-        "snapHeading": "Snap!",
-        "memoryMatchHeading": "Memory match",
-        "randomExercise": "Random",
-        "wordExercise": "Words",
-        "missingWordExercise": "Missing words",
-        "sentenceExercise": "Sentences",
-        "similarSoundExercise": "Similar sounds",
-        "readingPhoneticsExercise": "Reading phonetics",
-        "comprehensionExercise": "Comprehension",
-        "wordStressExercise": "Word stress",
-        "rhymingWordExercise": "Rhyming words",
-        "syllablesExercise": "Syllables",
-        "homophonesExercise": "Homophones",
-        "questionNo": "Question",
-        "timer": "Time:",
-        "dropLayer": "Drop here…",
-        "dragThisItem": "Drag this",
-        "snapCorrect": "Correct",
-        "snapIncorrect": "Incorrect",
+        "snapHeading": "Đúng hay Sai",
+        "memoryMatchHeading": "Tìm cặp tương đồng",
+        "randomExercise": "Ngẫu nhiên",
+        "wordExercise": "Viết lại từ",
+        "missingWordExercise": "Điền từ còn thiếu",
+        "sentenceExercise": "Câu",
+        "similarSoundExercise": "Âm giống nhau",
+        "readingPhoneticsExercise": "Đọc phát âm",
+        "comprehensionExercise": "Thông hiểu",
+        "wordStressExercise": "Trọng âm",
+        "rhymingWordExercise": "Từ láy",
+        "syllablesExercise": "Âm tiết",
+        "homophonesExercise": "Đồng âm",
+        "questionNo": "Câu",
+        "timer": "Thời gian:",
+        "dropLayer": "Thả vào đây…",
+        "dragThisItem": "Kéo thả cái này",
+        "snapCorrect": "Đúng",
+        "snapIncorrect": "Sai",
         "buttons": {
-            "checkBtn": "Check",
-            "nextBtn": "Next",
-            "quitBtn": "Quit",
-            "restartBtn": "Restart quiz",
-            "backBtn": "Back to exercise list",
-            "instructionBtn": "Instructions",
-            "collapseBtn": "Collapse instructions",
-            "expandBtn": "See instructions",
-            "playAudioBtn": "Play audio"
+            "checkBtn": "Kiểm tra",
+            "nextBtn": "Tiếp",
+            "quitBtn": "Thoát",
+            "restartBtn": "Làm lại bài",
+            "backBtn": "Quay lại danh sách bài tập",
+            "instructionBtn": "Hướng dẫn",
+            "collapseBtn": "Ẩn hướng dẫn",
+            "expandBtn": "Xem hướng dẫn",
+            "playAudioBtn": "Phát âm thanh"
         },
         "exerciseInfo": {
-            "dictationWord": "Test your listening and spelling with word dictations",
-            "dictationMissingWord": "Listen to full sentences and write the missing words",
-            "dictationSentence": "Test your listening and spelling with sentence dictations",
-            "dictationRandom": "A mixture of word and sentence dictations",
+            "dictationWord": "Kiểm tra kĩ năng nghe và chính tả với từ đơn",
+            "dictationMissingWord": "Nghe câu và viết lại từ còn thiếu",
+            "dictationSentence": "Kiểm tra kĩ năng nghe và chính tả với câu hoàn chỉnh",
+            "dictationRandom": "Hỗn hợp bài tập từ đơn và câu đầy đủ",
             "matchUpSimilarSound": "Match the written words with the words you hear",
             "matchUpReadingPhonetics": "Test your knowledge of phonetics by matching the phonetic transcriptions to the words",
             "matchUpComprehension": "Match the words to the sentences they appear in",
@@ -185,7 +185,6 @@
                     "When you want to stop, select “Quit” to see your score in this session."
                 ]
             },
-
             "matchup": {
                 "similar-sounds": [
                     "Here is a group of words that contain similar sounds.",
@@ -276,16 +275,19 @@
             "snap": {
                 "reading-phonetics": [
                     "Does the phonetic transcription match the word? Select “Yes” if the two match, or “No” if not.",
+                    "Can you complete the game before the timer runs out?",
                     "When you want to stop, select “Quit” to see your score in this session."
                 ],
                 "homophones": [
                     "Look at the two words. Are they pronounced the same or different?",
                     "Select “Yes” if you think the pronunciation is the same, and “No” if you think it's different.",
+                    "Can you complete the game before the timer runs out?",
                     "When you want to stop, select “Quit” to see your score in this session."
                 ],
                 "random": [
                     "Look at the two words. Do they match or not? Either the pronunciation should be the same, or the phonetic transcription should match the word.",
                     "Select “Yes” if they match, or “No” if not.",
+                    "Can you complete the game before the timer runs out?",
                     "When you want to stop, select “Quit” to see your score in this session."
                 ]
             },
@@ -553,7 +555,9 @@
                     "You may be taking an exam where you and a partner have to discuss something, for example pictures that the examiner shows you. You may not have to describe the pictures in detail, but to interpret the situations that they show and express an opinion about them. You must make sure that you take part in the conversation, but also that you involve your partner.",
                     "This type of task often appears in the following exams: Cambridge Assessment English: B2 First, C1 Advanced, C2 Proficiency, Business Certificates; Trinity ISE, GESE"
                 ],
-                "taskQuestion": ["Look at the pictures and discuss the questions."],
+                "taskQuestion": [
+                    "Look at the pictures and discuss the questions."
+                ],
                 "taskList": [
                     "What are the good and bad points about cycling?",
                     "Which situation in the pictures seems more dangerous for the cyclists?"
@@ -766,14 +770,18 @@
                 "listenHeading3": "Correcting yourself",
                 "listenHeading4": "Using adverbs to give more emphasis to a point",
                 "listenHeading5": "Changing emphasis by turning the sentence around",
-                "practiceQuestion1": ["Describe a friend. You should say:"],
+                "practiceQuestion1": [
+                    "Describe a friend. You should say:"
+                ],
                 "practiceQuestion1List": [
                     "how long you have known each other.",
                     "how you met.",
                     "what you usually do together.",
                     "what you like most about him/her."
                 ],
-                "practiceQuestion2": ["Describe your education. You should say:"],
+                "practiceQuestion2": [
+                    "Describe your education. You should say:"
+                ],
                 "practiceQuestion2List": [
                     "what kind of school you went to/go to.",
                     "what was/is your favorite subject.",
@@ -833,7 +841,9 @@
                 "listenHeading5": "Changing the subject",
                 "listenHeading6": "Concluding",
                 "listenHeading7": "Dealing with questions",
-                "practiceQuestion": ["Write your own presentation on a subject you know about."],
+                "practiceQuestion": [
+                    "Write your own presentation on a subject you know about."
+                ],
                 "tipDos": [
                     "Think about the purpose of your talk.",
                     "Think about your audience and how much they already know.",
@@ -907,6 +917,9 @@
         "openGitHubAlertLink": "Open GitHub",
         "changeSaved": "Changes saved",
         "noDataToDelete": "No data to delete",
+        "languageSettings": {
+            "languageOption": "Language"
+        },
         "exerciseSettings": {
             "timerHeading": "Exercise timer",
             "timerOption": "Enable timer",

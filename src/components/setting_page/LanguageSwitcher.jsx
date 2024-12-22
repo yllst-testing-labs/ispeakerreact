@@ -17,7 +17,10 @@ const openExternal = (url) => {
 };
 
 // Supported languages
-const supportedLanguages = [{ code: "en", label: "English", emoji: "uk" }];
+const supportedLanguages = [
+    { code: "en", label: "English", emoji: "uk" },
+    { code: "vi", label: "Tiếng Việt", emoji: "vn" },
+];
 {
     /*
         The label should be in the native language (e.g., Japanese as 日本語).

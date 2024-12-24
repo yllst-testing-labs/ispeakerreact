@@ -1,6 +1,8 @@
 <p align="center">
-  <img width="300" height="300" src="./public/images/logos/ispeakerreact-logo-color.svg" />
+  <img src="./public/images/homepage_screenshot.webp" />
 </p>
+
+[![Crowdin](https://badges.crowdin.net/ispeakerreact/localized.svg)](https://crowdin.com/project/ispeakerreact)
 
 # iSpeakerReact
 
@@ -20,13 +22,13 @@ Or download the offline portable version: <https://github.com/yllst-testing-labs
 
 For Windows, you can also download from the Microsoft Store if you want automatic updates:
 
-<a href="https://apps.microsoft.com/store/detail/9NWK49GLXGFP?launch=true&mode=mini">
- <img width="300px" src="https://get.microsoft.com/images/en-us%20dark.svg"/>
-</a>
+<p align="center">
+    <a href="https://apps.microsoft.com/store/detail/9NWK49GLXGFP?launch=true&mode=mini">
+        <img width="300px" src="https://get.microsoft.com/images/en-us%20dark.svg"/>
+    </a>
+</p>
 
 The offline portable version (or "Slim edition" on the Microsoft Store) includes audio files for offline playback. You can manually download the video files in the Settings page for offline use.
-
-![](./public/images/homepage_screenshot.webp)
 
 **==Also check out other English-learning interactive tools==**
 

@@ -1,6 +1,6 @@
 {
     "navigation": {
-        "home": "navigation.home = 首页",
+        "home": "首页",
         "sounds": "navigation.sounds = 语音",
         "exercises": "navigation.exercises = 练习",
         "conversations": "navigation.conversations = 对话",

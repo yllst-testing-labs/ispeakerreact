@@ -14,6 +14,7 @@ i18n.use(HttpApi) // Load translations via HTTP (use with i18next-http-backend)
             "en-US": ["en"],
             "en-GB": ["en"],
             "vi-VN": ["vi"],
+            "zh-CN": ["zh"],
             default: ["en"],
         },
         load: "languageOnly",
@@ -24,6 +25,11 @@ i18n.use(HttpApi) // Load translations via HTTP (use with i18next-http-backend)
         interpolation: {
             escapeValue: false, // React already escapes values
         },
+    })
+    .then(() => {
+        // Ensure the `lang` attribute on `html` is updated immediately
+        const currentLang = i18n.language || "en";
+        document.documentElement.setAttribute("lang", currentLang);
     });
 
 export default i18n;

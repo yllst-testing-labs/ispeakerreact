@@ -1,7 +1,9 @@
 {
     "navigation": {
         "home": "Home",
+        "practice": "Practice",
         "sounds": "Sounds",
+        "words": "Words",
         "exercises": "Exercises",
         "conversations": "Conversations",
         "exams": "Exams",
@@ -9,6 +11,7 @@
     },
     "homepage": {
         "soundDescription": "Watch videos and practice pronouncing sounds.",
+        "wordDescription": "Practice pronouncing common words from the Oxford 3000™ and Oxford 5000™ list.",
         "exerciseDescription": "Practice listening to sounds and sentences in various exercise types.",
         "conversationDescription": "Improve your conversation skills for different situations.",
         "examDescription": "Prepare yourself for different types of speaking exams.",
@@ -89,6 +92,26 @@
         "clipModalTitle": "Pronunciation clip",
         "recordInstructions": "Watch pronunciation clips, and use the <0>{{icon}}</0> button to record your own sound.",
         "reviewInstructions": "How do you pronounce the sound <0>{{phoneme}}</0>?"
+    },
+    "wordPage": {
+        "oxford3000Description": "3000 most important English words for basic understanding and conversation",
+        "oxford5000Description": "Expanded core word list for advanced learners of English",
+        "searchBox": "Search a word…",
+        "allLevelSelectBox": "All levels",
+        "firstPageBtn": "First",
+        "prevPageBtn": "Prev",
+        "nextPageBtn": "Next",
+        "lastPageBtn": "Last",
+        "backBtn": "Back to word list",
+        "wordPronunInfoHeader": "Information",
+        "wordPronunInfoBody": [
+            "This is the word’s pronunciation, displayed in IPA (International Phonetic Alphabet) for accurate guidance.",
+            "The pronunciation is broken into syllables to help practice reading the word effectively.",
+            "The syllable with the “P” badge represents the primary stress. It is the strongest stress.",
+            "The syllable with the “S” badge represents the secondary stress. It is slightly weaker than the primary stress.",
+            "Syllables without these badges are unstressed."
+        ],
+        "slowModeOption": "Slow mode"
     },
     "exercise_page": {
         "exerciseSubheading": "Select an exercise to get started.",

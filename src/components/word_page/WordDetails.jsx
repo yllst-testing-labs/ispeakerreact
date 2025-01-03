@@ -5,6 +5,7 @@ import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
 import AccentDropdown from "../general/AccentDropdown";
 import { parseIPA } from "./syllableParser";
+import SpeechRecognitionTest from "./SpeechRecognitionTest";
 
 const WordDetails = ({ word, handleBack, t }) => {
     const [accent, setAccent] = useState("british");
@@ -193,6 +194,8 @@ const WordDetails = ({ word, handleBack, t }) => {
                     </div>
                 </div>
             </div>
+
+            <SpeechRecognitionTest />
 
             <dialog id="wordPronunInfoModal" className="modal">
                 <div className="modal-box">

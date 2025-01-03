@@ -5,6 +5,9 @@ const SpeechRecognitionTest = () => {
     const [isListening, setIsListening] = useState(false);
     const [error, setError] = useState(null);
 
+    const [confidence, setConfidence] = useState(null);
+    const [feedback, setFeedback] = useState("");
+
     const startSpeechRecognition = () => {
         if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
             setError("Your browser does not support the Web Speech API.");
@@ -12,8 +15,7 @@ const SpeechRecognitionTest = () => {
         }
 
         // Use either webkitSpeechRecognition or SpeechRecognition
-        const Recognition =
-            window.webkitSpeechRecognition || window.SpeechRecognition;
+        const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
         const recognition = new Recognition();
 
         recognition.lang = "en"; // Set the language
@@ -38,15 +40,29 @@ const SpeechRecognitionTest = () => {
 
         recognition.onresult = (e) => {
             const recognizedText = e.results[0][0].transcript;
-            console.log("Recognized text:", recognizedText);
+            const confidenceScore = e.results[0][0].confidence;
+            console.log(confidenceScore)
+
             setTranscript(recognizedText);
+            setConfidence(confidenceScore);
+
+            // Provide feedback based on confidence
+            if (confidenceScore >= 0.9) {
+                setFeedback("Excellent! Your pronunciation is spot on.");
+            } else if (confidenceScore >= 0.7) {
+                setFeedback(
+                    "Good job! Your pronunciation is clear but could use slight improvement."
+                );
+            } else {
+                setFeedback("Keep practicing! Your pronunciation was unclear.");
+            }
         };
 
         recognition.start();
     };
 
     return (
-        <div className="text-center my-4">
+        <div className="my-4 text-center">
             <p className="mb-4">Web Speech API Test</p>
             <button
                 type="button"
@@ -63,9 +79,17 @@ const SpeechRecognitionTest = () => {
             )}
             <div className="my-4">
                 <strong>Recognized text:</strong>
-                <p>
-                    {transcript || "No speech recognized yet."}
-                </p>
+                <p>{transcript || "No speech recognized yet."}</p>
+                {confidence !== null && (
+                    <p>
+                        <strong>Confidence:</strong> {(confidence * 100).toFixed(2)}%
+                    </p>
+                )}
+                {feedback && (
+                    <p>
+                        {feedback}
+                    </p>
+                )}
             </div>
         </div>
     );

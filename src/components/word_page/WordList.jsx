@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import Container from "../../ui/Container";
+import AccentLocalStorage from "../../utils/AccentLocalStorage";
+import AccentDropdown from "../general/AccentDropdown";
 import TopNavBar from "../general/TopNavBar";
 import Pagination from "./Pagination";
 import WordDetails from "./WordDetails";
@@ -11,6 +13,8 @@ const PronunciationPractice = () => {
 
     const [activeTab, setActiveTab] = useState("oxford3000");
     const [words, setWords] = useState([]);
+    const [reviewData, setReviewData] = useState({});
+    const [accent, setAccent] = AccentLocalStorage();
     const [loading, setLoading] = useState(false);
 
     // Search and filter state
@@ -62,6 +66,12 @@ const PronunciationPractice = () => {
         fetchWords();
     }, [activeTab]);
 
+    // Load review data from localStorage
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem("ispeaker")) || {};
+        setReviewData(storedData.wordReview || {});
+    }, []);
+
     // Reset to first page when search query or filter changes
     useEffect(() => {
         setCurrentPage(1);
@@ -78,11 +88,29 @@ const PronunciationPractice = () => {
         setViewState("list");
     };
 
+    const handleAccentChange = (newAccent) => {
+        setAccent(newAccent); // Update the accent
+    };
+
+    const getBadgeClass = (review) => {
+        switch (review) {
+            case "good":
+                return "badge badge-success";
+            case "neutral":
+                return "badge badge-warning";
+            case "bad":
+                return "badge badge-error";
+            default:
+                return "";
+        }
+    };
+
     return (
         <>
             <TopNavBar />
             <Container>
                 <h1 className="py-6 text-3xl font-bold md:text-4xl">{t("navigation.words")}</h1>
+                <AccentDropdown onAccentChange={handleAccentChange} />
                 {viewState === "list" && (
                     <>
                         {/* Tabs for switching data */}
@@ -93,7 +121,11 @@ const PronunciationPractice = () => {
                                         <button
                                             type="button"
                                             onClick={() => setActiveTab("oxford3000")}
-                                            className={`md:text-base ${activeTab === "oxford3000" ? "active font-semibold" : ""}`}
+                                            className={`md:text-base ${
+                                                activeTab === "oxford3000"
+                                                    ? "active font-semibold"
+                                                    : ""
+                                            }`}
                                         >
                                             Oxford 3000
                                             <div
@@ -108,7 +140,11 @@ const PronunciationPractice = () => {
                                         <button
                                             type="button"
                                             onClick={() => setActiveTab("oxford5000")}
-                                            className={`md:text-base ${activeTab === "oxford5000" ? "active font-semibold" : ""}`}
+                                            className={`md:text-base ${
+                                                activeTab === "oxford5000"
+                                                    ? "active font-semibold"
+                                                    : ""
+                                            }`}
                                         >
                                             Oxford 5000
                                             <div
@@ -160,30 +196,42 @@ const PronunciationPractice = () => {
                                     <p className="text-lg font-semibold">Loading...</p>
                                 </div>
                             ) : currentWords.length > 0 ? (
-                                currentWords.map((word) => (
-                                    <div key={word.wordId}>
-                                        <div className="indicator">
-                                            <div className="card card-bordered flex h-full w-full justify-between pb-6 shadow-md dark:border-slate-600">
-                                                <div className="card-body flex-grow items-center text-center">
-                                                    <h2 className="card-title" lang="en">
-                                                        {word.name}
-                                                    </h2>
-                                                    <p className="italic" lang="en">
-                                                        {word.pos.join(", ")}
-                                                    </p>
-                                                </div>
-                                                <div className="card-actions px-6">
-                                                    <button
-                                                        className="btn btn-primary w-full"
-                                                        onClick={() => handlePractice(word)}
+                                currentWords.map((word) => {
+                                    const wordReview = reviewData[accent]?.[word.name] || null;
+                                    return (
+                                        <div key={word.wordId}>
+                                            <div className="indicator my-4">
+                                                {wordReview && (
+                                                    <span
+                                                        className={`${getBadgeClass(
+                                                            wordReview
+                                                        )} indicator-item indicator-center`}
                                                     >
-                                                        {t("sound_page.practiceBtn")}
-                                                    </button>
+                                                        {wordReview}
+                                                    </span>
+                                                )}
+                                                <div className="card card-bordered flex h-full w-full justify-between pb-6 shadow-md dark:border-slate-600">
+                                                    <div className="card-body flex-grow items-center text-center">
+                                                        <h2 className="card-title" lang="en">
+                                                            {word.name}
+                                                        </h2>
+                                                        <p className="italic" lang="en">
+                                                            {word.pos.join(", ")}
+                                                        </p>
+                                                    </div>
+                                                    <div className="card-actions px-6">
+                                                        <button
+                                                            className="btn btn-primary w-full"
+                                                            onClick={() => handlePractice(word)}
+                                                        >
+                                                            {t("sound_page.practiceBtn")}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))
+                                    );
+                                })
                             ) : (
                                 <div className="col-span-full my-6 text-center">
                                     <p className="text-lg font-semibold">No words found</p>
@@ -203,7 +251,13 @@ const PronunciationPractice = () => {
                 )}
 
                 {viewState === "details" && selectedWord && (
-                    <WordDetails word={selectedWord} handleBack={handleBack} t={t} />
+                    <WordDetails
+                        word={selectedWord}
+                        handleBack={handleBack}
+                        t={t}
+                        accent={accent}
+                        onAccentChange={handleAccentChange}
+                    />
                 )}
             </Container>
         </>

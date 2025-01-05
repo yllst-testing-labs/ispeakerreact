@@ -10,6 +10,7 @@ const RecordingWaveform = ({
     maxDuration,
     disableControls = false,
     onActivityChange = null,
+    onRecordingSaved = null,
     t,
 }) => {
     const containerRef = useRef(null);
@@ -101,7 +102,6 @@ const RecordingWaveform = ({
                     recordPlugin.stopRecording();
                     setIsRecording(false);
                     clearInterval(recordingInterval.current);
-                    notifyActivityChange(false);
                     return prevTime;
                 }
                 return prevTime + 1;
@@ -135,6 +135,10 @@ const RecordingWaveform = ({
                 try {
                     await saveRecording(blob, wordKey);
                     console.log("Recording saved successfully");
+                    if (onRecordingSaved) {
+                        onRecordingSaved(); // Notify the parent
+                    }
+                    notifyActivityChange(false);
                 } catch (error) {
                     console.error("Error saving recording:", error);
                 }
@@ -146,7 +150,7 @@ const RecordingWaveform = ({
         return () => {
             recordPluginRef.current?.destroy();
         };
-    }, [wavesurfer, wordKey, maxDuration]);
+    }, [wavesurfer, wordKey, maxDuration, onRecordingSaved, notifyActivityChange]);
 
     useEffect(() => {
         if (wavesurfer) {
@@ -235,6 +239,7 @@ RecordingWaveform.propTypes = {
     disableControls: PropTypes.bool.isRequired,
     onActivityChange: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
+    onRecordingSaved: PropTypes.func.isRequired,
 };
 
 export default RecordingWaveform;

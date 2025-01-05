@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
-import AccentDropdown from "../general/AccentDropdown";
+import { checkRecordingExists } from "../../utils/databaseOperations";
 import RecordingWaveform from "./RecordingWaveform";
+import ReviewRecording from "./ReviewRecording";
 import { parseIPA } from "./syllableParser";
 
-const WordDetails = ({ word, handleBack, t }) => {
-    const [accent, setAccent] = useState("british");
+const WordDetails = ({ word, handleBack, t, accent }) => {
     const [activeSyllable, setActiveSyllable] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isAudioLoading, setIsAudioLoading] = useState(true); // State to track loading
@@ -17,25 +17,23 @@ const WordDetails = ({ word, handleBack, t }) => {
     const [isSlowMode, setIsSlowMode] = useState(false);
     const [isRecordingWaveformActive, setIsRecordingWaveformActive] = useState(false);
 
+    const [isRecordingExists, setIsRecordingExists] = useState(false);
+
+    const wordKey = `wordPronunciation-${word.name}-${accent}`;
+
+    useEffect(() => {
+        const checkRecording = async () => {
+            const exists = await checkRecordingExists(wordKey);
+            setIsRecordingExists(exists);
+        };
+        checkRecording();
+    }, [wordKey]);
+
     const baseURL = import.meta.env.BASE_URL;
     const audioFile =
         accent === "american" && word.fileNameUS
             ? `${baseURL}media/word/mp3/${word.fileNameUS}.mp3`
             : `${baseURL}media/word/mp3/${word.fileName}.mp3`;
-
-    useEffect(() => {
-        const storedSettings = JSON.parse(localStorage.getItem("ispeaker"));
-        if (storedSettings?.selectedAccent === "american") {
-            setAccent("american");
-        }
-    }, [accent]);
-
-    const handleAccentChange = (newAccent) => {
-        setAccent(newAccent);
-        setIsAudioLoading(true); // Reset loading state when accent changes
-        setIsPlaying(false); // Stop playback if it was playing
-        setActiveSyllable(-1); // Reset syllable highlighting
-    };
 
     const displayName = accent === "american" && word.nameUS ? word.nameUS : word.name;
     const displayPronunciation =
@@ -111,8 +109,6 @@ const WordDetails = ({ word, handleBack, t }) => {
 
     return (
         <>
-            <AccentDropdown onAccentChange={handleAccentChange} />
-
             <button className="btn btn-secondary my-8" onClick={handleBack}>
                 <IoChevronBackOutline className="h-5 w-5" /> {t("wordPage.backBtn")}
             </button>
@@ -220,6 +216,14 @@ const WordDetails = ({ word, handleBack, t }) => {
                         disableControls={isPlaying}
                         onActivityChange={handleWaveformActivityChange}
                         t={t}
+                        onRecordingSaved={() => setIsRecordingExists(true)}
+                    />
+
+                    <ReviewRecording
+                        wordName={word.name}
+                        accent={accent}
+                        isRecordingExists={isRecordingExists}
+                        t={t}
                     />
                 </div>
             </div>
@@ -259,6 +263,8 @@ WordDetails.propTypes = {
     }).isRequired,
     handleBack: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
+    accent: PropTypes.string.isRequired,
+    onAccentChange: PropTypes.func.isRequired,
 };
 
 export default WordDetails;

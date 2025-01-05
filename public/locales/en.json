@@ -32,7 +32,7 @@
     },
     "toast": {
         "recordingExceeded": "Duration limit reached. Recording has stopped.",
-        "recordingSuccess": "Recording saved successfully.",
+        "recordingSuccess": "Recording saved successfully",
         "recordingFailed": "Recording failed. Reason: ",
         "playbackError": "Error during playback. Reason: ",
         "textSaveSuccess": "Text saved successfully.",
@@ -41,7 +41,8 @@
         "textClearFailed": "Error clearing text. Reason: ",
         "audioPlayFailed": "Unable to play audio due to a network issue. Please check your connection and reload the page.",
         "loadingError": "Error while loading the data. Please try refreshing the page.",
-        "reviewUpdated": "Review updated successfully."
+        "reviewUpdated": "Review updated successfully",
+        "noRecording": "Please record first before reviewing"
     },
     "buttonConversationExam": {
         "watchBtn": "Watch",
@@ -112,7 +113,8 @@
             "Syllables without these badges are unstressed."
         ],
         "slowModeOption": "Slow mode",
-        "pauseRecordingBtn": "Pause recording"
+        "pauseRecordingBtn": "Pause recording",
+        "ratePronunciation": "Rate your pronunciation:"
     },
     "exercise_page": {
         "exerciseSubheading": "Select an exercise to get started.",

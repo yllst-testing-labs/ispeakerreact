@@ -5,8 +5,8 @@ const SpeechRecognitionTest = () => {
     const [isListening, setIsListening] = useState(false);
     const [error, setError] = useState(null);
 
-    const [confidence, setConfidence] = useState(null);
-    const [feedback, setFeedback] = useState("");
+    // const [confidence, setConfidence] = useState(null);
+    // const [feedback, setFeedback] = useState("");
 
     const startSpeechRecognition = () => {
         if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
@@ -41,13 +41,17 @@ const SpeechRecognitionTest = () => {
         recognition.onresult = (e) => {
             const recognizedText = e.results[0][0].transcript;
             const confidenceScore = e.results[0][0].confidence;
-            console.log(confidenceScore)
+            console.log(confidenceScore);
 
             setTranscript(recognizedText);
-            setConfidence(confidenceScore);
+            // setConfidence(confidenceScore);
+
+            // Confidence score is only available on Google Chorme and Safari.
+            // Microsoft Edge always returns `0`, and Firefox returns `1`, therefore, its relevant code
+            // is commented out until major browsers implement this feature properly.
 
             // Provide feedback based on confidence
-            if (confidenceScore >= 0.9) {
+            /* if (confidenceScore >= 0.9) {
                 setFeedback("Excellent! Your pronunciation is spot on.");
             } else if (confidenceScore >= 0.7) {
                 setFeedback(
@@ -55,7 +59,7 @@ const SpeechRecognitionTest = () => {
                 );
             } else {
                 setFeedback("Keep practicing! Your pronunciation was unclear.");
-            }
+            } */
         };
 
         recognition.start();
@@ -73,23 +77,13 @@ const SpeechRecognitionTest = () => {
                 {isListening ? "Listening..." : "Start Speech Recognition"}
             </button>
             {error && (
-                <p className="text-error">
+                <p className="text-error my-4">
                     <strong>{error}</strong>
                 </p>
             )}
             <div className="my-4">
                 <strong>Recognized text:</strong>
                 <p>{transcript || "No speech recognized yet."}</p>
-                {confidence !== null && (
-                    <p>
-                        <strong>Confidence:</strong> {(confidence * 100).toFixed(2)}%
-                    </p>
-                )}
-                {feedback && (
-                    <p>
-                        {feedback}
-                    </p>
-                )}
             </div>
         </div>
     );

@@ -111,7 +111,8 @@
             "The syllable with the “S” badge represents the secondary stress. It is slightly weaker than the primary stress.",
             "Syllables without these badges are unstressed."
         ],
-        "slowModeOption": "Slow mode"
+        "slowModeOption": "Slow mode",
+        "pauseRecordingBtn": "Pause recording"
     },
     "exercise_page": {
         "exerciseSubheading": "Select an exercise to get started.",

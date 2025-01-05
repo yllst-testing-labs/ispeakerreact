@@ -4,16 +4,18 @@ import { useEffect, useState } from "react";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
 import AccentDropdown from "../general/AccentDropdown";
+import RecordingWaveform from "./RecordingWaveform";
 import { parseIPA } from "./syllableParser";
-import SpeechRecognitionTest from "./SpeechRecognitionTest";
 
 const WordDetails = ({ word, handleBack, t }) => {
     const [accent, setAccent] = useState("british");
     const [activeSyllable, setActiveSyllable] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isAudioLoading, setIsAudioLoading] = useState(true); // State to track loading
     const [, setAudioError] = useState(false);
     const [peaks, setPeaks] = useState([]);
     const [isSlowMode, setIsSlowMode] = useState(false);
+    const [isRecordingWaveformActive, setIsRecordingWaveformActive] = useState(false);
 
     const baseURL = import.meta.env.BASE_URL;
     const audioFile =
@@ -26,7 +28,14 @@ const WordDetails = ({ word, handleBack, t }) => {
         if (storedSettings?.selectedAccent === "american") {
             setAccent("american");
         }
-    }, []);
+    }, [accent]);
+
+    const handleAccentChange = (newAccent) => {
+        setAccent(newAccent);
+        setIsAudioLoading(true); // Reset loading state when accent changes
+        setIsPlaying(false); // Stop playback if it was playing
+        setActiveSyllable(-1); // Reset syllable highlighting
+    };
 
     const displayName = accent === "american" && word.nameUS ? word.nameUS : word.name;
     const displayPronunciation =
@@ -42,6 +51,7 @@ const WordDetails = ({ word, handleBack, t }) => {
         setWavesurfer(ws);
         setIsPlaying(false);
         setAudioError(false);
+        setIsAudioLoading(false); // Stop showing loading spinner
 
         // Generate peaks using exportPeaks
         const peaks = ws.exportPeaks({
@@ -59,7 +69,9 @@ const WordDetails = ({ word, handleBack, t }) => {
     };
 
     const onPlayPause = () => {
+        if (isRecordingWaveformActive || isAudioLoading) return;
         if (wavesurfer) {
+            setIsPlaying((prev) => !prev);
             wavesurfer.playPause();
         } else {
             console.error("WaveSurfer instance is not ready.");
@@ -93,9 +105,13 @@ const WordDetails = ({ word, handleBack, t }) => {
         }
     };
 
+    const handleWaveformActivityChange = (isActive) => {
+        setIsRecordingWaveformActive(isActive);
+    };
+
     return (
         <>
-            <AccentDropdown onAccentChange={setAccent} />
+            <AccentDropdown onAccentChange={handleAccentChange} />
 
             <button className="btn btn-secondary my-8" onClick={handleBack}>
                 <IoChevronBackOutline className="h-5 w-5" /> {t("wordPage.backBtn")}
@@ -170,8 +186,11 @@ const WordDetails = ({ word, handleBack, t }) => {
                             title={t("exercise_page.buttons.playAudioBtn")}
                             className="btn btn-circle btn-lg"
                             onClick={onPlayPause}
+                            disabled={isRecordingWaveformActive || isAudioLoading} // Disable until loaded
                         >
-                            {isPlaying ? (
+                            {isAudioLoading ? (
+                                <span className="loading loading-spinner loading-md"></span>
+                            ) : isPlaying ? (
                                 <BsPauseFill className="h-6 w-6" />
                             ) : (
                                 <BsPlayFill className="h-6 w-6" />
@@ -183,6 +202,7 @@ const WordDetails = ({ word, handleBack, t }) => {
                                 waveColor="#d1d5db"
                                 progressColor="#3b82f6"
                                 cursorColor="#1e293b"
+                                cursorWidth={2}
                                 url={audioFile}
                                 onReady={onReady}
                                 onPlay={() => setIsPlaying(true)}
@@ -192,10 +212,17 @@ const WordDetails = ({ word, handleBack, t }) => {
                             />
                         </div>
                     </div>
+
+                    {/* Recording Controls */}
+                    <RecordingWaveform
+                        wordKey={`wordPronunciation-${word.name}-${accent}`}
+                        maxDuration={8}
+                        disableControls={isPlaying}
+                        onActivityChange={handleWaveformActivityChange}
+                        t={t}
+                    />
                 </div>
             </div>
-
-            <SpeechRecognitionTest />
 
             <dialog id="wordPronunInfoModal" className="modal">
                 <div className="modal-box">

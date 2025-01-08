@@ -193,7 +193,9 @@ const PronunciationPractice = () => {
                         <div className="my-4 flex flex-wrap place-items-center justify-center gap-5">
                             {loading ? (
                                 <div className="col-span-full text-center">
-                                    <p className="text-lg font-semibold">Loading...</p>
+                                    <p className="text-lg font-semibold">
+                                        {t("wordPage.loadingText")}
+                                    </p>
                                 </div>
                             ) : currentWords.length > 0 ? (
                                 currentWords.map((word) => {
@@ -234,7 +236,9 @@ const PronunciationPractice = () => {
                                 })
                             ) : (
                                 <div className="col-span-full my-6 text-center">
-                                    <p className="text-lg font-semibold">No words found</p>
+                                    <p className="text-lg font-semibold">
+                                        {t("wordPage.noResultText")}
+                                    </p>
                                 </div>
                             )}
                         </div>

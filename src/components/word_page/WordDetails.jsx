@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
 import { checkRecordingExists } from "../../utils/databaseOperations";
+import { useTheme } from "../../utils/ThemeContext/useTheme";
 import RecordingWaveform from "./RecordingWaveform";
 import ReviewRecording from "./ReviewRecording";
 import { parseIPA } from "./syllableParser";
+import useWaveformTheme from "./useWaveformTheme";
 
 const WordDetails = ({ word, handleBack, t, accent }) => {
+    const { theme } = useTheme();
+
     const [activeSyllable, setActiveSyllable] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isAudioLoading, setIsAudioLoading] = useState(true); // State to track loading
@@ -18,6 +22,24 @@ const WordDetails = ({ word, handleBack, t, accent }) => {
     const [isRecordingWaveformActive, setIsRecordingWaveformActive] = useState(false);
 
     const [isRecordingExists, setIsRecordingExists] = useState(false);
+
+    const waveformLight = "hsl(24.6 95% 53.1%)"; // Light mode waveform color
+    const waveformDark = "hsl(27 96% 61%)"; // Dark mode waveform color
+    const progressLight = "hsl(262.1 83.3% 57.8%)"; // Light mode progress color
+    const progressDark = "hsl(258.3 89.5% 66.3%)"; // Dark mode progress color
+    const cursorLight = "hsl(262.1 83.3% 57.8%)"; // Dark mode progress color
+    const cursorDark = "hsl(258.3 89.5% 66.3%)"; // Dark mode progress color
+
+    const { waveformColor, progressColor, cursorColor } = useWaveformTheme(
+        theme,
+        waveformLight,
+        waveformDark,
+        progressLight,
+        progressDark,
+        cursorLight,
+        cursorDark
+    );
+
 
     const wordKey = `wordPronunciation-${word.name}-${accent}`;
 
@@ -194,10 +216,11 @@ const WordDetails = ({ word, handleBack, t, accent }) => {
                         </button>
                         <div className="w-full">
                             <WavesurferPlayer
+                                key="playback"
                                 height={80}
-                                waveColor="#d1d5db"
-                                progressColor="#3b82f6"
-                                cursorColor="#1e293b"
+                                waveColor={waveformColor}
+                                progressColor={progressColor}
+                                cursorColor={cursorColor}
                                 cursorWidth={2}
                                 url={audioFile}
                                 onReady={onReady}

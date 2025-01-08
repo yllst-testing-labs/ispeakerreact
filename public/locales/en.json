@@ -33,12 +33,12 @@
     "toast": {
         "recordingExceeded": "Duration limit reached. Recording has stopped.",
         "recordingSuccess": "Recording saved successfully",
-        "recordingFailed": "Recording failed. Reason: ",
-        "playbackError": "Error during playback. Reason: ",
+        "recordingFailed": "Recording failed. Reason:",
+        "playbackError": "Error during playback. Reason:",
         "textSaveSuccess": "Text saved successfully.",
-        "textSaveFailed": "Error saving text. Reason: ",
+        "textSaveFailed": "Error saving text. Reason:",
         "textClearSuccess": "Text cleared successfully.",
-        "textClearFailed": "Error clearing text. Reason: ",
+        "textClearFailed": "Error clearing text. Reason:",
         "audioPlayFailed": "Unable to play audio due to a network issue. Please check your connection and reload the page.",
         "loadingError": "Error while loading the data. Please try refreshing the page.",
         "reviewUpdated": "Review updated successfully",
@@ -97,8 +97,10 @@
     "wordPage": {
         "oxford3000Description": "3000 most important English words for basic understanding and conversation",
         "oxford5000Description": "Expanded core word list for advanced learners of English",
+        "loadingText": "Loading word list…",
         "searchBox": "Search a word…",
         "allLevelSelectBox": "All levels",
+        "noResultText": "No words found",
         "firstPageBtn": "First",
         "prevPageBtn": "Prev",
         "nextPageBtn": "Next",
@@ -357,7 +359,7 @@
     },
     "conversationPage": {
         "selectType": "Select a conversation type to get started",
-        "topicHeading": "Topic: ",
+        "topicHeading": "Topic:",
         "conversationModalInfo": "Conversation info",
         "expandInfoBtn": "See conversation info",
         "discussionAndOpinion": {
@@ -1002,7 +1004,7 @@
             "nextBtn": "Next",
             "inProgressModalHeading": "Verification in progress",
             "verifySuccess": "Verification success",
-            "verifySuccessMessage": "All extracted files are verified in the folder: ",
+            "verifySuccessMessage": "All extracted files are verified in the folder:",
             "verifyFailed": "Verification failed",
             "verifyFailedMessage": "It seems like either the files are corrupted or missing. Please try downloading the file again."
         },

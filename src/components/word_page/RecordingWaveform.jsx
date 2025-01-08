@@ -1,9 +1,12 @@
-import { useWavesurfer } from "@wavesurfer/react";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsPauseFill, BsPlayFill, BsRecordFill, BsStopFill } from "react-icons/bs";
+import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record";
 import { checkRecordingExists, openDatabase, saveRecording } from "../../utils/databaseOperations";
+import { sonnerErrorToast, sonnerSuccessToast } from "../../utils/sonnerCustomToast";
+import { useTheme } from "../../utils/ThemeContext/useTheme";
+import useWaveformTheme from "./useWaveformTheme";
 
 const RecordingWaveform = ({
     wordKey,
@@ -13,21 +16,33 @@ const RecordingWaveform = ({
     onRecordingSaved = null,
     t,
 }) => {
-    const containerRef = useRef(null);
-    const [audioUrl, setAudioUrl] = useState("");
+    const { theme } = useTheme();
+
+    const waveformRef = useRef(null);
+    const [recording, setRecording] = useState(false);
+    const [recordedUrl, setRecordedUrl] = useState(null);
+    const [wavesurfer, setWaveSurfer] = useState(null);
+    const [recordPlugin, setRecordPlugin] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [, setRecordingTime] = useState(0);
     const recordingInterval = useRef(null);
-    const [isRecording, setIsRecording] = useState(false);
-    const [playEnabled, setPlayEnabled] = useState(false);
 
-    const { wavesurfer, isPlaying } = useWavesurfer({
-        container: containerRef,
-        height: 80,
-        waveColor: "#ddd",
-        progressColor: "#ff006c",
-        cursorWidth: 2,
-        url: audioUrl,
-    });
+    const waveformLight = "hsl(224.3 76.3% 48%)"; // Light mode waveform color
+    const waveformDark = "hsl(213.1 93.9% 67.8%)"; // Dark mode waveform color
+    const progressLight = "hsl(83.7 80.5% 44.3%)"; // Light mode progress color
+    const progressDark = "hsl(82 84.5% 67.1%)"; // Dark mode progress color
+    const cursorLight = "hsl(83.7 80.5% 44.3%)"; // Dark mode progress color
+    const cursorDark = "hsl(82 84.5% 67.1%)"; // Dark mode progress color
+
+    const { waveformColor, progressColor, cursorColor } = useWaveformTheme(
+        theme,
+        waveformLight,
+        waveformDark,
+        progressLight,
+        progressDark,
+        cursorLight,
+        cursorDark
+    );
 
     const notifyActivityChange = useCallback(
         (isActive) => {
@@ -38,173 +53,172 @@ const RecordingWaveform = ({
         [onActivityChange]
     );
 
-    const recordPluginRef = useRef(null);
+    useEffect(() => {
+        const wavesurferInstance = WaveSurfer.create({
+            container: waveformRef.current,
+            waveColor: waveformColor,
+            progressColor: progressColor,
+            cursorColor: cursorColor,
+            height: 80,
+            cursorWidth: 2,
+            autoScroll: true,
+            hideScrollbar: true
+        });
 
-    const loadExistingRecording = useCallback(async () => {
-        const exists = await checkRecordingExists(wordKey);
-        if (exists) {
-            console.log(`Recording found for key: ${wordKey}`);
-            const db = await openDatabase();
-            const transaction = db.transaction(["recording_data"], "readonly");
-            const store = transaction.objectStore("recording_data");
-            const request = store.get(wordKey);
+        setWaveSurfer(wavesurferInstance);
 
-            request.onsuccess = () => {
-                const { recording } = request.result;
-                const blob = new Blob([recording], { type: "audio/wav" });
-                const url = URL.createObjectURL(blob);
-                setAudioUrl(url);
-                setPlayEnabled(true);
-            };
-        } else {
-            console.log(`No recording found for key: ${wordKey}`);
-            setPlayEnabled(false);
-        }
-    }, [wordKey]);
+        const recordPluginInstance = RecordPlugin.create({
+            renderRecordedAudio: true,
+            continuousWaveform: true,
+            continuousWaveformDuration: maxDuration,
+        });
+        setRecordPlugin(recordPluginInstance);
 
-    const startRecording = async () => {
-        if (disableControls) return;
+        wavesurferInstance.registerPlugin(recordPluginInstance);
 
-        const recordPlugin = recordPluginRef.current;
-        if (!recordPlugin) {
-            console.error("RecordPlugin not initialized");
-            return;
-        }
+        recordPluginInstance.on("record-end", async (blob) => {
+            const recordedUrl = URL.createObjectURL(blob);
+            setRecordedUrl(recordedUrl);
+            setTimeout(() => {
+                wavesurferInstance.empty(); // Clear previous waveform
+                wavesurferInstance.load(recordedUrl); // Load recorded audio
+            }, 100); // Slight delay to ensure blob readiness
 
-        if (isRecording) {
-            console.log("Stopping recording...");
-            recordPlugin.stopRecording();
-            setIsRecording(false);
-            setPlayEnabled(true);
-            notifyActivityChange(false);
-            return;
-        }
-
-        const devices = await RecordPlugin.getAvailableAudioDevices();
-        const deviceId = devices[0]?.deviceId;
-
-        if (!deviceId) {
-            console.error("No audio input devices found");
-            return;
-        }
-
-        //wavesurfer.empty(); // Clear the existing waveform
-        console.log("Starting recording...");
-        recordPlugin.startRecording({ deviceId });
-        setIsRecording(true);
-        setPlayEnabled(false);
-        notifyActivityChange(true);
-
-        recordingInterval.current = setInterval(() => {
-            setRecordingTime((prevTime) => {
-                if (prevTime >= maxDuration) {
-                    console.log("Max recording duration reached. Stopping...");
-                    recordPlugin.stopRecording();
-                    setIsRecording(false);
-                    clearInterval(recordingInterval.current);
-                    return prevTime;
+            try {
+                await saveRecording(blob, wordKey);
+                console.log("Recording saved successfully");
+                if (onRecordingSaved) {
+                    onRecordingSaved(); // Notify the parent
                 }
-                return prevTime + 1;
-            });
-        }, 1000);
+                notifyActivityChange(false);
+                sonnerSuccessToast(t("toast.recordingSuccess"));
+            } catch (error) {
+                console.error("Error saving recording:", error);
+                sonnerErrorToast(`${t("toast.recordingFailed")} ${error.message}`);
+            }
+        });
+
+        const loadExistingRecording = async () => {
+            const exists = await checkRecordingExists(wordKey);
+            if (exists) {
+                console.log(`Recording found for key: ${wordKey}`);
+                const db = await openDatabase();
+                const transaction = db.transaction(["recording_data"], "readonly");
+                const store = transaction.objectStore("recording_data");
+                const request = store.get(wordKey);
+
+                request.onsuccess = () => {
+                    if (request.result) {
+                        const { recording } = request.result;
+                        const blob = new Blob([recording], { type: "audio/wav" });
+                        const url = URL.createObjectURL(blob);
+                        setRecordedUrl(url);
+                        wavesurferInstance.load(url);
+                    } else {
+                        console.log(`No data found for key: ${wordKey}`);
+                    }
+                };
+            } else {
+                console.log(`No recording found for key: ${wordKey}`);
+            }
+        };
+
+        loadExistingRecording();
+
+        wavesurferInstance.on("play", () => {
+            setIsPlaying(true);
+        });
+
+        wavesurferInstance.on("pause", () => {
+            setIsPlaying(false);
+        });
+
+        wavesurferInstance.on("finish", () => {
+            setIsPlaying(false);
+            notifyActivityChange(false); // Notify parent when playback ends
+        });
+
+        return () => {
+            wavesurferInstance.unAll();
+            wavesurferInstance.destroy();
+        };
+    }, [
+        notifyActivityChange,
+        onRecordingSaved,
+        wordKey,
+        maxDuration,
+        cursorColor,
+        progressColor,
+        waveformColor,
+        t,
+    ]);
+
+    const handleRecordClick = () => {
+        if (recordPlugin) {
+            if (recording) {
+                recordPlugin.stopRecording(); // Stop recording
+                setRecording(false);
+                clearInterval(recordingInterval.current); // Clear the interval
+            } else {
+                recordPlugin.startRecording(); // Start recording
+                setRecording(true);
+                setRecordedUrl(null); // Clear previously recorded URL
+                setRecordingTime(0); // Reset the recording time
+
+                recordingInterval.current = setInterval(() => {
+                    setRecordingTime((prevTime) => {
+                        if (prevTime >= maxDuration) {
+                            console.log("Max recording duration reached. Stopping...");
+                            recordPlugin.stopRecording();
+                            setRecording(false);
+                            clearInterval(recordingInterval.current);
+                            return prevTime;
+                        }
+                        return prevTime + 1;
+                    });
+                }, 1000);
+
+                if (wavesurfer) {
+                    wavesurfer.empty(); // Clear waveform for live input
+                }
+            }
+        }
     };
 
-    useEffect(() => {
-        if (wavesurfer && !recordPluginRef.current) {
-            const recordPlugin = wavesurfer.registerPlugin(
-                RecordPlugin.create({
-                    scrollingWaveform: true,
-                    renderRecordedAudio: true,
-                    continuousWaveform: true,
-                    continuousWaveformDuration: maxDuration,
-                })
-            );
-            recordPluginRef.current = recordPlugin;
-
-            recordPlugin.on("record-end", async (blob) => {
-                if (blob.size === 0) {
-                    console.error("Recording failed: Blob is empty");
-                    return;
-                }
-                clearInterval(recordingInterval.current);
-                setRecordingTime(0);
-
-                const recordedUrl = URL.createObjectURL(blob);
-                setAudioUrl(recordedUrl);
-
-                try {
-                    await saveRecording(blob, wordKey);
-                    console.log("Recording saved successfully");
-                    if (onRecordingSaved) {
-                        onRecordingSaved(); // Notify the parent
-                    }
-                    notifyActivityChange(false);
-                } catch (error) {
-                    console.error("Error saving recording:", error);
-                }
-
-                setPlayEnabled(true);
-            });
-        }
-
-        return () => {
-            recordPluginRef.current?.destroy();
-        };
-    }, [wavesurfer, wordKey, maxDuration, onRecordingSaved, notifyActivityChange]);
-
-    useEffect(() => {
+    const handlePlayPause = () => {
         if (wavesurfer) {
-            // Listen for playback finish event
-            wavesurfer.on("finish", () => {
-                notifyActivityChange(false); // Notify parent when playback ends
-            });
+            try {
+                wavesurfer.playPause();
+            } catch (error) {
+                console.error("Playback error:", error);
+                sonnerErrorToast(`${t("toast.recordingFailed")} ${error.message}`);
+            }
         }
-
-        return () => {
-            wavesurfer?.un("finish"); // Cleanup event listener
-        };
-    }, [wavesurfer, notifyActivityChange]);
-
-    useEffect(() => {
-        loadExistingRecording();
-    }, [loadExistingRecording]);
-
-    const onPlayPause = useCallback(() => {
-        if (disableControls || !wavesurfer) return;
-
-        if (wavesurfer) {
-            const isNowPlaying = !isPlaying;
-            wavesurfer.playPause();
-            notifyActivityChange(isNowPlaying);
-            setIsRecording(false);
-        }
-    }, [wavesurfer, disableControls, isPlaying, notifyActivityChange]);
-
-    useEffect(() => {
-        return () => {
-            clearInterval(recordingInterval.current);
-            wavesurfer?.destroy();
-        };
-    }, [wavesurfer]);
+    };
 
     return (
         <div className="my-4">
-            <div className="w-full">
-                <div ref={containerRef}></div>
+            <div className="mb-4 w-full">
+                <div
+                    ref={waveformRef}
+                    className={`waveform-container ${recording ? "recording" : ""}`}
+                ></div>
             </div>
+
             <div className="flex w-full place-items-center justify-center space-x-4">
                 <button
+                    type="button"
+                    id="record"
                     title={
-                        isRecording
+                        recording
                             ? t("buttonConversationExam.stopRecordBtn")
                             : t("buttonConversationExam.recordBtn")
                     }
-                    type="button"
                     className="btn btn-circle btn-accent"
-                    onClick={startRecording}
-                    disabled={isPlaying || disableControls} // Disable while playing
+                    onClick={handleRecordClick}
+                    disabled={disableControls || isPlaying}
                 >
-                    {isRecording ? (
+                    {recording ? (
                         <BsStopFill className="h-6 w-6" />
                     ) : (
                         <BsRecordFill className="h-6 w-6" />
@@ -212,23 +226,34 @@ const RecordingWaveform = ({
                 </button>
 
                 <button
+                    type="button"
+                    id="play"
+                    className="btn btn-circle btn-primary"
+                    onClick={handlePlayPause}
+                    disabled={!recordedUrl || disableControls}
                     title={
-                        isPlaying
+                        wavesurfer?.isPlaying()
                             ? t("wordPage.pauseRecordingBtn")
                             : t("buttonConversationExam.playBtn")
                     }
-                    type="button"
-                    className="btn btn-circle btn-primary"
-                    onClick={onPlayPause}
-                    disabled={!playEnabled || isRecording || disableControls} // Disable while recording
                 >
-                    {isPlaying ? (
+                    {wavesurfer?.isPlaying() ? (
                         <BsPauseFill className="h-6 w-6" />
                     ) : (
                         <BsPlayFill className="h-6 w-6" />
                     )}
                 </button>
             </div>
+
+            {/*recordedUrl && (
+                <a
+                    href={recordedUrl}
+                    download="recording.webm"
+                    style={{ display: "block", marginTop: "1rem" }}
+                >
+                    Download recording
+                </a>
+            )*/}
         </div>
     );
 };
@@ -236,10 +261,10 @@ const RecordingWaveform = ({
 RecordingWaveform.propTypes = {
     wordKey: PropTypes.string.isRequired,
     maxDuration: PropTypes.number.isRequired,
-    disableControls: PropTypes.bool.isRequired,
-    onActivityChange: PropTypes.func.isRequired,
+    disableControls: PropTypes.bool,
+    onActivityChange: PropTypes.func,
     t: PropTypes.func.isRequired,
-    onRecordingSaved: PropTypes.func.isRequired,
+    onRecordingSaved: PropTypes.func,
 };
 
 export default RecordingWaveform;

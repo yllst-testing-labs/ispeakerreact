@@ -8,6 +8,19 @@ import { sonnerErrorToast, sonnerSuccessToast } from "../../utils/sonnerCustomTo
 import { useTheme } from "../../utils/ThemeContext/useTheme";
 import useWaveformTheme from "./useWaveformTheme";
 
+const getSupportedMimeType = () => {
+    const mimeTypes = ["audio/webm", "audio/ogg", "audio/wav", "audio/mpeg"];
+
+    for (const type of mimeTypes) {
+        if (MediaRecorder.isTypeSupported(type)) {
+            return type;
+        }
+    }
+
+    console.warn("No supported MIME type found. Defaulting to 'audio/wav'.");
+    return "audio/wav"; // Fallback
+};
+
 const RecordingWaveform = ({
     wordKey,
     maxDuration,
@@ -67,10 +80,14 @@ const RecordingWaveform = ({
 
         setWaveSurfer(wavesurferInstance);
 
+        const mimeType = getSupportedMimeType();
+        console.log("Using MIME type:", mimeType);
+
         const recordPluginInstance = RecordPlugin.create({
             renderRecordedAudio: true,
             continuousWaveform: true,
             continuousWaveformDuration: maxDuration,
+            mimeType: mimeType,
         });
         setRecordPlugin(recordPluginInstance);
 
@@ -85,7 +102,7 @@ const RecordingWaveform = ({
             }, 100); // Slight delay to ensure blob readiness
 
             try {
-                await saveRecording(blob, wordKey);
+                await saveRecording(blob, wordKey, mimeType);
                 console.log("Recording saved successfully");
                 if (onRecordingSaved) {
                     onRecordingSaved(); // Notify the parent
@@ -109,8 +126,8 @@ const RecordingWaveform = ({
 
                 request.onsuccess = () => {
                     if (request.result) {
-                        const { recording } = request.result;
-                        const blob = new Blob([recording]);
+                        const { recording, mimeType } = request.result;
+                        const blob = new Blob([recording], { type: mimeType });
                         const url = URL.createObjectURL(blob);
                         setRecordedUrl(url);
                         wavesurferInstance.load(url);

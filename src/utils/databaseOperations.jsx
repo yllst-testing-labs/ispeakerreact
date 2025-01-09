@@ -36,11 +36,7 @@ export function openDatabase() {
             const db = event.target.result;
 
             // Create required object stores if they don't exist
-            const storeNames = [
-                "recording_data",
-                "conversation_data",
-                "exam_data",
-            ];
+            const storeNames = ["recording_data", "conversation_data", "exam_data"];
             storeNames.forEach((storeName) => {
                 if (!db.objectStoreNames.contains(storeName)) {
                     db.createObjectStore(storeName, { keyPath: "id" });
@@ -51,7 +47,7 @@ export function openDatabase() {
 }
 
 // Save recording to either Electron or IndexedDB
-export async function saveRecording(blob, key) {
+export async function saveRecording(blob, key, mimeType) {
     const arrayBuffer = await blobToArrayBuffer(blob);
 
     if (isElectron()) {
@@ -71,7 +67,7 @@ export async function saveRecording(blob, key) {
             const transaction = db.transaction(["recording_data"], "readwrite");
             const store = transaction.objectStore("recording_data");
 
-            const request = store.put({ id: key, recording: arrayBuffer });
+            const request = store.put({ id: key, recording: arrayBuffer, mimeType: mimeType });
 
             return new Promise((resolve, reject) => {
                 request.onsuccess = () => {

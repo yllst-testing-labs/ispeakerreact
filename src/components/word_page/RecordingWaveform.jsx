@@ -107,38 +107,13 @@ const RecordingWaveform = ({
                 const store = transaction.objectStore("recording_data");
                 const request = store.get(wordKey);
 
-                request.onsuccess = async () => {
+                request.onsuccess = () => {
                     if (request.result) {
                         const { recording } = request.result;
                         const blob = new Blob([recording]);
-                        const arrayBuffer = await blob.arrayBuffer();
-
-                        try {
-                            // Create or resume an AudioContext
-                            const audioContext = new (window.AudioContext ||
-                                window.webkitAudioContext)();
-                            console.log("Initial AudioContext state:", audioContext.state);
-
-                            if (audioContext.state === "suspended") {
-                                await audioContext.resume();
-                                console.log("AudioContext resumed:", audioContext.state);
-                            }
-
-                            // Decode audio data for playback
-                            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                            const audioSource = audioContext.createBufferSource();
-                            audioSource.buffer = audioBuffer;
-                            audioSource.connect(audioContext.destination);
-
-                            // Attach playback controls to the WaveSurfer instance
-                            setRecordedUrl(blob);
-                            wavesurferInstance.loadBlob(blob);
-
-                            console.log("Audio loaded successfully for playback.");
-                        } catch (error) {
-                            console.error("Error handling audio playback:", error);
-                            sonnerErrorToast("Error handling audio playback:", error)
-                        }
+                        const url = URL.createObjectURL(blob);
+                        setRecordedUrl(url);
+                        wavesurferInstance.load(url);
                     } else {
                         console.log(`No data found for key: ${wordKey}`);
                     }
@@ -164,8 +139,10 @@ const RecordingWaveform = ({
         });
 
         return () => {
-            wavesurferInstance.unAll();
-            wavesurferInstance.destroy();
+            if (wavesurferInstance) {
+                wavesurferInstance.unAll();
+                wavesurferInstance.destroy();
+            }
         };
     }, [
         notifyActivityChange,
@@ -218,7 +195,7 @@ const RecordingWaveform = ({
                 wavesurfer.playPause();
             } catch (error) {
                 console.error("Playback error:", error);
-                sonnerErrorToast(`${t("toast.recordingFailed")} ${error.message}`);
+                sonnerErrorToast(`${t("toast.playbackError")} ${error.message}`);
             }
         }
     };

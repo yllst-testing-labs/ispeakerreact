@@ -62,7 +62,7 @@ const RecordingWaveform = ({
             height: 80,
             cursorWidth: 2,
             autoScroll: true,
-            hideScrollbar: true
+            hideScrollbar: true,
         });
 
         setWaveSurfer(wavesurferInstance);
@@ -160,10 +160,16 @@ const RecordingWaveform = ({
                 setRecording(false);
                 clearInterval(recordingInterval.current); // Clear the interval
             } else {
-                recordPlugin.startRecording(); // Start recording
                 setRecording(true);
                 setRecordedUrl(null); // Clear previously recorded URL
                 setRecordingTime(0); // Reset the recording time
+
+                if (wavesurfer) {
+                    wavesurfer.empty(); // Clear waveform for live input
+                }
+
+                recordPlugin.renderMicStream();
+                recordPlugin.startRecording(); // Start recording
 
                 recordingInterval.current = setInterval(() => {
                     setRecordingTime((prevTime) => {
@@ -177,10 +183,6 @@ const RecordingWaveform = ({
                         return prevTime + 1;
                     });
                 }, 1000);
-
-                if (wavesurfer) {
-                    wavesurfer.empty(); // Clear waveform for live input
-                }
             }
         }
     };

@@ -135,8 +135,8 @@ const RecordingWaveform = ({
                             wavesurferInstance.load(source.buffer);
 
                             const silentBlob = new Blob([], { type: "audio/wav" }); // Silent audio Blob
-            const silentUrl = URL.createObjectURL(silentBlob);
-            setRecordedUrl(silentUrl); // Enable the play button
+                            const silentUrl = URL.createObjectURL(silentBlob);
+                            setRecordedUrl(silentUrl); // Enable the play button
                         }
                     },
                     (error) => {
@@ -192,16 +192,15 @@ const RecordingWaveform = ({
                 setRecording(false);
                 clearInterval(recordingInterval.current); // Clear the interval
             } else {
-                setRecording(true);
                 setRecordedUrl(null); // Clear previously recorded URL
                 setRecordingTime(0); // Reset the recording time
-
                 if (wavesurfer) {
                     wavesurfer.empty(); // Clear waveform for live input
                 }
 
                 //recordPlugin.renderMicStream();
-                recordPlugin.startMic() && recordPlugin.startRecording(); // Start recording
+                setRecording(true);
+                recordPlugin.startRecording(); // Start recording
 
                 recordingInterval.current = setInterval(() => {
                     setRecordingTime((prevTime) => {

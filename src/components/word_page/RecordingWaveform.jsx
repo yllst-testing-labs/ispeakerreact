@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { BsPauseFill, BsPlayFill, BsRecordFill, BsStopFill } from "react-icons/bs";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record";
-import { checkRecordingExists, openDatabase, saveRecording } from "../../utils/databaseOperations";
+import { checkRecordingExists, playRecording, saveRecording } from "../../utils/databaseOperations";
 import { sonnerErrorToast, sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 import { useTheme } from "../../utils/ThemeContext/useTheme";
 import useWaveformTheme from "./useWaveformTheme";
@@ -117,24 +117,37 @@ const RecordingWaveform = ({
 
         const loadExistingRecording = async () => {
             const exists = await checkRecordingExists(wordKey);
+
             if (exists) {
                 console.log(`Recording found for key: ${wordKey}`);
-                const db = await openDatabase();
-                const transaction = db.transaction(["recording_data"], "readonly");
-                const store = transaction.objectStore("recording_data");
-                const request = store.get(wordKey);
 
-                request.onsuccess = () => {
-                    if (request.result) {
-                        const { recording, mimeType } = request.result;
-                        const blob = new Blob([recording], { type: mimeType });
-                        const url = URL.createObjectURL(blob);
-                        setRecordedUrl(url);
-                        wavesurferInstance.load(url);
-                    } else {
-                        console.log(`No data found for key: ${wordKey}`);
+                await playRecording(
+                    wordKey,
+                    async (audio, source) => {
+                        if (audio) {
+                            // Browser environment: Use Blob URL for WaveSurfer
+                            const url = audio.src;
+                            setRecordedUrl(url);
+                            wavesurferInstance.load(url);
+                        } else if (source) {
+                            // iOS/AudioContext: No direct URL; provide a fallback
+                            console.log("AudioContext source playback started");
+                            wavesurferInstance.load(source.buffer);
+
+                            const silentBlob = new Blob([], { type: "audio/wav" }); // Silent audio Blob
+            const silentUrl = URL.createObjectURL(silentBlob);
+            setRecordedUrl(silentUrl); // Enable the play button
+                        }
+                    },
+                    (error) => {
+                        console.error("Playback error:", error);
+                        sonnerErrorToast(`${t("toast.playbackError")} ${error.message}`);
+                    },
+                    () => {
+                        // console.log("Playback finished");
+                        //notifyActivityChange(false);
                     }
-                };
+                );
             } else {
                 console.log(`No recording found for key: ${wordKey}`);
             }

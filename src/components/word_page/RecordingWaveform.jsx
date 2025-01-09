@@ -128,7 +128,7 @@ const RecordingWaveform = ({
                     if (request.result) {
                         const { recording, mimeType } = request.result;
                         const blob = new Blob([recording], { type: mimeType });
-                        console.log(blob)
+                        console.log(blob);
                         const url = URL.createObjectURL(blob);
                         setRecordedUrl(url);
                         wavesurferInstance.load(url);
@@ -180,7 +180,6 @@ const RecordingWaveform = ({
                 setRecording(false);
                 clearInterval(recordingInterval.current); // Clear the interval
             } else {
-                setRecording(true);
                 setRecordedUrl(null); // Clear previously recorded URL
                 setRecordingTime(0); // Reset the recording time
 
@@ -188,8 +187,8 @@ const RecordingWaveform = ({
                     wavesurfer.empty(); // Clear waveform for live input
                 }
 
-                //recordPlugin.renderMicStream();
-                recordPlugin.startMic() && recordPlugin.startRecording(); // Start recording
+                setRecording(true);
+                recordPlugin.startRecording(); // Start recording
 
                 recordingInterval.current = setInterval(() => {
                     setRecordingTime((prevTime) => {

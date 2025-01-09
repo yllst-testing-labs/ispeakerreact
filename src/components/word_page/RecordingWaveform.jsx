@@ -137,6 +137,7 @@ const RecordingWaveform = ({
                             console.log("Audio loaded successfully for playback.");
                         } catch (error) {
                             console.error("Error handling audio playback:", error);
+                            sonnerErrorToast("Error handling audio playback:", error)
                         }
                     } else {
                         console.log(`No data found for key: ${wordKey}`);

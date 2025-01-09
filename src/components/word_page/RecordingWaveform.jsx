@@ -80,14 +80,14 @@ const RecordingWaveform = ({
 
         setWaveSurfer(wavesurferInstance);
 
-        const mimeType = getSupportedMimeType();
-        console.log("Using MIME type:", mimeType);
+        const getMimeType = getSupportedMimeType();
+        // console.log("Using MIME type:", mimeType);
 
         const recordPluginInstance = RecordPlugin.create({
             renderRecordedAudio: true,
             continuousWaveform: true,
             continuousWaveformDuration: maxDuration,
-            mimeType: mimeType,
+            mimeType: getMimeType,
         });
         setRecordPlugin(recordPluginInstance);
 
@@ -102,7 +102,7 @@ const RecordingWaveform = ({
             }, 100); // Slight delay to ensure blob readiness
 
             try {
-                await saveRecording(blob, wordKey, mimeType);
+                await saveRecording(blob, wordKey, getMimeType);
                 console.log("Recording saved successfully");
                 if (onRecordingSaved) {
                     onRecordingSaved(); // Notify the parent

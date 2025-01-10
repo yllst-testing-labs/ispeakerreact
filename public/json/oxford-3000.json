@@ -19,7 +19,7 @@
     },
     {
         "fileName": "ability__gb_1",
-        "fileNameUS": "ability__us_4",
+        "fileNameUS": "ability--_us_3",
         "level": ["a2"],
         "name": "ability",
         "pos": ["n"],
@@ -5349,7 +5349,7 @@
         "level": ["b1"],
         "name": "content",
         "pos": ["n"],
-        "pronunciation": "ˈkɒntent",
+        "pronunciation": "ˈkɒn.tent",
         "pronunciationUS": "ˈkɑːn.tent",
         "wordId": 571
     },

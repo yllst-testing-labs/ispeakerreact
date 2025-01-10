@@ -33,6 +33,7 @@ const RecordingWaveform = ({
     disableControls = false,
     onActivityChange = null,
     onRecordingSaved = null,
+    isAudioLoading = false,
     t,
 }) => {
     const { theme } = useTheme();
@@ -266,7 +267,7 @@ const RecordingWaveform = ({
                     }
                     className="btn btn-circle btn-accent"
                     onClick={handleRecordClick}
-                    disabled={disableControls || isPlaying}
+                    disabled={disableControls || isPlaying || isAudioLoading}
                 >
                     {recording ? (
                         <BsStopFill className="h-6 w-6" />
@@ -280,7 +281,7 @@ const RecordingWaveform = ({
                     id="play"
                     className="btn btn-circle btn-primary"
                     onClick={handlePlayPause}
-                    disabled={!recordedUrl || disableControls}
+                    disabled={!recordedUrl || disableControls || isAudioLoading}
                     title={
                         wavesurfer?.isPlaying()
                             ? t("wordPage.pauseRecordingBtn")
@@ -315,6 +316,7 @@ RecordingWaveform.propTypes = {
     onActivityChange: PropTypes.func,
     t: PropTypes.func.isRequired,
     onRecordingSaved: PropTypes.func,
+    isAudioLoading: PropTypes.bool,
 };
 
 export default RecordingWaveform;

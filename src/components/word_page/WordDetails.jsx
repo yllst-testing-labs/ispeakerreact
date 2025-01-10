@@ -240,6 +240,7 @@ const WordDetails = ({ word, handleBack, t, accent }) => {
                         onActivityChange={handleWaveformActivityChange}
                         t={t}
                         onRecordingSaved={() => setIsRecordingExists(true)}
+                        isAudioLoading={isAudioLoading}
                     />
 
                     <ReviewRecording

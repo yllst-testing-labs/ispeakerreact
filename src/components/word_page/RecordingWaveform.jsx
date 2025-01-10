@@ -9,7 +9,7 @@ import { useTheme } from "../../utils/ThemeContext/useTheme";
 import useWaveformTheme from "./useWaveformTheme";
 
 const getSupportedMimeType = () => {
-    const mimeTypes = ["audio/webm", "audio/ogg", "audio/wav", "audio/mpeg"];
+    const mimeTypes = ["audio/webm", "audio/ogg", "audio/wav", "audio/mpeg", "audio/mp4"];
 
     for (const type of mimeTypes) {
         if (MediaRecorder.isTypeSupported(type)) {
@@ -157,6 +157,8 @@ const RecordingWaveform = ({
         });
 
         return () => {
+            if (recordingInterval) clearInterval(recordingInterval.current);
+
             if (wavesurferInstance) {
                 wavesurferInstance.unAll();
                 wavesurferInstance.destroy();
@@ -180,11 +182,15 @@ const RecordingWaveform = ({
                 setRecording(false);
                 clearInterval(recordingInterval.current); // Clear the interval
             } else {
-                recordPlugin.startRecording(); // Start recording
-                setRecording(true);
+                if (wavesurfer) {
+                    wavesurfer.empty(); // Clear waveform for live input
+                }
 
                 setRecordedUrl(null); // Clear previously recorded URL
                 setRecordingTime(0); // Reset the recording time
+
+                recordPlugin.startRecording(); // Start recording
+                setRecording(true);
 
                 recordingInterval.current = setInterval(() => {
                     setRecordingTime((prevTime) => {
@@ -193,15 +199,12 @@ const RecordingWaveform = ({
                             recordPlugin.stopRecording();
                             setRecording(false);
                             clearInterval(recordingInterval.current);
+                            setRecordingTime(0);
                             return prevTime;
                         }
                         return prevTime + 1;
                     });
                 }, 1000);
-
-                if (wavesurfer) {
-                    wavesurfer.empty(); // Clear waveform for live input
-                }
             }
         }
     };

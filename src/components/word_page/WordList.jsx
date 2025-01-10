@@ -104,6 +104,19 @@ const PronunciationPractice = () => {
         }
     };
 
+    const getReviewText = (review) => {
+        switch (review) {
+            case "good":
+                return t("sound_page.reviewGood");
+            case "neutral":
+                return t("sound_page.reviewNeutral");
+            case "bad":
+                return t("sound_page.reviewBad");
+            default:
+                return "";
+        }
+    };
+
     const updateReviewData = () => {
         const storedData = JSON.parse(localStorage.getItem("ispeaker")) || {};
         setReviewData(storedData.wordReview || {});
@@ -204,6 +217,11 @@ const PronunciationPractice = () => {
                             ) : currentWords.length > 0 ? (
                                 currentWords.map((word) => {
                                     const wordReview = reviewData[accent]?.[word.name] || null;
+                                    const wordReviewText = getReviewText(wordReview);
+                                    const wordAccent =
+                                        accent === "american" && word.nameUS
+                                            ? word.nameUS
+                                            : word.name;
                                     return (
                                         <div key={word.wordId}>
                                             <div className="indicator my-4">
@@ -213,17 +231,28 @@ const PronunciationPractice = () => {
                                                             wordReview
                                                         )} indicator-item indicator-center`}
                                                     >
-                                                        {wordReview}
+                                                        {wordReviewText}
                                                     </span>
                                                 )}
                                                 <div className="card card-bordered flex h-full w-full justify-between pb-6 shadow-md dark:border-slate-600">
                                                     <div className="card-body flex-grow items-center text-center">
                                                         <h2 className="card-title" lang="en">
-                                                            {word.name}
+                                                            {wordAccent}
                                                         </h2>
                                                         <p className="italic" lang="en">
                                                             {word.pos.join(", ")}
                                                         </p>
+                                                        <div className="space-x-2">
+                                                            {word.level.map((wordLevel, id) => (
+                                                                <span
+                                                                    key={id}
+                                                                    className="badge badge-outline font-semibold"
+                                                                    lang="en"
+                                                                >
+                                                                    {wordLevel.toUpperCase()}
+                                                                </span>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                     <div className="card-actions px-6">
                                                         <button

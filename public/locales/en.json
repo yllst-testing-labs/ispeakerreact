@@ -108,13 +108,15 @@
         "backBtn": "Back to word list",
         "wordPronunInfoHeader": "Information",
         "wordPronunInfoBody": [
-            "This is the word’s pronunciation, displayed in IPA (International Phonetic Alphabet) for accurate guidance.",
-            "The pronunciation is broken into syllables to help practice reading the word effectively.",
-            "The syllable with the “P” badge represents the primary stress. It is the strongest stress.",
-            "The syllable with the “S” badge represents the secondary stress. It is slightly weaker than the primary stress.",
+            "This is the word’s transcription in the IPA (International Phonetic Alphabet).",
+            "The transcription is broken into syllables to help practice reading the word effectively.",
+            "The syllable with the “P” badge indicates the primary stress, which is the strongest stress.",
+            "The syllable with the “S” badge represents the secondary stress, which is slightly weaker than the primary stress.",
             "Syllables without these badges are unstressed."
         ],
         "slowModeOption": "Slow mode",
+        "primaryBadge": "P",
+        "secondaryBadge": "S",
         "pauseRecordingBtn": "Pause recording",
         "ratePronunciation": "Rate your pronunciation:"
     },

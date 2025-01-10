@@ -135,10 +135,19 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
             </button>
             <div className="card card-bordered p-6 shadow-md dark:border-slate-600">
                 <div className="card-body flex justify-center text-center">
-                    <h1 className="text-2xl font-bold" lang="en">
-                        {displayName}{" "}
-                        <span className="text-base font-normal italic">{word.pos.join(", ")}</span>
-                    </h1>
+                    <div className="flex flex-row items-center justify-center gap-2">
+                        <h1 className="text-2xl font-bold" lang="en">
+                            {displayName}
+                        </h1>
+                        <span className="text-sm font-normal italic" lang="en">
+                            {word.pos.join(", ")}
+                        </span>
+                        {word.level.map((wordLevel, id) => (
+                            <span key={id} className="badge badge-outline font-semibold" lang="en">
+                                {wordLevel.toUpperCase()}
+                            </span>
+                        ))}
+                    </div>
 
                     <div className="flex flex-wrap items-center justify-center space-x-2">
                         {syllables.map((syllable, index) => (
@@ -149,11 +158,13 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                                 }`}
                             >
                                 {syllable.primary && (
-                                    <span className="badge indicator-item badge-warning">P</span>
+                                    <span className="badge indicator-item badge-warning">
+                                        {t("wordPage.primaryBadge")}
+                                    </span>
                                 )}
                                 {syllable.secondary && (
                                     <span className="badge indicator-item badge-accent indicator-start">
-                                        S
+                                        {t("wordPage.secondaryBadge")}
                                     </span>
                                 )}
                                 <button
@@ -168,7 +179,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                                                 : ""
                                     }`}
                                 >
-                                    {syllable.text}
+                                    <span lang="en">{syllable.text}</span>
                                 </button>
                             </div>
                         ))}

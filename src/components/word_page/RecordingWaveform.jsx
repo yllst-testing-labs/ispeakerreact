@@ -3,7 +3,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { BsPauseFill, BsPlayFill, BsRecordFill, BsStopFill } from "react-icons/bs";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record";
-import { checkRecordingExists, openDatabase, saveRecording } from "../../utils/databaseOperations";
+import {
+    checkRecordingExists,
+    openDatabase,
+    playRecording,
+    saveRecording,
+} from "../../utils/databaseOperations";
+import { isElectron } from "../../utils/isElectron";
 import { sonnerErrorToast, sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 import { useTheme } from "../../utils/ThemeContext/useTheme";
 import useWaveformTheme from "./useWaveformTheme";
@@ -118,26 +124,46 @@ const RecordingWaveform = ({
         const loadExistingRecording = async () => {
             const exists = await checkRecordingExists(wordKey);
             if (exists) {
-                console.log(`Recording found for key: ${wordKey}`);
-                const db = await openDatabase();
-                const transaction = db.transaction(["recording_data"], "readonly");
-                const store = transaction.objectStore("recording_data");
-                const request = store.get(wordKey);
+                if (isElectron()) {
+                    await playRecording(
+                        wordKey,
+                        async (audio) => {
+                            if (audio) {
+                                const url = audio.src;
+                                setRecordedUrl(url);
+                                wavesurferInstance.load(url);
+                                audio.pause(); // Pause the audio immediately after loading
+                                audio.currentTime = 0;
+                            }
+                        },
+                        (error) => {
+                            console.error("Playback error:", error);
+                            sonnerErrorToast(`${t("toast.playbackError")} ${error.message}`);
+                        },
+                        () => {
+                            // console.log("Playback finished");
+                            //notifyActivityChange(false);
+                        }
+                    );
+                } else {
+                    console.log(`Recording found for key: ${wordKey}`);
+                    const db = await openDatabase();
+                    const transaction = db.transaction(["recording_data"], "readonly");
+                    const store = transaction.objectStore("recording_data");
+                    const request = store.get(wordKey);
 
-                request.onsuccess = () => {
-                    if (request.result) {
-                        const { recording, mimeType } = request.result;
-                        const blob = new Blob([recording], { type: mimeType });
-                        console.log(blob);
-                        const url = URL.createObjectURL(blob);
-                        setRecordedUrl(url);
-                        wavesurferInstance.load(url);
-                    } else {
-                        console.log(`No data found for key: ${wordKey}`);
-                    }
-                };
-            } else {
-                console.log(`No recording found for key: ${wordKey}`);
+                    request.onsuccess = () => {
+                        if (request.result) {
+                            const { recording, mimeType } = request.result;
+                            const blob = new Blob([recording], { type: mimeType });
+                            const url = URL.createObjectURL(blob);
+                            setRecordedUrl(url);
+                            wavesurferInstance.load(url);
+                        } else {
+                            console.log(`No data found for key: ${wordKey}`);
+                        }
+                    };
+                }
             }
         };
 

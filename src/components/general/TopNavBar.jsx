@@ -173,32 +173,30 @@ const TopNavBar = () => {
                             location.pathname === item.to;
 
                         return item.childMenu ? (
-                            <div key={item.label} className="dropdown dropdown-bottom">
-                                <li>
-                                    <div
-                                        tabIndex={0}
-                                        role="button"
-                                        className={`flex items-center space-x-1 ${
-                                            isActive ? "active" : ""
-                                        }`}
-                                        aria-label={item.label}
-                                    >
-                                        {item.icon} {item.label}
-                                    </div>
-                                    <ul
-                                        tabIndex={0}
-                                        className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
-                                    >
-                                        {item.childMenu.map((child) => (
-                                            <li key={child.to}>
-                                                <NavLink to={child.to} aria-label={child.label}>
-                                                    {child.icon} {child.label}
-                                                </NavLink>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
-                            </div>
+                            <li key={item.label} className="dropdown dropdown-bottom">
+                                <div
+                                    tabIndex={0}
+                                    role="button"
+                                    className={`flex items-center space-x-1 ${
+                                        isActive ? "active" : ""
+                                    }`}
+                                    aria-label={item.label}
+                                >
+                                    {item.icon} {item.label}
+                                </div>
+                                <ul
+                                    tabIndex={0}
+                                    className="menu dropdown-content w-52 rounded-box bg-base-100 p-2 shadow"
+                                >
+                                    {item.childMenu.map((child) => (
+                                        <li key={child.to}>
+                                            <NavLink to={child.to} aria-label={child.label}>
+                                                {child.icon} {child.label}
+                                            </NavLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
                         ) : (
                             <li key={item.to}>
                                 <NavLink

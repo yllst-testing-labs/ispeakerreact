@@ -181,6 +181,7 @@ const RecordingWaveform = ({
         wavesurferInstance.on("finish", () => {
             setIsPlaying(false);
             notifyActivityChange(false); // Notify parent when playback ends
+            wavesurferInstance.seekTo(0);
         });
 
         return () => {

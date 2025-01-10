@@ -82,6 +82,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
 
         ws.on("finish", () => {
             setActiveSyllable(-1); // Reset the highlighting
+            ws.seekTo(0);
         });
 
         ws.setPlaybackRate(isSlowMode ? 0.5 : 1);

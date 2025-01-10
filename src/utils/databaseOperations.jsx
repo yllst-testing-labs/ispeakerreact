@@ -165,7 +165,19 @@ export async function playRecording(key, onSuccess, onError, onEnded) {
                 const { recording, mimeType } = request.result;
 
                 try {
-                    //console.error("Error decoding audio data:");
+                    // Use AudioContext for playback
+                    const audioContext = new AudioContext();
+                    const buffer = await audioContext.decodeAudioData(recording);
+                    const source = audioContext.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioContext.destination);
+
+                    source.onended = onEnded;
+                    source.start();
+
+                    if (onSuccess) onSuccess(null, source);
+                } catch (decodeError) {
+                    console.error("Error decoding audio data:", decodeError);
 
                     // Fallback to Blob URL
                     const audioBlob = new Blob([recording], { type: mimeType });
@@ -184,18 +196,6 @@ export async function playRecording(key, onSuccess, onError, onEnded) {
                             console.error("Error playing audio via Blob URL:", playError);
                             if (onError) onError(playError);
                         });
-                } catch {
-                    // Use AudioContext for playback
-                    const audioContext = new AudioContext();
-                    const buffer = await audioContext.decodeAudioData(recording);
-                    const source = audioContext.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(audioContext.destination);
-
-                    source.onended = onEnded;
-                    source.start();
-
-                    if (onSuccess) onSuccess(null, source);
                 }
             };
 

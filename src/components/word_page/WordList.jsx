@@ -68,8 +68,7 @@ const PronunciationPractice = () => {
 
     // Load review data from localStorage
     useEffect(() => {
-        const storedData = JSON.parse(localStorage.getItem("ispeaker")) || {};
-        setReviewData(storedData.wordReview || {});
+        updateReviewData();
     }, []);
 
     // Reset to first page when search query or filter changes
@@ -103,6 +102,11 @@ const PronunciationPractice = () => {
             default:
                 return "";
         }
+    };
+
+    const updateReviewData = () => {
+        const storedData = JSON.parse(localStorage.getItem("ispeaker")) || {};
+        setReviewData(storedData.wordReview || {});
     };
 
     return (
@@ -180,7 +184,7 @@ const PronunciationPractice = () => {
                             </div>
                         </div>
 
-                        {filteredWords.length > 0 && (
+                        {filteredWords.length > 0 && !loading && (
                             <Pagination
                                 t={t}
                                 currentPage={currentPage}
@@ -243,7 +247,7 @@ const PronunciationPractice = () => {
                             )}
                         </div>
 
-                        {filteredWords.length > 0 && (
+                        {filteredWords.length > 0 && !loading && (
                             <Pagination
                                 t={t}
                                 currentPage={currentPage}
@@ -261,6 +265,7 @@ const PronunciationPractice = () => {
                         t={t}
                         accent={accent}
                         onAccentChange={handleAccentChange}
+                        onReviewUpdate={updateReviewData}
                     />
                 )}
             </Container>

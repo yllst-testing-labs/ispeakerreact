@@ -10,7 +10,7 @@ import ReviewRecording from "./ReviewRecording";
 import { parseIPA } from "./syllableParser";
 import useWaveformTheme from "./useWaveformTheme";
 
-const WordDetails = ({ word, handleBack, t, accent }) => {
+const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
     const { theme } = useTheme();
 
     const [activeSyllable, setActiveSyllable] = useState(-1);
@@ -39,7 +39,6 @@ const WordDetails = ({ word, handleBack, t, accent }) => {
         cursorLight,
         cursorDark
     );
-
 
     const wordKey = `wordPronunciation-${word.name}-${accent}`;
 
@@ -248,6 +247,7 @@ const WordDetails = ({ word, handleBack, t, accent }) => {
                         accent={accent}
                         isRecordingExists={isRecordingExists}
                         t={t}
+                        onReviewUpdate={onReviewUpdate}
                     />
                 </div>
             </div>
@@ -289,6 +289,7 @@ WordDetails.propTypes = {
     t: PropTypes.func.isRequired,
     accent: PropTypes.string.isRequired,
     onAccentChange: PropTypes.func.isRequired,
+    onReviewUpdate: PropTypes.func,
 };
 
 export default WordDetails;

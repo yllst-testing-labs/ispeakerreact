@@ -10,7 +10,7 @@ import {
 import { sonnerSuccessToast, sonnerWarningToast } from "../../utils/sonnerCustomToast";
 import { useState, useEffect } from "react";
 
-const ReviewRecording = ({ wordName, accent, isRecordingExists, t }) => {
+const ReviewRecording = ({ wordName, accent, isRecordingExists, t, onReviewUpdate }) => {
     const [review, setReview] = useState(null);
 
     // Load review from localStorage on mount
@@ -35,6 +35,8 @@ const ReviewRecording = ({ wordName, accent, isRecordingExists, t }) => {
         setReview(type);
 
         sonnerSuccessToast(t("toast.reviewUpdated"));
+
+        onReviewUpdate();
     };
 
     const emojiStyle = (reviewType) => {
@@ -97,6 +99,7 @@ ReviewRecording.propTypes = {
     accent: PropTypes.string.isRequired,
     isRecordingExists: PropTypes.bool.isRequired,
     t: PropTypes.func.isRequired,
+    onReviewUpdate: PropTypes.func,
 };
 
 export default ReviewRecording;

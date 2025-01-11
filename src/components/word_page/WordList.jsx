@@ -232,7 +232,7 @@ const PronunciationPractice = () => {
                                                         {wordReviewText}
                                                     </span>
                                                 )}
-                                                <div className="card card-bordered flex h-auto w-32 justify-between break-words pb-6 shadow-md md:w-48 dark:border-slate-600">
+                                                <div className="card card-bordered flex h-auto w-36 justify-between break-words pb-6 shadow-md md:w-48 dark:border-slate-600">
                                                     <div className="card-body flex-grow items-center text-center">
                                                         <h2
                                                             className="card-title hyphens-auto break-words"

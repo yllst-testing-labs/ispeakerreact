@@ -128,10 +128,6 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
         setIsRecordingWaveformActive(isActive);
     };
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    });
-
     return (
         <>
             <button className="btn btn-secondary my-8" onClick={handleBack}>
@@ -139,7 +135,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
             </button>
             <div className="card card-bordered p-6 shadow-md dark:border-slate-600">
                 <div className="card-body flex justify-center text-center">
-                    <div className="flex flex-row items-center justify-center gap-2">
+                    <div className="mb-4 flex flex-row items-center justify-center gap-2">
                         <h1 className="text-2xl font-bold" lang="en">
                             {displayName}{" "}
                             <span className="text-base font-normal italic" lang="en">
@@ -154,11 +150,11 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                         ))}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-center space-x-2">
+                    <div className="flex flex-wrap items-center justify-center space-x-1 md:space-x-2">
                         {syllables.map((syllable, index) => (
                             <div
                                 key={index}
-                                className={`my-4 ${
+                                className={`my-2 ${
                                     syllable.primary || syllable.secondary ? "indicator" : ""
                                 }`}
                             >
@@ -174,7 +170,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                                 )}
                                 <button
                                     type="button"
-                                    className={`font-normal btn btn-lg ${
+                                    className={`btn btn-lg font-normal ${
                                         index === activeSyllable
                                             ? "btn-accent"
                                             : syllable.primary
@@ -189,7 +185,11 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                             </div>
                         ))}
 
-                        <button type="button" title={t("wordPage.wordPronunInfoHeader")}>
+                        <button
+                            type="button"
+                            className="btn btn-circle btn-ghost btn-sm"
+                            title={t("wordPage.wordPronunInfoHeader")}
+                        >
                             <IoInformationCircleOutline
                                 className="h-6 w-6"
                                 onClick={() =>

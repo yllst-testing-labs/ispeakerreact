@@ -128,6 +128,10 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
         setIsRecordingWaveformActive(isActive);
     };
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    });
+
     return (
         <>
             <button className="btn btn-secondary my-8" onClick={handleBack}>
@@ -137,11 +141,12 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                 <div className="card-body flex justify-center text-center">
                     <div className="flex flex-row items-center justify-center gap-2">
                         <h1 className="text-2xl font-bold" lang="en">
-                            {displayName}
+                            {displayName}{" "}
+                            <span className="text-base font-normal italic" lang="en">
+                                {word.pos.join(", ")}
+                            </span>
                         </h1>
-                        <span className="text-sm font-normal italic" lang="en">
-                            {word.pos.join(", ")}
-                        </span>
+
                         {word.level.map((wordLevel, id) => (
                             <span key={id} className="badge badge-outline font-semibold" lang="en">
                                 {wordLevel.toUpperCase()}
@@ -158,18 +163,18 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                                 }`}
                             >
                                 {syllable.primary && (
-                                    <span className="badge indicator-item badge-warning">
+                                    <span className="badge indicator-item badge-warning indicator-center font-semibold">
                                         {t("wordPage.primaryBadge")}
                                     </span>
                                 )}
                                 {syllable.secondary && (
-                                    <span className="badge indicator-item badge-accent indicator-start">
+                                    <span className="badge indicator-item badge-accent indicator-center font-semibold">
                                         {t("wordPage.secondaryBadge")}
                                     </span>
                                 )}
                                 <button
                                     type="button"
-                                    className={`btn btn-lg ${
+                                    className={`font-normal btn btn-lg ${
                                         index === activeSyllable
                                             ? "btn-accent"
                                             : syllable.primary

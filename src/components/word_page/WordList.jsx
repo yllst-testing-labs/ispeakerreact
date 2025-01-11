@@ -174,18 +174,18 @@ const PronunciationPractice = () => {
                                     </li>
                                 </ul>
                             </div>
-                            <div className="mt-6 flex flex-col items-center justify-center space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+                            <div className="mt-6 flex flex-wrap items-center justify-center space-x-4">
                                 <input
                                     type="text"
                                     placeholder={t("wordPage.searchBox")}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="input input-bordered w-full max-w-xs"
+                                    className="input input-bordered w-1/2 max-w-xs basis-1/2"
                                 />
                                 <select
                                     value={selectedLevel}
                                     onChange={(e) => setSelectedLevel(e.target.value)}
-                                    className="select select-bordered w-full max-w-xs"
+                                    className="select select-bordered w-1/2 max-w-xs basis-1/3"
                                 >
                                     <option value="">{t("wordPage.allLevelSelectBox")}</option>
                                     <option value="a1">A1</option>
@@ -207,15 +207,13 @@ const PronunciationPractice = () => {
                         )}
 
                         {/* Content Area */}
-                        <div className="my-4 flex flex-wrap place-items-center justify-center gap-5">
-                            {loading ? (
-                                <div className="col-span-full text-center">
-                                    <p className="text-lg font-semibold">
-                                        {t("wordPage.loadingText")}
-                                    </p>
-                                </div>
-                            ) : currentWords.length > 0 ? (
-                                currentWords.map((word) => {
+                        {loading ? (
+                            <div className="col-span-full text-center">
+                                <p className="text-lg font-semibold">{t("wordPage.loadingText")}</p>
+                            </div>
+                        ) : currentWords.length > 0 ? (
+                            <div className="my-4 flex flex-row flex-wrap place-items-center justify-center gap-5">
+                                {currentWords.map((word) => {
                                     const wordReview = reviewData[accent]?.[word.name] || null;
                                     const wordReviewText = getReviewText(wordReview);
                                     const wordAccent =
@@ -234,9 +232,12 @@ const PronunciationPractice = () => {
                                                         {wordReviewText}
                                                     </span>
                                                 )}
-                                                <div className="card card-bordered flex h-full w-full justify-between pb-6 shadow-md dark:border-slate-600">
+                                                <div className="card card-bordered flex h-auto w-32 justify-between break-words pb-6 shadow-md md:w-48 dark:border-slate-600">
                                                     <div className="card-body flex-grow items-center text-center">
-                                                        <h2 className="card-title" lang="en">
+                                                        <h2
+                                                            className="card-title hyphens-auto break-words"
+                                                            lang="en"
+                                                        >
                                                             {wordAccent}
                                                         </h2>
                                                         <p className="italic" lang="en">
@@ -266,15 +267,15 @@ const PronunciationPractice = () => {
                                             </div>
                                         </div>
                                     );
-                                })
-                            ) : (
-                                <div className="col-span-full my-6 text-center">
-                                    <p className="text-lg font-semibold">
-                                        {t("wordPage.noResultText")}
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                                })}
+                            </div>
+                        ) : (
+                            <div className="col-span-full my-6 text-center">
+                                <p className="text-lg font-semibold">
+                                    {t("wordPage.noResultText")}
+                                </p>
+                            </div>
+                        )}
 
                         {filteredWords.length > 0 && !loading && (
                             <Pagination

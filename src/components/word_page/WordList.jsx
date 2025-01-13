@@ -66,6 +66,10 @@ const PronunciationPractice = () => {
         fetchWords();
     }, [activeTab]);
 
+    useEffect(() => {
+        document.title = `${t("navigation.words")} | iSpeakerReact v${__APP_VERSION__}`;
+    }, [t]);
+
     // Load review data from localStorage
     useEffect(() => {
         updateReviewData();

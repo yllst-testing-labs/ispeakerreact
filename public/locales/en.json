@@ -118,7 +118,8 @@
         "primaryBadge": "P",
         "secondaryBadge": "S",
         "pauseRecordingBtn": "Pause recording",
-        "ratePronunciation": "Rate your pronunciation:"
+        "ratePronunciation": "Rate your pronunciation:",
+        "feedbackBtn": "Give feedback"
     },
     "exercise_page": {
         "exerciseSubheading": "Select an exercise to get started.",

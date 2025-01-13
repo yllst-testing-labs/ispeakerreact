@@ -9,6 +9,20 @@ import RecordingWaveform from "./RecordingWaveform";
 import ReviewRecording from "./ReviewRecording";
 import { parseIPA } from "./syllableParser";
 import useWaveformTheme from "./useWaveformTheme";
+import { VscFeedback } from "react-icons/vsc";
+import { isElectron } from "../../utils/isElectron";
+
+const openExternal = (url) => {
+    if (isElectron()) {
+        window.electron.openExternal(url);
+    } else {
+        const link = document.createElement("a");
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.click();
+    }
+};
 
 const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
     const { theme } = useTheme();
@@ -265,6 +279,19 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                         t={t}
                         onReviewUpdate={onReviewUpdate}
                     />
+
+                    <div className="flex justify-center">
+                        <button
+                            className="btn btn-info my-4"
+                            onClick={() =>
+                                openExternal(
+                                    "https://github.com/yllst-testing-labs/ispeakerreact/discussions/34"
+                                )
+                            }
+                        >
+                            <VscFeedback className="h-5 w-5" /> {t("wordPage.feedbackBtn")}
+                        </button>
+                    </div>
                 </div>
             </div>
 

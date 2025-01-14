@@ -8,6 +8,7 @@ const JS7z = require("./libraries/js7z/js7z.cjs");
 const crypto = require("crypto");
 
 const express = require("express");
+const RateLimit = require("express-rate-limit");
 const DEFAULT_PORT = 8998;
 const MIN_PORT = 1024; // Minimum valid port number
 const MAX_PORT = 65535; // Maximum valid port number
@@ -313,6 +314,15 @@ function createWindow() {
 
     applog.info(`App started. Version ${version}`);
 }
+
+// Set up rate limiter: maximum of 100 requests per 15 minutes
+const limiter = RateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // max 100 requests per windowMs
+});
+
+// Apply rate limiter to all requests
+expressApp.use(limiter);
 
 // Set up the express server to serve video files
 expressApp.get("/video/:folderName/:fileName", (req, res) => {

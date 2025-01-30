@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
-const VideoDownloadTable = ({ data, isDownloaded }) => {
-    const { t } = useTranslation();
-
+const VideoDownloadTable = ({ t, data, isDownloaded }) => {
     const [, setShowVerifyModal] = useState(false);
-    const [, setShowProgressModal] = useState(false);
+    const [showProgressModal, setShowProgressModal] = useState(false);
     const [selectedZip, setSelectedZip] = useState(null);
     const [verifyFiles, setVerifyFiles] = useState([]);
     const [progress, setProgress] = useState(0);
@@ -57,12 +54,9 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
 
     const handleVerify = (zip) => {
         setSelectedZip(zip);
-
         const fileToVerify = zip.name ? [{ name: zip.name }] : [];
         setVerifyFiles(fileToVerify);
-
         setShowVerifyModal(true);
-
         verifyModal.current?.showModal();
     };
 
@@ -114,43 +108,75 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item) => (
-                            <tr className="hover align-middle text-base" key={item.zipFile}>
-                                <td>{t(item.name)}</td>
-                                <td className="text-center">
-                                    {(item.fileSize / (1024 * 1024)).toFixed(2)} MB
-                                </td>
-                                <td className="text-center">
-                                    <a
-                                        className="link"
-                                        onClick={() => window.electron.openExternal(item.link)}
-                                    >
-                                        {t(
-                                            "settingPage.videoDownloadSettings.downloadTable.downloadLink"
+                        {data.map((item) => {
+                            // Find the corresponding download status for the current item
+                            const fileStatus = isDownloaded.find(
+                                (status) => status.zipFile === item.zipFile
+                            );
+
+                            return (
+                                <tr className="hover align-middle text-base" key={item.zipFile}>
+                                    <td>{t(item.name)}</td>
+                                    <td className="text-center">
+                                        {(item.fileSize / (1024 * 1024)).toFixed(2)} MB
+                                    </td>
+                                    <td className="text-center">
+                                        <a
+                                            className="link"
+                                            onClick={() => window.electron.openExternal(item.link)}
+                                        >
+                                            {t(
+                                                "settingPage.videoDownloadSettings.downloadTable.downloadLink"
+                                            )}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {fileStatus ? ( // Check if fileStatus is found
+                                            fileStatus.isDownloaded ||
+                                            fileStatus.hasExtractedFolder ? (
+                                                <BsCheckCircleFill className="mx-auto h-6 w-6 text-success" />
+                                            ) : (
+                                                <BsXCircleFill className="mx-auto h-6 w-6 text-error" />
+                                            )
+                                        ) : (
+                                            // Handle the case where fileStatus is not found
+                                            // This can happen if `isDownloaded` array does not include all items in `data`
+                                            <span>Loading...</span>
                                         )}
-                                    </a>
-                                </td>
-                                <td>
-                                    {isDownloaded[item.zipFile] ? (
-                                        <BsCheckCircleFill className="mx-auto h-6 w-6 text-success" />
-                                    ) : (
-                                        <BsXCircleFill className="mx-auto h-6 w-6 text-error" />
-                                    )}
-                                </td>
-                                <td className="text-center">
-                                    <button
-                                        type="button"
-                                        className="btn btn-accent btn-sm"
-                                        onClick={() => handleVerify(item)}
-                                        disabled={!isDownloaded[item.zipFile]}
-                                    >
-                                        {t(
-                                            "settingPage.videoDownloadSettings.downloadTable.verifyBtn"
-                                        )}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td className="text-center">
+                                        <button
+                                            type="button"
+                                            className="btn btn-accent btn-sm"
+                                            onClick={() => handleVerify(item)}
+                                            disabled={
+                                                !fileStatus ||
+                                                (!fileStatus.isDownloaded &&
+                                                    !fileStatus.hasExtractedFolder)
+                                            } // Disable if fileStatus not found or not downloaded
+                                        >
+                                            {(() => {
+                                                if (!fileStatus)
+                                                    return t(
+                                                        "settingPage.videoDownloadSettings.downloadTable.extractBtn"
+                                                    );
+                                                if (fileStatus.hasExtractedFolder)
+                                                    return t(
+                                                        "settingPage.videoDownloadSettings.downloadTable.verifyBtn"
+                                                    );
+                                                if (fileStatus.isDownloaded)
+                                                    return t(
+                                                        "settingPage.videoDownloadSettings.downloadTable.extractBtn"
+                                                    );
+                                                return t(
+                                                    "settingPage.videoDownloadSettings.downloadTable.extractBtn"
+                                                );
+                                            })()}
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
@@ -198,19 +224,19 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
             <dialog ref={progressModal} className="modal">
                 <div className="modal-box">
                     <h3 className="text-lg font-bold">
-                        {isSuccess === null
+                        {showProgressModal === true
                             ? t("settingPage.videoDownloadSettings.inProgressModalHeading")
                             : isSuccess
                               ? t("settingPage.videoDownloadSettings.verifySuccess")
                               : t("settingPage.videoDownloadSettings.verifyFailed")}
                     </h3>
                     <div className="py-4">
-                        {isSuccess === null ? (
+                        {showProgressModal === true ? (
                             <>
                                 <p>{progressText}</p>
                                 <progress
                                     className="progress progress-primary w-full"
-                                    value={isPercentage ? progress : 100}
+                                    value={isPercentage ? progress : 0}
                                     max="100"
                                 >
                                     {isPercentage ? `${progress}%` : null}
@@ -224,7 +250,7 @@ const VideoDownloadTable = ({ data, isDownloaded }) => {
                         <button
                             className="btn"
                             onClick={handleCloseProgressModal}
-                            disabled={isSuccess === null}
+                            disabled={showProgressModal === true}
                         >
                             {t("sound_page.closeBtn")}
                         </button>

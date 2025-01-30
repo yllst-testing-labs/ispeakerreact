@@ -542,9 +542,9 @@ async function fileVerification(event, zipContents, extractedFolder) {
         // If no missing or corrupted files, finish the verification
         event.sender.send(
             "verification-success",
-            `All extracted files are verified for ${extractedFolder}`
+            `All extracted files are verified for "${extractedFolder}"`
         );
-        applog.log(`All extracted files are verified for ${extractedFolder}`);
+        applog.log(`All extracted files are verified for "${extractedFolder}"`);
         return;
     }
 }

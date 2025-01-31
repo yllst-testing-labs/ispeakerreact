@@ -1007,10 +1007,18 @@
             "verifyFooter": "Proceed?",
             "nextBtn": "Next",
             "inProgressModalHeading": "Verification in progress",
+            "verifyinProgressMsg": "Verifying extracted files…",
             "verifySuccess": "Verification success",
             "verifySuccessMessage": "All extracted files are verified in the folder:",
             "verifyFailed": "Verification failed",
-            "verifyFailedMessage": "It seems like either the files are corrupted or missing. Please try downloading the file again."
+            "verifyFailedMessage": "It seems like either the files are corrupted or missing. Please try downloading the file again.",
+            "electronVerifyMessage": {
+                "extractedSuccessMsg": "All extracted files are verified for",
+                "zipSuccessMsg": "Successfully verified and extracted",
+                "zipFileVerifying": "Verifying ZIP file",
+                "zipExtractingMsg": "Extracting ZIP file",
+                "zipErrorMsg": "Error extracting"
+            }
         },
         "logSettings": {
             "logSettingsHeading": "Log settings",

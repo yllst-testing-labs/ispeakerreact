@@ -9,7 +9,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
     const [progress, setProgress] = useState(0);
     const [modalMessage, setModalMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(null);
-    const [progressText, setProgressText] = useState("Initializing...");
+    const [progressText, setProgressText] = useState("");
     const [isPercentage, setIsPercentage] = useState(false);
 
     const verifyModal = useRef(null);
@@ -23,18 +23,33 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
         };
 
         const handleProgressText = (event, text) => {
-            setProgressText(text); // Update progress text
+            setProgressText(t(text)); // Update progress text
             setIsPercentage(false); // Not percentage-based, show full progress bar
         };
 
-        const handleVerificationSuccess = (event, message) => {
-            setModalMessage(message);
+        const handleVerificationSuccess = (event, data) => {
+            setModalMessage(
+                <>
+                    {t(data.messageKey)}{" "}
+                    <span lang="en">
+                        <code className="text-primary">{data.param}</code>
+                    </span>
+                </>
+            );
             setIsSuccess(true);
             setShowProgressModal(false); // Hide modal after success
+            console.log(data);
         };
 
-        const handleVerificationError = (event, message) => {
-            setModalMessage(message);
+        const handleVerificationError = (event, data) => {
+            setModalMessage(
+                <>
+                    {t(data.messageKey)}{" "}
+                    <span lang="en">
+                        <code className="text-primary">{data.param}</code>
+                    </span>
+                </>
+            );
             setIsSuccess(false);
             setShowProgressModal(false); // Hide modal on error
         };
@@ -50,7 +65,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
             window.electron.ipcRenderer.removeAllListeners("verification-success");
             window.electron.ipcRenderer.removeAllListeners("verification-error");
         };
-    }, []);
+    }, [t, data.messageKey, data.param]);
 
     const handleVerify = (zip) => {
         setSelectedZip(zip);
@@ -63,7 +78,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
     const handleNextModal = () => {
         setShowVerifyModal(false);
         setShowProgressModal(true);
-        setProgressText("Verifying extracted files...");
+        setProgressText(t("settingPage.videoDownloadSettings.verifyinProgressMsg"));
         window.electron.ipcRenderer.send("verify-and-extract", selectedZip);
         progressModal.current?.showModal();
         verifyModal.current?.close();
@@ -71,7 +86,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
 
     const handleCloseVerifyModal = () => {
         setShowVerifyModal(false);
-        setVerifyFiles([]);
+        //setVerifyFiles([]);
         verifyModal.current?.close();
     };
 

@@ -626,10 +626,11 @@ ipcMain.on("verify-and-extract", async (event, zipFileData) => {
                 applog.error(
                     `Hash mismatch for ${zipFile}. It seems like the zip file was either corrupted or tampered.`
                 );
-                event.sender.send(
-                    "verification-error",
-                    `Hash mismatch for ${zipFile}. It seems like the zip file was either corrupted or tampered.`
-                );
+                event.sender.send("verification-error", {
+                    messageKey:
+                        "settingPage.videoDownloadSettings.electronVerifyMessage.zipHashMismatchMsg",
+                    param: zipFile,
+                });
                 return;
             }
             event.sender.send("progress-text", "ZIP file verified");

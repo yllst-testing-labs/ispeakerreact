@@ -1017,7 +1017,8 @@
                 "zipSuccessMsg": "Successfully verified and extracted",
                 "zipFileVerifying": "Verifying ZIP file",
                 "zipExtractingMsg": "Extracting ZIP file",
-                "zipErrorMsg": "Error extracting"
+                "zipErrorMsg": "Error extracting",
+                "zipHashMismatchMsg": "Hash mismatch for <0>{{param}}</0>. It seems like the zip file was either corrupted or tampered."
             }
         },
         "logSettings": {

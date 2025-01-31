@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Trans } from "react-i18next";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
 const VideoDownloadTable = ({ t, data, isDownloaded }) => {
@@ -31,24 +32,22 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
             setModalMessage(
                 <>
                     {t(data.messageKey)}{" "}
-                    <span lang="en">
-                        <code className="text-primary">{data.param}</code>
-                    </span>
+                    <code lang="en" className="break-all bg-warning text-warning-content">
+                        {data.param}
+                    </code>
                 </>
             );
             setIsSuccess(true);
             setShowProgressModal(false); // Hide modal after success
-            console.log(data);
         };
 
         const handleVerificationError = (event, data) => {
             setModalMessage(
-                <>
-                    {t(data.messageKey)}{" "}
-                    <span lang="en">
-                        <code className="text-primary">{data.param}</code>
-                    </span>
-                </>
+                <Trans i18nKey={data.messageKey} values={{ param: data.param }}>
+                    <code className="break-all bg-warning text-warning-content" lang="en">
+                        {data.param}
+                    </code>
+                </Trans>
             );
             setIsSuccess(false);
             setShowProgressModal(false); // Hide modal on error
@@ -258,7 +257,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
                                 </progress>
                             </>
                         ) : (
-                            <p className="break-all">{modalMessage}</p>
+                            <p>{modalMessage}</p>
                         )}
                     </div>
                     <div className="modal-action">

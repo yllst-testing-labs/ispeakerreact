@@ -32,8 +32,8 @@ const SoundCard = ({
                     {reviewText}
                 </span>
             )}
-            <div className="card card-bordered flex h-auto flex-col justify-between pb-6 shadow-md dark:border-slate-600">
-                <div className="card-body flex-grow items-center text-center">
+            <div className="card card-lg card-border flex h-auto flex-col justify-between pb-6 shadow-md dark:border-slate-600">
+                <div className="card-body grow items-center text-center">
                     <h2 className="card-title" lang="en">{he.decode(sound.phoneme)}</h2>
                     <p lang="en">{sound.example_word}</p>
                 </div>
@@ -184,7 +184,7 @@ const SoundList = () => {
                                                         onClick={() => setActiveTab("tab1")}
                                                         className={`md:text-base ${
                                                             activeTab === "tab1"
-                                                                ? "active font-semibold"
+                                                                ? "menu-active font-semibold"
                                                                 : ""
                                                         }`}
                                                     >
@@ -197,7 +197,7 @@ const SoundList = () => {
                                                         onClick={() => setActiveTab("tab2")}
                                                         className={`md:text-base ${
                                                             activeTab === "tab2"
-                                                                ? "active font-semibold"
+                                                                ? "menu-active font-semibold"
                                                                 : ""
                                                         }`}
                                                     >

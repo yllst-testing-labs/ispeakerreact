@@ -39,7 +39,7 @@ const SoundCardItem = ({
 
     return (
         <div className="flex flex-wrap">
-            <div className="card card-bordered mb-2 w-full dark:border-slate-600">
+            <div className="card card-lg card-border mb-2 w-full dark:border-slate-600">
                 <div className="card-body">
                     <div className="flex flex-col items-center space-y-4 md:flex-row md:space-x-4 md:space-y-0">
                         <button

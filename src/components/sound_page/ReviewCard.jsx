@@ -28,7 +28,7 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
     };
 
     return (
-        <div className="card card-bordered flex h-auto flex-col justify-between pb-6 shadow-md dark:border-slate-600">
+        <div className="card card-lg card-border flex h-auto flex-col justify-between pb-6 shadow-md dark:border-slate-600">
             <div className="card-body">
                 <p className="mb-2 text-center">
                     <Trans

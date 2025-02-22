@@ -53,7 +53,7 @@ const LanguageSwitcher = () => {
                     {t("settingPage.languageSettings.languageOption")}
                 </p>
             </div>
-            <div className="flex flex-grow basis-1/2 justify-end">
+            <div className="flex grow basis-1/2 justify-end">
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn">
                         <img
@@ -65,7 +65,7 @@ const LanguageSwitcher = () => {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="menu dropdown-content z-[300] w-52 rounded-box border-slate-50 bg-base-100 p-2 shadow-md"
+                        className="menu dropdown-content z-300 w-52 rounded-box border-slate-50 bg-base-100 p-2 shadow-md"
                     >
                         {supportedLanguages.map((lang) => (
                             <li lang={lang.code} key={lang.code}>

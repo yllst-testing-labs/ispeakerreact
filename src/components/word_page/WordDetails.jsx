@@ -147,7 +147,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
             <button className="btn btn-secondary my-8" onClick={handleBack}>
                 <IoChevronBackOutline className="h-5 w-5" /> {t("wordPage.backBtn")}
             </button>
-            <div className="card card-bordered p-6 shadow-md dark:border-slate-600">
+            <div className="card card-lg card-border p-6 shadow-md dark:border-slate-600">
                 <div className="card-body flex justify-center text-center">
                     <div className="mb-4 flex flex-row items-center justify-center gap-2">
                         <h1 className="text-2xl font-bold" lang="en">

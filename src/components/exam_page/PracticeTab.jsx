@@ -255,7 +255,7 @@ const PracticeTab = ({ accent, examId, taskData, tips }) => {
 
                     return (
                         <div
-                            className="card card-bordered shadow-sm flex dark:border-slate-600"
+                            className="card card-lg card-border shadow-2xs flex dark:border-slate-600"
                             key={taskIndex}
                         >
                             <div className="card-body p-4">

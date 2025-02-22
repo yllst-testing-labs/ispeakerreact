@@ -45,7 +45,7 @@ const AccentDropdown = ({ onAccentChange }) => {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="menu dropdown-content z-[300] w-52 rounded-box border bg-base-100 p-2 shadow-md dark:border-slate-600"
+                        className="menu dropdown-content z-300 w-52 rounded-box border bg-base-100 p-2 shadow-md dark:border-slate-600"
                     >
                         {selectedAccentOptions.map((item) => (
                             <li key={item.value}>

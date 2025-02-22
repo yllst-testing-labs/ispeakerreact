@@ -305,7 +305,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                             />
                         )}
                         {activeTab === "practieTab" && (
-                            <div className="card card-bordered mb-6 w-full shadow-md dark:border-slate-600">
+                            <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
                                 <div className="card-body">
                                     <p className="mb-2 text-center">
                                         <Trans

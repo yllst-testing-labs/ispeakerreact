@@ -113,7 +113,7 @@ const TopNavBar = () => {
 
     return (
         <nav
-            className={`navbar sticky top-0 z-[300] w-full flex-none backdrop-blur-md backdrop-brightness-125 backdrop-saturate-200 ${navbarClass}`}
+            className={`navbar sticky top-0 z-300 w-full flex-none backdrop-blur-md backdrop-brightness-125 backdrop-saturate-200 ${navbarClass}`}
         >
             <div className="navbar md:navbar-start">
                 {/* Mobile Drawer */}
@@ -178,7 +178,7 @@ const TopNavBar = () => {
                                     tabIndex={0}
                                     role="button"
                                     className={`flex items-center space-x-1 ${
-                                        isActive ? "active" : ""
+                                        isActive ? "menu-active" : ""
                                     }`}
                                     aria-label={item.label}
                                 >
@@ -186,7 +186,7 @@ const TopNavBar = () => {
                                 </div>
                                 <ul
                                     tabIndex={0}
-                                    className="menu dropdown-content w-52 rounded-box bg-base-100 p-2 shadow"
+                                    className="menu dropdown-content w-52 rounded-box bg-base-100 p-2 shadow-2xs"
                                 >
                                     {item.childMenu.map((child) => (
                                         <li key={child.to}>
@@ -202,7 +202,7 @@ const TopNavBar = () => {
                                 <NavLink
                                     to={item.to}
                                     aria-label={item.label}
-                                    className={({ isActive }) => (isActive ? "active" : "")}
+                                    className={({ isActive }) => (isActive ? "menu-active" : "")}
                                 >
                                     {item.icon} {item.label}
                                 </NavLink>

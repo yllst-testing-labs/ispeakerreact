@@ -175,7 +175,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 </div>
             </div>
 
-            <div className="card card-bordered mb-6 w-full shadow-md dark:border-slate-600">
+            <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
                 <div className="card-body">
                     {activeTab === "watchStudyTab" && (
                         <WatchAndStudyTab

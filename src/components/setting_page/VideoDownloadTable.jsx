@@ -32,7 +32,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
             setModalMessage(
                 <>
                     {t(data.messageKey)}{" "}
-                    <code lang="en" className="break-all bg-warning text-warning-content">
+                    <code lang="en" className="bg-warning text-warning-content break-all">
                         {data.param}
                     </code>
                 </>
@@ -44,9 +44,10 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
         const handleVerificationError = (event, data) => {
             setModalMessage(
                 <Trans i18nKey={data.messageKey} values={{ param: data.param }}>
-                    <code className="break-all bg-warning text-warning-content" lang="en">
+                    <code className="bg-warning text-warning-content break-all" lang="en">
                         {data.param}
                     </code>
+                    <span>{data.errorMessage ? `Error message: ${data.errorMessage}` : ""}</span>
                 </Trans>
             );
             setIsSuccess(false);
@@ -148,9 +149,9 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
                                         {fileStatus ? ( // Check if fileStatus is found
                                             fileStatus.isDownloaded ||
                                             fileStatus.hasExtractedFolder ? (
-                                                <BsCheckCircleFill className="mx-auto h-6 w-6 text-success" />
+                                                <BsCheckCircleFill className="text-success mx-auto h-6 w-6" />
                                             ) : (
-                                                <BsXCircleFill className="mx-auto h-6 w-6 text-error" />
+                                                <BsXCircleFill className="text-error mx-auto h-6 w-6" />
                                             )
                                         ) : (
                                             // Handle the case where fileStatus is not found

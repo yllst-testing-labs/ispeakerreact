@@ -238,6 +238,7 @@ function createWindow() {
     mainWindow.once("ready-to-show", () => {
         setTimeout(() => {
             splashWindow.close();
+            mainWindow.maximize();
             mainWindow.show();
         }, 2000);
     });
@@ -682,7 +683,11 @@ ipcMain.on("verify-and-extract", async (event, zipFileData) => {
             };
         } catch (err) {
             console.error(`Error processing ${zipFile}: ${err.message}`);
-            event.sender.send("verification-error", `Error processing ${zipFile}: ${err.message}`);
+            event.sender.send("verification-error", {
+                messageKey: "settingPage.videoDownloadSettings.electronVerifyMessage.zipErrorMsg",
+                param: zipFile,
+                errorMessage: err.message,
+            });
         }
     } else {
         //event.sender.send("verification-error", `ZIP file does not exist: ${zipFilePath}`);

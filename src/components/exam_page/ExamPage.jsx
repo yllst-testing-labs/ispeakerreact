@@ -53,19 +53,15 @@ const ExamPage = () => {
 
         return (
             <>
-                <div className="dropdown dropdown-end dropdown-top dropdown-hover hidden cursor-pointer md:flex">
-                    <div className="hover:text-primary dark:hover:text-accent">
-                        <IoInformationCircleOutline className="h-5 w-5" />
-                    </div>
-                    <div
-                        tabIndex={0}
-                        className="card dropdown-content compact z-1 w-64 bg-secondary dark:bg-accent dark:text-accent-content"
-                    >
-                        <div tabIndex={0} className="card-body">
-                            {tooltipText}
-                        </div>
-                    </div>
+                <div
+                    className="tooltip tooltip-secondary dark:tooltip-accent hidden sm:inline"
+                    data-tip=""
+                >
+                    <div className="tooltip-content">{tooltipText}</div>
+                    <IoInformationCircleOutline className="hover:text-primary dark:hover:text-accent h-5 w-5 cursor-pointer" />
                 </div>
+
+                {/* Modal trigger button for small screens */}
                 <button
                     type="button"
                     title={t("examPage.expandInfoBtn")}

@@ -135,16 +135,16 @@ const PronunciationPractice = () => {
                 {viewState === "list" && (
                     <>
                         {/* Tabs for switching data */}
-                        <div className="sticky top-[calc(5rem)] z-10 bg-base-100 py-8">
+                        <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-8">
                             <div className="flex justify-center">
-                                <ul className="menu menu-horizontal w-auto rounded-box bg-base-200 dark:bg-slate-600">
+                                <ul className="menu menu-horizontal rounded-box bg-base-200 w-auto dark:bg-slate-600">
                                     <li>
                                         <button
                                             type="button"
                                             onClick={() => setActiveTab("oxford3000")}
                                             className={`md:text-base ${
                                                 activeTab === "oxford3000"
-                                                    ? "active font-semibold"
+                                                    ? "menu-active font-semibold"
                                                     : ""
                                             }`}
                                         >
@@ -153,7 +153,7 @@ const PronunciationPractice = () => {
                                                 className="tooltip tooltip-secondary font-normal"
                                                 data-tip={t("wordPage.oxford3000Description")}
                                             >
-                                                <IoInformationCircleOutline className="h-6 w-6" />
+                                                <IoInformationCircleOutline className="h-6 w-6 cursor-pointer" />
                                             </div>
                                         </button>
                                     </li>
@@ -163,16 +163,16 @@ const PronunciationPractice = () => {
                                             onClick={() => setActiveTab("oxford5000")}
                                             className={`md:text-base ${
                                                 activeTab === "oxford5000"
-                                                    ? "active font-semibold"
+                                                    ? "menu-active font-semibold"
                                                     : ""
                                             }`}
                                         >
                                             Oxford 5000
                                             <div
-                                                className="tooltip tooltip-left tooltip-secondary font-normal md:tooltip-top"
+                                                className="tooltip tooltip-left tooltip-secondary md:tooltip-top font-normal"
                                                 data-tip={t("wordPage.oxford5000Description")}
                                             >
-                                                <IoInformationCircleOutline className="h-6 w-6" />
+                                                <IoInformationCircleOutline className="h-6 w-6 cursor-pointer" />
                                             </div>
                                         </button>
                                     </li>
@@ -236,10 +236,10 @@ const PronunciationPractice = () => {
                                                         {wordReviewText}
                                                     </span>
                                                 )}
-                                                <div className="card card-lg card-border flex h-auto w-36 justify-between break-words pb-6 shadow-md md:w-48 dark:border-slate-600">
+                                                <div className="card card-lg card-border flex h-auto w-36 justify-between pb-6 break-words shadow-md md:w-48 dark:border-slate-600">
                                                     <div className="card-body grow items-center text-center">
                                                         <h2
-                                                            className="card-title hyphens-auto break-words"
+                                                            className="card-title break-words hyphens-auto"
                                                             lang="en"
                                                         >
                                                             {wordAccent}

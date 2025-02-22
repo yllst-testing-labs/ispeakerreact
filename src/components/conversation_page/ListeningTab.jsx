@@ -122,7 +122,7 @@ const ListeningTab = ({ sentences }) => {
                                     return (
                                         <li
                                             key={uniqueIdx}
-                                            className={`flex justify-between gap-x-6 py-3 ${playingIndex === uniqueIdx ? "bg-secondary text-secondary-content" : ""}`}
+                                            className={`flex cursor-pointer justify-between gap-x-6 py-3 ${playingIndex === uniqueIdx ? "bg-secondary text-secondary-content" : ""}`}
                                             role="button"
                                             onClick={() =>
                                                 handlePlayPause(uniqueIdx, sentenceObj.audioSrc)

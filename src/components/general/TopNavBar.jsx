@@ -124,7 +124,7 @@ const TopNavBar = () => {
                     <input type="checkbox" id="mobile-menu" className="drawer-toggle hidden" />
                     <div className="drawer-side">
                         <label htmlFor="mobile-menu" className="drawer-overlay"></label>
-                        <ul className="menu min-h-full w-80 bg-base-200 p-4 text-base text-base-content">
+                        <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 text-base">
                             {menuItems.map((item) =>
                                 item.childMenu ? (
                                     item.childMenu.map((child) => (
@@ -173,7 +173,7 @@ const TopNavBar = () => {
                             location.pathname === item.to;
 
                         return item.childMenu ? (
-                            <li key={item.label} className="dropdown dropdown-bottom">
+                            <li key={item.label} className="cursor-pointer dropdown dropdown-bottom">
                                 <div
                                     tabIndex={0}
                                     role="button"
@@ -186,11 +186,17 @@ const TopNavBar = () => {
                                 </div>
                                 <ul
                                     tabIndex={0}
-                                    className="menu dropdown-content w-52 rounded-box bg-base-100 p-2 shadow-2xs"
+                                    className="menu dropdown-content rounded-box bg-base-100 w-52 p-2 shadow-2xs"
                                 >
                                     {item.childMenu.map((child) => (
                                         <li key={child.to}>
-                                            <NavLink to={child.to} aria-label={child.label}>
+                                            <NavLink
+                                                to={child.to}
+                                                aria-label={child.label}
+                                                className={({ isActive }) =>
+                                                    isActive ? "menu-active" : ""
+                                                }
+                                            >
                                                 {child.icon} {child.label}
                                             </NavLink>
                                         </li>

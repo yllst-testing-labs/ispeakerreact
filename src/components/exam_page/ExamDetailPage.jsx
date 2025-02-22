@@ -101,7 +101,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
 
     return (
         <>
-            <h3 className="mb-2 mt-4 text-2xl font-semibold">
+            <h3 className="mt-4 mb-2 text-2xl font-semibold">
                 {t("tabConversationExam.taskCard")}: {t(title)}
                 <button
                     type="button"
@@ -120,15 +120,15 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 {t("buttonConversationExam.examBackBtn")}
             </button>
 
-            <div className="sticky top-[calc(5rem)] z-10 bg-base-100 py-8">
+            <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-8">
                 <div className="flex justify-center">
-                    <ul className="menu menu-horizontal w-auto justify-center rounded-box bg-base-200 dark:bg-slate-600">
+                    <ul className="menu menu-horizontal rounded-box bg-base-200 w-auto justify-center dark:bg-slate-600">
                         <li>
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("watchStudyTab")}
                                 className={`md:text-base ${
-                                    activeTab === "watchStudyTab" ? "active font-semibold" : ""
+                                    activeTab === "watchStudyTab" ? "menu-active font-semibold" : ""
                                 }`}
                             >
                                 <MdOutlineOndemandVideo className="h-6 w-6" />{" "}
@@ -140,7 +140,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                                 type="button"
                                 onClick={() => setActiveTab("listenTab")}
                                 className={`md:text-base ${
-                                    activeTab === "listenTab" ? "active font-semibold" : ""
+                                    activeTab === "listenTab" ? "menu-active font-semibold" : ""
                                 }`}
                             >
                                 <MdHeadphones className="h-6 w-6" />{" "}
@@ -152,7 +152,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                                 type="button"
                                 onClick={() => setActiveTab("practiceTab")}
                                 className={`md:text-base ${
-                                    activeTab === "practiceTab" ? "active font-semibold" : ""
+                                    activeTab === "practiceTab" ? "menu-active font-semibold" : ""
                                 }`}
                             >
                                 <MdKeyboardVoice className="h-6 w-6" />{" "}
@@ -164,7 +164,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                                 type="button"
                                 onClick={() => setActiveTab("reviewTab")}
                                 className={`md:text-base ${
-                                    activeTab === "reviewTab" ? "active font-semibold" : ""
+                                    activeTab === "reviewTab" ? "menu-active font-semibold" : ""
                                 }`}
                             >
                                 <MdChecklist className="h-6 w-6" />{" "}

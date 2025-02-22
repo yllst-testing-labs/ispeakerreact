@@ -49,13 +49,13 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
                             <BsEmojiSmileFill
                                 size={52}
                                 role="button"
-                                className={`${emojiStyle("good")}`}
+                                className={`cursor-pointer ${emojiStyle("good")}`}
                             />
                         ) : (
                             <BsEmojiSmile
                                 size={52}
                                 role="button"
-                                className={`${emojiStyle("good")}`}
+                                className={`cursor-pointer ${emojiStyle("good")}`}
                             />
                         )}
                     </a>
@@ -69,13 +69,13 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
                             <BsEmojiNeutralFill
                                 size={52}
                                 role="button"
-                                className={`${emojiStyle("neutral")}`}
+                                className={`cursor-pointer ${emojiStyle("neutral")}`}
                             />
                         ) : (
                             <BsEmojiNeutral
                                 size={52}
                                 role="button"
-                                className={`${emojiStyle("neutral")}`}
+                                className={`cursor-pointer ${emojiStyle("neutral")}`}
                             />
                         )}
                     </a>
@@ -89,13 +89,13 @@ const ReviewCard = ({ sound, accent, index, soundsData }) => {
                             <BsEmojiFrownFill
                                 size={52}
                                 role="button"
-                                className={`${emojiStyle("bad")}`}
+                                className={`cursor-pointer ${emojiStyle("bad")}`}
                             />
                         ) : (
                             <BsEmojiFrown
                                 size={52}
                                 role="button"
-                                className={`${emojiStyle("bad")}`}
+                                className={`cursor-pointer ${emojiStyle("bad")}`}
                             />
                         )}
                     </a>

@@ -184,7 +184,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                                 )}
                                 <button
                                     type="button"
-                                    className={`btn btn-lg font-normal ${
+                                    className={`btn btn-xl font-normal ${
                                         index === activeSyllable
                                             ? "btn-accent"
                                             : syllable.primary
@@ -216,7 +216,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
                     <div className="my-4 flex justify-center">
                         <div className="form-control">
                             <label className="label cursor-pointer">
-                                <span className="label-text">{t("wordPage.slowModeOption")}</span>
+                                <span>{t("wordPage.slowModeOption")}</span>
                                 <input
                                     type="checkbox"
                                     className="toggle ms-4"

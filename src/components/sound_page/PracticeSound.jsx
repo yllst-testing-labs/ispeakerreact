@@ -250,16 +250,18 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     </button>
                 </div>
                 <div className="w-full lg:w-3/4">
-                    <div className="sticky top-[calc(5rem)] z-10 bg-base-100 py-4">
+                    <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-4">
                         <div className="flex flex-col items-center">
                             {/* Menu */}
-                            <ul className="menu menu-horizontal w-auto rounded-box bg-base-200 dark:bg-slate-600">
+                            <ul className="menu menu-horizontal rounded-box bg-base-200 w-auto dark:bg-slate-600">
                                 <li>
                                     <button
                                         type="button"
                                         onClick={() => setActiveTab("watchTab")}
                                         className={`md:text-base ${
-                                            activeTab === "watchTab" ? "active font-semibold" : ""
+                                            activeTab === "watchTab"
+                                                ? "menu-active font-semibold"
+                                                : ""
                                         }`}
                                     >
                                         <MdOutlineOndemandVideo className="h-6 w-6" />{" "}
@@ -271,7 +273,9 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                         type="button"
                                         onClick={() => setActiveTab("practieTab")}
                                         className={`md:text-base ${
-                                            activeTab === "practieTab" ? "active font-semibold" : ""
+                                            activeTab === "practieTab"
+                                                ? "menu-active font-semibold"
+                                                : ""
                                         }`}
                                     >
                                         <MdKeyboardVoice className="h-6 w-6" />{" "}
@@ -283,7 +287,9 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                         type="button"
                                         onClick={() => setActiveTab("reviewTab")}
                                         className={`md:text-base ${
-                                            activeTab === "reviewTab" ? "active font-semibold" : ""
+                                            activeTab === "reviewTab"
+                                                ? "menu-active font-semibold"
+                                                : ""
                                         }`}
                                     >
                                         <MdChecklist className="h-6 w-6" />{" "}

@@ -4,6 +4,7 @@ import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io
 import { MdChecklist, MdHeadphones, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 import { isElectron } from "../../utils/isElectron";
 import { sonnerErrorToast } from "../../utils/sonnerCustomToast";
+import { useScrollTo } from "../../utils/useScrollTo";
 import LoadingOverlay from "../general/LoadingOverlay";
 import ListeningTab from "./ListeningTab";
 import PracticeTab from "./PracticeTab";
@@ -12,6 +13,7 @@ import WatchAndStudyTab from "./WatchAndStudyTab";
 
 const ExamDetailPage = ({ id, title, onBack, accent }) => {
     const { t } = useTranslation();
+    const { ref: scrollRef, scrollTo } = useScrollTo();
 
     const [activeTab, setActiveTab] = useState("watchStudyTab");
     const [examData, setExamData] = useState(null);
@@ -126,7 +128,10 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                         <li>
                             <button
                                 type="button"
-                                onClick={() => setActiveTab("watchStudyTab")}
+                                onClick={() => {
+                                    setActiveTab("watchStudyTab");
+                                    scrollTo();
+                                }}
                                 className={`md:text-base ${
                                     activeTab === "watchStudyTab" ? "menu-active font-semibold" : ""
                                 }`}
@@ -138,7 +143,10 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                         <li>
                             <button
                                 type="button"
-                                onClick={() => setActiveTab("listenTab")}
+                                onClick={() => {
+                                    setActiveTab("listenTab");
+                                    scrollTo();
+                                }}
                                 className={`md:text-base ${
                                     activeTab === "listenTab" ? "menu-active font-semibold" : ""
                                 }`}
@@ -150,7 +158,10 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                         <li>
                             <button
                                 type="button"
-                                onClick={() => setActiveTab("practiceTab")}
+                                onClick={() => {
+                                    setActiveTab("practiceTab");
+                                    scrollTo();
+                                }}
                                 className={`md:text-base ${
                                     activeTab === "practiceTab" ? "menu-active font-semibold" : ""
                                 }`}
@@ -162,7 +173,10 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                         <li>
                             <button
                                 type="button"
-                                onClick={() => setActiveTab("reviewTab")}
+                                onClick={() => {
+                                    setActiveTab("reviewTab");
+                                    scrollTo();
+                                }}
                                 className={`md:text-base ${
                                     activeTab === "reviewTab" ? "menu-active font-semibold" : ""
                                 }`}
@@ -175,7 +189,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                 </div>
             </div>
 
-            <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
+            <div ref={scrollRef} className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
                 <div className="card-body">
                     {activeTab === "watchStudyTab" && (
                         <WatchAndStudyTab
@@ -184,6 +198,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                             taskData={examDetails.watch_and_study.taskData}
                             dialog={examDetails.watch_and_study.study.dialog}
                             skills={examDetails.watch_and_study.study.skills}
+                            scrollTo={scrollTo}
                         />
                     )}
                     {activeTab === "listenTab" && (
@@ -191,6 +206,7 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                             subtopicsBre={examDetails.listen.BrE?.subtopics || []}
                             subtopicsAme={examDetails.listen.AmE?.subtopics || []}
                             currentAccent={accent}
+                            scrollTo={scrollTo}
                         />
                     )}
                     {activeTab === "practiceTab" && (
@@ -199,10 +215,16 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                             accent={accent}
                             taskData={examDetails.practise.task}
                             tips={examDetails.practise.tips}
+                            scrollTo={scrollTo}
                         />
                     )}
                     {activeTab === "reviewTab" && (
-                        <ReviewTab reviews={examDetails.reviews} examId={id} accent={accent} />
+                        <ReviewTab
+                            reviews={examDetails.reviews}
+                            examId={id}
+                            accent={accent}
+                            scrollTo={scrollTo}
+                        />
                     )}
                 </div>
             </div>

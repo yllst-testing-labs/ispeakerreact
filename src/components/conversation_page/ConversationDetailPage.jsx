@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { MdChecklist, MdHeadphones, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 import { isElectron } from "../../utils/isElectron";
+import { useScrollTo } from "../../utils/useScrollTo";
 import LoadingOverlay from "../general/LoadingOverlay";
 import ListeningTab from "./ListeningTab";
 import PracticeTab from "./PracticeTab";
@@ -11,6 +12,7 @@ import WatchAndStudyTab from "./WatchAndStudyTab";
 
 const ConversationDetailPage = ({ id, accent, title, onBack }) => {
     const { t } = useTranslation();
+    const { ref: scrollRef, scrollTo } = useScrollTo();
 
     const [activeTab, setActiveTab] = useState("watchStudyTab");
     const [loading, setLoading] = useState(true);
@@ -115,7 +117,10 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                 <li>
                                     <button
                                         type="button"
-                                        onClick={() => setActiveTab("watchStudyTab")}
+                                        onClick={() => {
+                                            setActiveTab("watchStudyTab");
+                                            scrollTo();
+                                        }}
                                         className={`md:text-base ${
                                             activeTab === "watchStudyTab"
                                                 ? "menu-active font-semibold"
@@ -129,7 +134,10 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                 <li>
                                     <button
                                         type="button"
-                                        onClick={() => setActiveTab("listenTab")}
+                                        onClick={() => {
+                                            setActiveTab("listenTab");
+                                            scrollTo();
+                                        }}
                                         className={`md:text-base ${
                                             activeTab === "listenTab"
                                                 ? "menu-active font-semibold"
@@ -143,7 +151,10 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                 <li>
                                     <button
                                         type="button"
-                                        onClick={() => setActiveTab("practiceTab")}
+                                        onClick={() => {
+                                            setActiveTab("practiceTab");
+                                            scrollTo();
+                                        }}
                                         className={`md:text-base ${
                                             activeTab === "practiceTab"
                                                 ? "menu-active font-semibold"
@@ -157,7 +168,10 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                 <li>
                                     <button
                                         type="button"
-                                        onClick={() => setActiveTab("reviewTab")}
+                                        onClick={() => {
+                                            setActiveTab("reviewTab");
+                                            scrollTo();
+                                        }}
                                         className={`md:text-base ${
                                             activeTab === "reviewTab"
                                                 ? "menu-active font-semibold"
@@ -171,7 +185,10 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                             </ul>
                         </div>
                     </div>
-                    <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
+                    <div
+                        ref={scrollRef}
+                        className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600"
+                    >
                         <div className="card-body">
                             {activeTab === "watchStudyTab" && (
                                 <WatchAndStudyTab
@@ -181,15 +198,23 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                     skillCheckmark={
                                         accentData.watch_and_study.study.skill_checkmark
                                     }
+                                    scrollTo={scrollTo}
                                 />
                             )}
 
                             {activeTab === "listenTab" && (
-                                <ListeningTab sentences={accentData.listen.subtopics} />
+                                <ListeningTab
+                                    sentences={accentData.listen.subtopics}
+                                    scrollTo={scrollTo}
+                                />
                             )}
 
                             {activeTab === "practiceTab" && (
-                                <PracticeTab accent={accent} conversationId={id} />
+                                <PracticeTab
+                                    accent={accent}
+                                    conversationId={id}
+                                    scrollTo={scrollTo}
+                                />
                             )}
 
                             {activeTab === "reviewTab" && (
@@ -197,6 +222,7 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                     reviews={accentData.reviews}
                                     accent={accent}
                                     conversationId={id}
+                                    scrollTo={scrollTo}
                                 />
                             )}
                         </div>

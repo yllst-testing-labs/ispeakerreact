@@ -201,7 +201,7 @@ const TopNavBar = () => {
                                 </div>
                                 <ul
                                     tabIndex={0}
-                                    className="menu dropdown-content rounded-box bg-base-100 w-52 p-2 shadow-2xs"
+                                    className="menu border-base-200 dropdown-content rounded-box bg-base-100 w-52 border p-2 shadow-sm"
                                 >
                                     {item.childMenu.map((child) => (
                                         <li key={child.to}>

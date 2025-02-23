@@ -129,14 +129,26 @@ const TopNavBar = () => {
                                 item.childMenu ? (
                                     item.childMenu.map((child) => (
                                         <li key={child.to}>
-                                            <NavLink to={child.to} aria-label={child.label}>
+                                            <NavLink
+                                                to={child.to}
+                                                aria-label={child.label}
+                                                className={({ isActive }) =>
+                                                    isActive ? "menu-active" : ""
+                                                }
+                                            >
                                                 {child.icon} {child.label}
                                             </NavLink>
                                         </li>
                                     ))
                                 ) : (
                                     <li key={item.to}>
-                                        <NavLink to={item.to} aria-label={item.label}>
+                                        <NavLink
+                                            to={item.to}
+                                            aria-label={item.label}
+                                            className={({ isActive }) =>
+                                                isActive ? "menu-active" : ""
+                                            }
+                                        >
                                             {item.icon} {item.label}
                                         </NavLink>
                                     </li>
@@ -173,7 +185,10 @@ const TopNavBar = () => {
                             location.pathname === item.to;
 
                         return item.childMenu ? (
-                            <li key={item.label} className="cursor-pointer dropdown dropdown-bottom">
+                            <li
+                                key={item.label}
+                                className="dropdown dropdown-bottom cursor-pointer"
+                            >
                                 <div
                                     tabIndex={0}
                                     role="button"
@@ -228,7 +243,7 @@ const TopNavBar = () => {
                     }
                 >
                     <FaGithub size="1.5em" />
-                    <span className="ml-1 hidden items-center space-x-1 md:inline-flex">
+                    <span className="ms-1 hidden items-center space-x-1 md:inline-flex">
                         <span lang="en">GitHub</span>
                         <FiExternalLink />
                     </span>

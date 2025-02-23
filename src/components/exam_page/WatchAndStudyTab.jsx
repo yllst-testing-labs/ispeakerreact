@@ -110,7 +110,7 @@ const WatchAndStudyTab = ({ videoUrl, subtitleUrl, taskData, dialog, skills }) =
             case 5:
                 return "checkbox-error";
             case 6:
-                return "border-fuchsia-600 [--chkbg:var(--color-fuchsia-600)] checked:bg-fuchsia-600";
+                return "border-fuchsia-600 bg-fuchsia-600 checked:text-white checked:bg-fuchsia-600";
             default:
                 return "";
         }

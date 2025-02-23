@@ -32,7 +32,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
             setModalMessage(
                 <>
                     {t(data.messageKey)}{" "}
-                    <code lang="en" className="bg-warning text-warning-content break-all">
+                    <code lang="en" className="font-mono break-all italic">
                         {data.param}
                     </code>
                 </>
@@ -44,7 +44,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
         const handleVerificationError = (event, data) => {
             setModalMessage(
                 <Trans i18nKey={data.messageKey} values={{ param: data.param }}>
-                    <code className="bg-warning text-warning-content break-all" lang="en">
+                    <code className="font-mono break-all italic" lang="en">
                         {data.param}
                     </code>
                     <span>{data.errorMessage ? `Error message: ${data.errorMessage}` : ""}</span>

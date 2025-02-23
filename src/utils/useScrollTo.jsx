@@ -2,7 +2,7 @@ import { useRef } from "react";
 
 export const useScrollTo = () => {
     const ref = useRef(null);
-    const padding = 250; // extra padding
+    const padding = 300; // extra padding
 
     const scrollTo = (options = { behavior: "smooth" }) => {
         if (ref.current) {

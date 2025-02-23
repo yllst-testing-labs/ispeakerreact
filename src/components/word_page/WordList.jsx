@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
+import { useScrollTo } from "../../utils/useScrollTo";
 import AccentDropdown from "../general/AccentDropdown";
 import TopNavBar from "../general/TopNavBar";
 import Pagination from "./Pagination";
@@ -10,6 +11,7 @@ import WordDetails from "./WordDetails";
 
 const PronunciationPractice = () => {
     const { t } = useTranslation();
+    const { ref: scrollRef, scrollTo } = useScrollTo();
 
     const [activeTab, setActiveTab] = useState("oxford3000");
     const [words, setWords] = useState([]);
@@ -207,6 +209,7 @@ const PronunciationPractice = () => {
                                 currentPage={currentPage}
                                 totalPages={totalPages}
                                 onPageChange={setCurrentPage}
+                                scrollTo={scrollTo}
                             />
                         )}
 
@@ -216,7 +219,10 @@ const PronunciationPractice = () => {
                                 <p className="text-lg font-semibold">{t("wordPage.loadingText")}</p>
                             </div>
                         ) : currentWords.length > 0 ? (
-                            <div className="my-4 flex flex-row flex-wrap place-items-center justify-center gap-5">
+                            <div
+                                ref={scrollRef}
+                                className="my-4 flex flex-row flex-wrap place-items-center justify-center gap-5"
+                            >
                                 {currentWords.map((word) => {
                                     const wordReview = reviewData[accent]?.[word.name] || null;
                                     const wordReviewText = getReviewText(wordReview);
@@ -262,7 +268,10 @@ const PronunciationPractice = () => {
                                                     <div className="card-actions px-6">
                                                         <button
                                                             className="btn btn-primary w-full"
-                                                            onClick={() => handlePractice(word)}
+                                                            onClick={() => {
+                                                                handlePractice(word);
+                                                                scrollTo();
+                                                            }}
                                                         >
                                                             {t("sound_page.practiceBtn")}
                                                         </button>
@@ -287,6 +296,7 @@ const PronunciationPractice = () => {
                                 currentPage={currentPage}
                                 totalPages={totalPages}
                                 onPageChange={setCurrentPage}
+                                scrollTo={scrollTo}
                             />
                         )}
                     </>
@@ -300,6 +310,7 @@ const PronunciationPractice = () => {
                         accent={accent}
                         onAccentChange={handleAccentChange}
                         onReviewUpdate={updateReviewData}
+                        scrollTo={scrollTo}
                     />
                 )}
             </Container>

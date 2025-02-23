@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
+import { VscFeedback } from "react-icons/vsc";
 import { checkRecordingExists } from "../../utils/databaseOperations";
+import { isElectron } from "../../utils/isElectron";
 import { useTheme } from "../../utils/ThemeContext/useTheme";
 import RecordingWaveform from "./RecordingWaveform";
 import ReviewRecording from "./ReviewRecording";
 import { parseIPA } from "./syllableParser";
 import useWaveformTheme from "./useWaveformTheme";
-import { VscFeedback } from "react-icons/vsc";
-import { isElectron } from "../../utils/isElectron";
 
 const openExternal = (url) => {
     if (isElectron()) {
@@ -24,7 +24,7 @@ const openExternal = (url) => {
     }
 };
 
-const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
+const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate, scrollRef }) => {
     const { theme } = useTheme();
 
     const [activeSyllable, setActiveSyllable] = useState(-1);
@@ -147,7 +147,10 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate }) => {
             <button className="btn btn-secondary my-8" onClick={handleBack}>
                 <IoChevronBackOutline className="h-5 w-5" /> {t("wordPage.backBtn")}
             </button>
-            <div className="card card-lg card-border p-6 shadow-md dark:border-slate-600">
+            <div
+                ref={scrollRef}
+                className="card card-lg card-border p-6 shadow-md dark:border-slate-600"
+            >
                 <div className="card-body flex justify-center text-center">
                     <div className="mb-4 flex flex-row items-center justify-center gap-2">
                         <h1 className="text-2xl font-bold" lang="en">

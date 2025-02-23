@@ -141,19 +141,6 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                         <a
                             role="tab"
                             onClick={() => {
-                                setActiveTab("practiceTab");
-                                scrollTo();
-                            }}
-                            className={`tab md:text-base ${
-                                activeTab === "practiceTab" ? "tab-active font-semibold" : ""
-                            }`}
-                        >
-                            <MdKeyboardVoice className="me-1 h-6 w-6" />
-                            {t("buttonConversationExam.practiceBtn")}
-                        </a>
-                        <a
-                            role="tab"
-                            onClick={() => {
                                 setActiveTab("listenTab");
                                 scrollTo();
                             }}
@@ -163,6 +150,19 @@ const ExamDetailPage = ({ id, title, onBack, accent }) => {
                         >
                             <MdHeadphones className="me-1 h-6 w-6" />
                             {t("buttonConversationExam.listenBtn")}
+                        </a>
+                        <a
+                            role="tab"
+                            onClick={() => {
+                                setActiveTab("practiceTab");
+                                scrollTo();
+                            }}
+                            className={`tab md:text-base ${
+                                activeTab === "practiceTab" ? "tab-active font-semibold" : ""
+                            }`}
+                        >
+                            <MdKeyboardVoice className="me-1 h-6 w-6" />
+                            {t("buttonConversationExam.practiceBtn")}
                         </a>
                         <a
                             role="tab"

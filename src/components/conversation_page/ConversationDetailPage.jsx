@@ -126,8 +126,21 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                             : ""
                                     }`}
                                 >
-                                    <MdOutlineOndemandVideo className="h-6 w-6 me-1" />
+                                    <MdOutlineOndemandVideo className="me-1 h-6 w-6" />
                                     {t("buttonConversationExam.watchBtn")}
+                                </a>
+                                <a
+                                    role="tab"
+                                    onClick={() => {
+                                        setActiveTab("listenTab");
+                                        scrollTo();
+                                    }}
+                                    className={`tab md:text-base ${
+                                        activeTab === "listenTab" ? "tab-active font-semibold" : ""
+                                    }`}
+                                >
+                                    <MdHeadphones className="me-1 h-6 w-6" />
+                                    {t("buttonConversationExam.listenBtn")}
                                 </a>
                                 <a
                                     role="tab"
@@ -141,21 +154,8 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                             : ""
                                     }`}
                                 >
-                                    <MdKeyboardVoice className="h-6 w-6 me-1" />
+                                    <MdKeyboardVoice className="me-1 h-6 w-6" />
                                     {t("buttonConversationExam.practiceBtn")}
-                                </a>
-                                <a
-                                    role="tab"
-                                    onClick={() => {
-                                        setActiveTab("listenTab");
-                                        scrollTo();
-                                    }}
-                                    className={`tab md:text-base ${
-                                        activeTab === "listenTab" ? "tab-active font-semibold" : ""
-                                    }`}
-                                >
-                                    <MdHeadphones className="h-6 w-6 me-1" />
-                                    {t("buttonConversationExam.listenBtn")}
                                 </a>
                                 <a
                                     role="tab"
@@ -167,7 +167,7 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                                         activeTab === "reviewTab" ? "tab-active font-semibold" : ""
                                     }`}
                                 >
-                                    <MdChecklist className="h-6 w-6 me-1" />
+                                    <MdChecklist className="me-1 h-6 w-6" />
                                     {t("buttonConversationExam.reviewBtn")}
                                 </a>
                             </div>

@@ -139,46 +139,42 @@ const PronunciationPractice = () => {
                         {/* Tabs for switching data */}
                         <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-8">
                             <div className="flex justify-center">
-                                <ul className="menu menu-horizontal rounded-box bg-base-200 w-auto dark:bg-slate-600">
-                                    <li>
-                                        <button
-                                            type="button"
-                                            onClick={() => setActiveTab("oxford3000")}
-                                            className={`md:text-base ${
-                                                activeTab === "oxford3000"
-                                                    ? "menu-active font-semibold"
-                                                    : ""
-                                            }`}
+                                <div role="tablist" className="tabs tabs-box">
+                                    <a
+                                        role="tab"
+                                        onClick={() => setActiveTab("oxford3000")}
+                                        className={`md:text-base tab ${
+                                            activeTab === "oxford3000"
+                                                ? "tab-active font-semibold"
+                                                : ""
+                                        }`}
+                                    >
+                                        Oxford 3000
+                                        <div
+                                            className="tooltip tooltip-secondary font-normal"
+                                            data-tip={t("wordPage.oxford3000Description")}
                                         >
-                                            Oxford 3000
-                                            <div
-                                                className="tooltip tooltip-secondary font-normal"
-                                                data-tip={t("wordPage.oxford3000Description")}
-                                            >
-                                                <IoInformationCircleOutline className="h-6 w-6 cursor-pointer" />
-                                            </div>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            type="button"
-                                            onClick={() => setActiveTab("oxford5000")}
-                                            className={`md:text-base ${
-                                                activeTab === "oxford5000"
-                                                    ? "menu-active font-semibold"
-                                                    : ""
-                                            }`}
+                                            <IoInformationCircleOutline className="ms-1 h-5 w-5 cursor-pointer" />
+                                        </div>
+                                    </a>
+                                    <a
+                                        role="tab"
+                                        className={`md:text-base tab ${
+                                            activeTab === "oxford5000"
+                                                ? "tab-active font-semibold"
+                                                : ""
+                                        }`}
+                                        onClick={() => setActiveTab("oxford5000")}
+                                    >
+                                        Oxford 5000
+                                        <div
+                                            className="tooltip tooltip-left tooltip-secondary md:tooltip-top font-normal"
+                                            data-tip={t("wordPage.oxford5000Description")}
                                         >
-                                            Oxford 5000
-                                            <div
-                                                className="tooltip tooltip-left tooltip-secondary md:tooltip-top font-normal"
-                                                data-tip={t("wordPage.oxford5000Description")}
-                                            >
-                                                <IoInformationCircleOutline className="h-6 w-6 cursor-pointer" />
-                                            </div>
-                                        </button>
-                                    </li>
-                                </ul>
+                                            <IoInformationCircleOutline className="ms-1 h-5 w-5 cursor-pointer" />
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                             <div className="mt-6 flex flex-wrap items-center justify-center space-x-4">
                                 <input
@@ -204,13 +200,15 @@ const PronunciationPractice = () => {
                         </div>
 
                         {filteredWords.length > 0 && !loading && (
-                            <Pagination
-                                t={t}
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={setCurrentPage}
-                                scrollTo={scrollTo}
-                            />
+                            <div ref={scrollRef}>
+                                <Pagination
+                                    t={t}
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={setCurrentPage}
+                                    scrollTo={scrollTo}
+                                />
+                            </div>
                         )}
 
                         {/* Content Area */}
@@ -219,10 +217,7 @@ const PronunciationPractice = () => {
                                 <p className="text-lg font-semibold">{t("wordPage.loadingText")}</p>
                             </div>
                         ) : currentWords.length > 0 ? (
-                            <div
-                                ref={scrollRef}
-                                className="my-4 flex flex-row flex-wrap place-items-center justify-center gap-5"
-                            >
+                            <div className="my-4 flex flex-row flex-wrap place-items-center justify-center gap-5">
                                 {currentWords.map((word) => {
                                     const wordReview = reviewData[accent]?.[word.name] || null;
                                     const wordReviewText = getReviewText(wordReview);

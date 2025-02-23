@@ -113,76 +113,64 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
                 <>
                     <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-8">
                         <div className="flex justify-center">
-                            <ul className="menu menu-horizontal rounded-box bg-base-200 w-auto justify-center dark:bg-slate-600">
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setActiveTab("watchStudyTab");
-                                            scrollTo();
-                                        }}
-                                        className={`md:text-base ${
-                                            activeTab === "watchStudyTab"
-                                                ? "menu-active font-semibold"
-                                                : ""
-                                        }`}
-                                    >
-                                        <MdOutlineOndemandVideo className="h-6 w-6" />{" "}
-                                        {t("buttonConversationExam.watchBtn")}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setActiveTab("listenTab");
-                                            scrollTo();
-                                        }}
-                                        className={`md:text-base ${
-                                            activeTab === "listenTab"
-                                                ? "menu-active font-semibold"
-                                                : ""
-                                        }`}
-                                    >
-                                        <MdHeadphones className="h-6 w-6" />{" "}
-                                        {t("buttonConversationExam.listenBtn")}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setActiveTab("practiceTab");
-                                            scrollTo();
-                                        }}
-                                        className={`md:text-base ${
-                                            activeTab === "practiceTab"
-                                                ? "menu-active font-semibold"
-                                                : ""
-                                        }`}
-                                    >
-                                        <MdKeyboardVoice className="h-6 w-6" />{" "}
-                                        {t("buttonConversationExam.practiceBtn")}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setActiveTab("reviewTab");
-                                            scrollTo();
-                                        }}
-                                        className={`md:text-base ${
-                                            activeTab === "reviewTab"
-                                                ? "menu-active font-semibold"
-                                                : ""
-                                        }`}
-                                    >
-                                        <MdChecklist className="h-6 w-6" />{" "}
-                                        {t("buttonConversationExam.reviewBtn")}
-                                    </button>
-                                </li>
-                            </ul>
+                            <div role="tablist" className="tabs tabs-box">
+                                <a
+                                    role="tab"
+                                    onClick={() => {
+                                        setActiveTab("watchStudyTab");
+                                        scrollTo();
+                                    }}
+                                    className={`tab md:text-base ${
+                                        activeTab === "watchStudyTab"
+                                            ? "tab-active font-semibold"
+                                            : ""
+                                    }`}
+                                >
+                                    <MdOutlineOndemandVideo className="h-6 w-6 me-1" />
+                                    {t("buttonConversationExam.watchBtn")}
+                                </a>
+                                <a
+                                    role="tab"
+                                    onClick={() => {
+                                        setActiveTab("practiceTab");
+                                        scrollTo();
+                                    }}
+                                    className={`tab md:text-base ${
+                                        activeTab === "practiceTab"
+                                            ? "tab-active font-semibold"
+                                            : ""
+                                    }`}
+                                >
+                                    <MdKeyboardVoice className="h-6 w-6 me-1" />
+                                    {t("buttonConversationExam.practiceBtn")}
+                                </a>
+                                <a
+                                    role="tab"
+                                    onClick={() => {
+                                        setActiveTab("listenTab");
+                                        scrollTo();
+                                    }}
+                                    className={`tab md:text-base ${
+                                        activeTab === "listenTab" ? "tab-active font-semibold" : ""
+                                    }`}
+                                >
+                                    <MdHeadphones className="h-6 w-6 me-1" />
+                                    {t("buttonConversationExam.listenBtn")}
+                                </a>
+                                <a
+                                    role="tab"
+                                    onClick={() => {
+                                        setActiveTab("reviewTab");
+                                        scrollTo();
+                                    }}
+                                    className={`tab md:text-base ${
+                                        activeTab === "reviewTab" ? "tab-active font-semibold" : ""
+                                    }`}
+                                >
+                                    <MdChecklist className="h-6 w-6 me-1" />
+                                    {t("buttonConversationExam.reviewBtn")}
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div

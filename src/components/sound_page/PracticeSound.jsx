@@ -253,50 +253,38 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-4">
                         <div className="flex flex-col items-center">
                             {/* Menu */}
-                            <ul className="menu menu-horizontal rounded-box bg-base-200 w-auto dark:bg-slate-600">
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => setActiveTab("watchTab")}
-                                        className={`md:text-base ${
-                                            activeTab === "watchTab"
-                                                ? "menu-active font-semibold"
-                                                : ""
-                                        }`}
-                                    >
-                                        <MdOutlineOndemandVideo className="h-6 w-6" />{" "}
-                                        {t("buttonConversationExam.watchBtn")}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => setActiveTab("practieTab")}
-                                        className={`md:text-base ${
-                                            activeTab === "practieTab"
-                                                ? "menu-active font-semibold"
-                                                : ""
-                                        }`}
-                                    >
-                                        <MdKeyboardVoice className="h-6 w-6" />{" "}
-                                        {t("buttonConversationExam.practiceBtn")}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => setActiveTab("reviewTab")}
-                                        className={`md:text-base ${
-                                            activeTab === "reviewTab"
-                                                ? "menu-active font-semibold"
-                                                : ""
-                                        }`}
-                                    >
-                                        <MdChecklist className="h-6 w-6" />{" "}
-                                        {t("buttonConversationExam.reviewBtn")}
-                                    </button>
-                                </li>
-                            </ul>
+                            <div role="tablist" className="tabs tabs-box">
+                                <a
+                                    role="tab"
+                                    onClick={() => setActiveTab("watchTab")}
+                                    className={`tab md:text-base ${
+                                        activeTab === "watchTab" ? "tab-active font-semibold" : ""
+                                    }`}
+                                >
+                                    <MdOutlineOndemandVideo className="me-1 h-6 w-6" />
+                                    {t("buttonConversationExam.watchBtn")}
+                                </a>
+                                <a
+                                    role="tab"
+                                    onClick={() => setActiveTab("practieTab")}
+                                    className={`tab md:text-base ${
+                                        activeTab === "practieTab" ? "tab-active font-semibold" : ""
+                                    }`}
+                                >
+                                    <MdKeyboardVoice className="me-1 h-6 w-6" />
+                                    {t("buttonConversationExam.practiceBtn")}
+                                </a>
+                                <a
+                                    role="tab"
+                                    onClick={() => setActiveTab("reviewTab")}
+                                    className={`tab md:text-base ${
+                                        activeTab === "reviewTab" ? "tab-active font-semibold" : ""
+                                    }`}
+                                >
+                                    <MdChecklist className="me-1 h-6 w-6" />
+                                    {t("buttonConversationExam.reviewBtn")}
+                                </a>
+                            </div>
                         </div>
                     </div>
 

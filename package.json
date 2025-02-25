@@ -88,6 +88,7 @@
         "wait-on": "^8.0.2"
     },
     "optionalDependencies": {
-        "appdmg": "latest"
+        "appdmg": "latest",
+        "@rollup/rollup-linux-x64-gnu": "^4.34.8"
     }
 }

@@ -89,6 +89,7 @@
     },
     "optionalDependencies": {
         "appdmg": "latest",
-        "@rollup/rollup-linux-x64-gnu": "^4.34.8"
+        "@rollup/rollup-linux-x64-gnu": "^4.34.8",
+        "@tailwindcss/oxide-linux-x64-gnu": "^4.0.0-beta.5"
     }
 }

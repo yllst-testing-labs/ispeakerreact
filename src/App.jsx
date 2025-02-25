@@ -97,8 +97,13 @@ const clearCacheForNewVersion = async () => {
                 `New version found: ${latestVersion}. Clearing cache and refreshing page...`
             );
             alert(`New version found: ${latestVersion}. Refreshing in 3 seconds...`);
+
             caches.keys().then((names) => {
-                names.forEach((name) => caches.delete(name));
+                names.forEach((name) => {
+                    if (name !== "permanent-cache") {
+                        caches.delete(name);
+                    }
+                });
             });
 
             setTimeout(() => {

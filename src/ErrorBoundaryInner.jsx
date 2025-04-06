@@ -32,11 +32,12 @@ export default class ErrorBoundary extends React.Component {
 
     handleCopy = () => {
         const { error, errorInfo } = this.state;
-        const fullError = `
+        const fullError = `Error log:\n
 \`\`\`
-${error?.toString()}\n\nStack Trace:\n${errorInfo?.componentStack}
+${error?.toString()}\nApp version: v${__APP_VERSION__}\n\nStack Trace:\n${errorInfo?.componentStack}
 \`\`\`
 `;
+
         navigator.clipboard.writeText(fullError).then(() => {
             sonnerSuccessToast(this.props.t("toast.appCrashCopySuccess"));
         });
@@ -51,22 +52,24 @@ ${error?.toString()}\n\nStack Trace:\n${errorInfo?.componentStack}
         if (hasError) {
             return (
                 <Container>
-                    <div className="grid min-h-screen place-items-center">
-                        <div className="rounded-lg bg-red-50 p-6 text-red-700 dark:bg-red-300 dark:text-black">
+                    <div className="flex min-h-screen flex-row items-center justify-center">
+                        <div className="w-full rounded-lg bg-red-50 p-6 text-red-700 dark:bg-red-300 dark:text-black">
                             <h2 className="mb-4 text-2xl font-bold">
                                 🚨 {t("appCrash.appCrashedTitle")}
                             </h2>
                             <p className="mb-4">{t("appCrash.appCrashedDesc")}</p>
-                            <div className="card bg-base-100 card-md max-h-64 overflow-auto p-4 font-mono text-sm whitespace-pre-wrap shadow-sm">
+                            <div className="card bg-base-100 card-md max-h-100 overflow-auto whitespace-pre-wrap shadow-sm lg:max-h-64">
                                 <div className="card-body">
                                     <code className="font-mono! dark:text-red-200">
                                         {error?.toString()}
+                                        {"\n"}
+                                        App version: v{__APP_VERSION__}
                                         {"\n"}
                                         {errorInfo?.componentStack}
                                     </code>
                                 </div>
                             </div>
-                            <div className="my-6 flex flex-wrap justify-center gap-2 px-8">
+                            <div className="my-6 flex flex-wrap justify-center gap-2">
                                 <button onClick={this.handleCopy} className="btn btn-primary">
                                     <HiOutlineClipboardCopy className="h-5 w-5" />
                                     {t("appCrash.copyBtn")}

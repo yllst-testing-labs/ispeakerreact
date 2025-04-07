@@ -91,7 +91,7 @@ function Homepage() {
                         .map((card, idx) => (
                             <div
                                 key={idx}
-                                className="card card-lg card-border flex h-auto w-full flex-col justify-between pb-6 shadow-md sm:w-1/2 lg:w-1/5 dark:border-slate-600"
+                                className="card card-lg card-border flex h-auto w-full flex-col justify-between pb-6 shadow-md sm:w-1/2 md:w-1/3 lg:w-1/4 dark:border-slate-600"
                             >
                                 <figure className="px-10 pt-10">
                                     <img

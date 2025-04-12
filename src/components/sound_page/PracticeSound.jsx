@@ -3,6 +3,7 @@ import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/l
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
 import he from "he";
+import PropTypes from "prop-types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsRecordCircleFill } from "react-icons/bs";
 import { IoChevronBackOutline, IoInformationCircleOutline } from "react-icons/io5";
@@ -15,14 +16,15 @@ import { useTheme } from "../../utils/ThemeContext/useTheme";
 import LoadingOverlay from "../general/LoadingOverlay";
 import { usePlaybackFunction } from "./hooks/usePlaybackFunction";
 import { useRecordingFunction } from "./hooks/useRecordingFunction";
-import { useSoundVideoMapping } from "./hooks/useSoundVideoMapping";
 import ReviewCard from "./ReviewCard";
 import SoundPracticeCard from "./SoundPracticeCard";
 import WatchVideoCard from "./WatchVideoCard";
 
-const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
+const PracticeSound = ({ sound, accent, onBack, index, phonemesData }) => {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState("watchTab");
+    const [soundsData, setSoundsData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const { theme } = useTheme();
     const [, setCurrentTheme] = useState(theme);
@@ -53,29 +55,51 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
         };
     }, [theme]);
 
+    useEffect(() => {
+        const fetchSoundsData = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.BASE_URL}json/sounds_data.json`);
+                const data = await response.json();
+                setSoundsData(data);
+            } catch (error) {
+                console.error("Error fetching sounds data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSoundsData();
+    }, []);
+
     const videoColorScheme = isDarkMode ? "dark" : "light";
-
-    const accentKey = accent === "american" ? "a" : "b";
-    const accentData = sound[accentKey][0];
-
-    const soundVideoModal = useRef(null);
 
     const findPhonemeDetails = useCallback(
         (phoneme) => {
-            let phonemeIndex = soundsData.consonants.findIndex((p) => p.phoneme === phoneme);
-            if (phonemeIndex !== -1) return { index: phonemeIndex, type: "consonant" };
+            let phonemeIndex = phonemesData.consonants.findIndex((p) => p.phoneme === phoneme);
+            if (phonemeIndex !== -1) return { index: phonemeIndex, type: "consonants" };
 
-            phonemeIndex = soundsData.vowels_n_diphthongs.findIndex((p) => p.phoneme === phoneme);
-            if (phonemeIndex !== -1) return { index: phonemeIndex, type: "vowel" };
+            phonemeIndex = phonemesData.vowels.findIndex((p) => p.phoneme === phoneme);
+            if (phonemeIndex !== -1) return { index: phonemeIndex, type: "vowels" };
+
+            phonemeIndex = phonemesData.diphthongs.findIndex((p) => p.phoneme === phoneme);
+            if (phonemeIndex !== -1) return { index: phonemeIndex, type: "diphthongs" };
 
             return { index: -1, type: null };
         },
-        [soundsData.consonants, soundsData.vowels_n_diphthongs]
+        [phonemesData]
     );
 
     const { index: phonemeIndex, type } = findPhonemeDetails(sound.phoneme);
+    const accentData = soundsData?.[type]?.[phonemeIndex]?.[accent]?.[0];
 
-    const { videoUrls, videoUrl } = useSoundVideoMapping(type, accent, soundsData, phonemeIndex);
+    // Get video URLs based on environment
+    const mainVideoUrl = isElectron() 
+        ? `http://localhost:8998/videos/${accentData?.mainOfflineVideo}`
+        : accentData?.mainOnlineVideo;
+
+    const practiceVideoUrls = isElectron()
+        ? accentData?.practiceOfflineVideos.map(video => `http://localhost:8998/videos/${video}`)
+        : accentData?.practiceOnlineVideos;
 
     const imgPhonemeThumbSrc =
         accent === "american"
@@ -91,8 +115,10 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
     const [selectedVideoUrl, setSelectedVideoUrl] = useState("");
     const [selectedVideoModalIndex, setSelectedVideoModalIndex] = useState("");
 
+    const soundVideoModal = useRef(null);
+
     const handleShow = (videoIndex) => {
-        const newVideoUrl = videoUrls[videoIndex];
+        const newVideoUrl = practiceVideoUrls[videoIndex];
 
         // Only reset loading if the selected video URL is different
         if (selectedVideoUrl !== newVideoUrl) {
@@ -212,7 +238,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
         };
     }, [isRecording, mediaRecorder, currentAudioSource, currentAudioElement]);
 
-    if (!videoUrl) {
+    if (loading || !soundsData || !mainVideoUrl) {
         return <LoadingOverlay />;
     }
 
@@ -292,7 +318,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     <div className="mt-4">
                         {activeTab === "watchTab" && (
                             <WatchVideoCard
-                                videoUrl={videoUrl}
+                                videoUrl={mainVideoUrl}
                                 iframeLoadingStates={iframeLoadingStates}
                                 t={t}
                                 handleIframeLoad={handleIframeLoad}
@@ -334,7 +360,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                                 sound={sound}
                                 accent={accent}
                                 index={index}
-                                soundsData={soundsData}
+                                phonemesData={phonemesData}
                             />
                         )}
                     </div>
@@ -388,7 +414,7 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
                     )}
                     <div className="modal-action">
                         <form method="dialog">
-                            <button type="button" className="btn" onClick={handleClose}>
+                            <button className="btn" onClick={handleClose}>
                                 {t("sound_page.closeBtn")}
                             </button>
                         </form>
@@ -397,6 +423,108 @@ const PracticeSound = ({ sound, accent, onBack, index, soundsData }) => {
             </dialog>
         </>
     );
+};
+
+PracticeSound.propTypes = {
+    sound: PropTypes.shape({
+        phoneme: PropTypes.string.isRequired,
+        word: PropTypes.string.isRequired,
+        british: PropTypes.bool.isRequired,
+        american: PropTypes.bool.isRequired,
+        id: PropTypes.number.isRequired,
+    }).isRequired,
+    accent: PropTypes.oneOf(["british", "american"]).isRequired,
+    onBack: PropTypes.func.isRequired,
+    index: PropTypes.number.isRequired,
+    phonemesData: PropTypes.shape({
+        consonants: PropTypes.arrayOf(
+            PropTypes.shape({
+                phoneme: PropTypes.string.isRequired,
+                info: PropTypes.arrayOf(PropTypes.string).isRequired,
+                id: PropTypes.number.isRequired,
+                british: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        initial: PropTypes.string.isRequired,
+                        medial: PropTypes.string.isRequired,
+                        final: PropTypes.string.isRequired,
+                        mainOnlineVideo: PropTypes.string.isRequired,
+                        mainOfflineVideo: PropTypes.string.isRequired,
+                        practiceOnlineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                        practiceOfflineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                    })
+                ).isRequired,
+                american: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        initial: PropTypes.string.isRequired,
+                        medial: PropTypes.string.isRequired,
+                        final: PropTypes.string.isRequired,
+                        mainOnlineVideo: PropTypes.string.isRequired,
+                        mainOfflineVideo: PropTypes.string.isRequired,
+                        practiceOnlineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                        practiceOfflineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                    })
+                ).isRequired,
+            })
+        ).isRequired,
+        vowels: PropTypes.arrayOf(
+            PropTypes.shape({
+                phoneme: PropTypes.string.isRequired,
+                info: PropTypes.arrayOf(PropTypes.string).isRequired,
+                id: PropTypes.number.isRequired,
+                british: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        initial: PropTypes.string.isRequired,
+                        medial: PropTypes.string.isRequired,
+                        final: PropTypes.string.isRequired,
+                        mainOnlineVideo: PropTypes.string.isRequired,
+                        mainOfflineVideo: PropTypes.string.isRequired,
+                        practiceOnlineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                        practiceOfflineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                    })
+                ).isRequired,
+                american: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        initial: PropTypes.string.isRequired,
+                        medial: PropTypes.string.isRequired,
+                        final: PropTypes.string.isRequired,
+                        mainOnlineVideo: PropTypes.string.isRequired,
+                        mainOfflineVideo: PropTypes.string.isRequired,
+                        practiceOnlineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                        practiceOfflineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                    })
+                ).isRequired,
+            })
+        ).isRequired,
+        diphthongs: PropTypes.arrayOf(
+            PropTypes.shape({
+                phoneme: PropTypes.string.isRequired,
+                info: PropTypes.arrayOf(PropTypes.string).isRequired,
+                id: PropTypes.number.isRequired,
+                british: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        initial: PropTypes.string.isRequired,
+                        medial: PropTypes.string.isRequired,
+                        final: PropTypes.string.isRequired,
+                        mainOnlineVideo: PropTypes.string.isRequired,
+                        mainOfflineVideo: PropTypes.string.isRequired,
+                        practiceOnlineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                        practiceOfflineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                    })
+                ).isRequired,
+                american: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        initial: PropTypes.string.isRequired,
+                        medial: PropTypes.string.isRequired,
+                        final: PropTypes.string.isRequired,
+                        mainOnlineVideo: PropTypes.string.isRequired,
+                        mainOfflineVideo: PropTypes.string.isRequired,
+                        practiceOnlineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                        practiceOfflineVideos: PropTypes.arrayOf(PropTypes.string).isRequired,
+                    })
+                ).isRequired,
+            })
+        ).isRequired,
+    }).isRequired,
 };
 
 export default PracticeSound;

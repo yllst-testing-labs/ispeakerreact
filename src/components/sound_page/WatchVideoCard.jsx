@@ -49,7 +49,7 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
                             {isElectron() &&
                             videoUrl?.isLocal &&
                             videoUrl.value.includes("http://localhost") ? (
-                                <MediaPlayer src={videoUrl.value}>
+                                <MediaPlayer src={videoUrl}>
                                     <MediaProvider />
                                     <DefaultVideoLayout
                                         icons={defaultLayoutIcons}
@@ -62,7 +62,7 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
                                         <div className="skeleton absolute inset-0 h-full w-full"></div>
                                     )}
                                     <iframe
-                                        src={videoUrl?.value}
+                                        src={videoUrl}
                                         title="Phoneme Video"
                                         loading="lazy"
                                         allowFullScreen

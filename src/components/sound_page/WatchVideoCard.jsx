@@ -2,77 +2,68 @@ import { MediaPlayer, MediaProvider } from "@vidstack/react";
 import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/layouts/default";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
-
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { IoInformationCircleOutline } from "react-icons/io5";
 import { isElectron } from "../../utils/isElectron";
-import { useTheme } from "../../utils/ThemeContext/useTheme";
 
-const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) => {
-    const { theme } = useTheme();
-    const [, setCurrentTheme] = useState(theme);
-    const [isDarkMode, setIsDarkMode] = useState(false);
+const WatchVideoCard = ({ videoData, accent, t }) => {
+    const [iframeLoading, setIframeLoading] = useState(true);
+    const [localVideoUrl, setLocalVideoUrl] = useState(null);
 
     useEffect(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const checkLocalVideo = async () => {
+            if (isElectron() && videoData?.mainOfflineVideo) {
+                try {
+                    const port = await window.electron?.ipcRenderer?.invoke("get-port");
+                    const folderName = `iSpeakerReact_SoundVideos_${accent === "british" ? "GB" : "US"}`;
+                    const localUrl = `http://localhost:${port}/video/${folderName}/${videoData.mainOfflineVideo}`;
 
-        const updateTheme = () => {
-            if (theme === "auto") {
-                const systemPrefersDark = mediaQuery.matches;
-                setCurrentTheme(systemPrefersDark ? "dark" : "light");
-                setIsDarkMode(systemPrefersDark);
-            } else {
-                setCurrentTheme(theme);
-                setIsDarkMode(theme === "dark");
+                    // Check if the local video exists
+                    const response = await fetch(localUrl, { method: "HEAD" });
+                    if (response.ok) {
+                        setLocalVideoUrl(localUrl);
+                    }
+                } catch (error) {
+                    console.warn("Error checking local video:", error);
+                }
             }
         };
 
-        // Initial check and listener
-        updateTheme();
-        if (theme === "auto") {
-            mediaQuery.addEventListener("change", updateTheme);
-        }
+        checkLocalVideo();
+    }, [videoData, accent]);
 
-        return () => {
-            mediaQuery.removeEventListener("change", updateTheme);
-        };
-    }, [theme]);
+    const handleIframeLoad = () => {
+        setIframeLoading(false);
+    };
 
-    const videoColorScheme = isDarkMode ? "dark" : "light";
+    const videoUrl = isElectron() ? localVideoUrl : videoData?.mainOnlineVideo;
 
     return (
         <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
             <div className="card-body">
-                <div className={`${iframeLoadingStates.modalIframe ? "overflow-hidden" : ""}`}>
+                <div className={`${iframeLoading ? "overflow-hidden" : ""}`}>
                     <div className="aspect-video">
                         <div className="relative h-full w-full">
-                            {isElectron() &&
-                            videoUrl?.isLocal &&
-                            videoUrl.value.includes("http://localhost") ? (
-                                <MediaPlayer src={videoUrl}>
+                            {localVideoUrl ? (
+                                <MediaPlayer src={localVideoUrl} className="h-full w-full">
                                     <MediaProvider />
                                     <DefaultVideoLayout
                                         icons={defaultLayoutIcons}
-                                        colorScheme={videoColorScheme}
+                                        colorScheme="light"
                                     />
                                 </MediaPlayer>
                             ) : (
                                 <>
-                                    {iframeLoadingStates.mainIframe && (
+                                    {iframeLoading && (
                                         <div className="skeleton absolute inset-0 h-full w-full"></div>
                                     )}
                                     <iframe
                                         src={videoUrl}
                                         title="Phoneme Video"
-                                        loading="lazy"
                                         allowFullScreen
-                                        onLoad={() => {
-                                            handleIframeLoad("mainIframe");
-                                        }}
+                                        onLoad={handleIframeLoad}
                                         className={`h-full w-full transition-opacity duration-300 ${
-                                            iframeLoadingStates.mainIframe
-                                                ? "opacity-0"
-                                                : "opacity-100"
+                                            iframeLoading ? "opacity-0" : "opacity-100"
                                         }`}
                                     ></iframe>
                                 </>
@@ -80,17 +71,18 @@ const WatchVideoCard = ({ t, videoUrl, iframeLoadingStates, handleIframeLoad }) 
                         </div>
                     </div>
                 </div>
-                {isElectron() && !videoUrl?.value.includes("http://localhost") ? (
-                    <div role="alert" className="alert mt-5">
-                        <IoInformationCircleOutline className="h-6 w-6" />
-                        <span>{t("alert.alertOnlineVideo")}</span>
-                    </div>
-                ) : (
-                    ""
-                )}
             </div>
         </div>
     );
+};
+
+WatchVideoCard.propTypes = {
+    videoData: PropTypes.shape({
+        mainOfflineVideo: PropTypes.string,
+        mainOnlineVideo: PropTypes.string,
+    }),
+    accent: PropTypes.oneOf(["british", "american"]).isRequired,
+    t: PropTypes.func.isRequired,
 };
 
 export default WatchVideoCard;

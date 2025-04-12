@@ -236,14 +236,14 @@
             ]
         },
         {
-            "phoneme": "/ g /",
+            "phoneme": "/ ɡ /",
             "info": ["<strong>g</strong>et", "be<strong>g</strong>in", "bi<strong>g</strong>"],
             "id": 6,
             "british": [
                 {
-                    "initial": "<strong>g</strong>et - /get/",
-                    "medial": "be<strong>g</strong>in - /bɪ'gɪn/",
-                    "final": "bi<strong>g</strong> - /bɪg/",
+                    "initial": "<strong>g</strong>et - /ɡet/",
+                    "medial": "be<strong>g</strong>in - /bɪ'ɡɪn/",
+                    "final": "bi<strong>g</strong> - /bɪɡ/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693911843?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_g_1.mp4",
                     "practiceOnlineVideos": [
@@ -262,9 +262,9 @@
             ],
             "american": [
                 {
-                    "initial": "<strong>g</strong>et - /get/",
-                    "medial": "be<strong>g</strong>in - /bɪ'gɪn/",
-                    "final": "bi<strong>g</strong> - /bɪg/",
+                    "initial": "<strong>g</strong>et - /ɡet/",
+                    "medial": "be<strong>g</strong>in - /bɪ'ɡɪn/",
+                    "final": "bi<strong>g</strong> - /bɪɡ/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693905456?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_g_1.mp4",
                     "practiceOnlineVideos": [

@@ -1,14 +1,14 @@
 import he from "he";
+import PropTypes from "prop-types";
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
 import { isElectron } from "../../utils/isElectron";
+import { useScrollTo } from "../../utils/useScrollTo";
 import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
-import { useScrollTo } from "../../utils/useScrollTo";
-import PropTypes from "prop-types";
 
 const PracticeSound = lazy(() => import("./PracticeSound"));
 
@@ -39,7 +39,11 @@ const SoundCard = ({
                     <h2 className="card-title" lang="en">
                         {he.decode(sound.phoneme)}
                     </h2>
-                    <p lang="en" className="italic" dangerouslySetInnerHTML={{ __html: sound.word }} />
+                    <p
+                        lang="en"
+                        className="italic"
+                        dangerouslySetInnerHTML={{ __html: sound.word }}
+                    />
                 </div>
                 <div className="card-actions px-6">
                     <button
@@ -105,7 +109,11 @@ const SoundList = () => {
     const triggerReviewsUpdate = () => setReviewsUpdateTrigger((prev) => prev + 1);
 
     const handlePracticeClick = (sound, accent, index) => {
-        setSelectedSound({ sound, accent, index });
+        setSelectedSound({
+            sound: { ...sound, type: activeTab },
+            accent,
+            index,
+        });
     };
 
     const handleGoBack = () => {

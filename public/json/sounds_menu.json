@@ -156,15 +156,15 @@
                 "id": 22
             },
             {
-                "phoneme": "/ x /",
-                "word": "lo<span class='font-bold'>ch</span>",
+                "phoneme": "/ j /",
+                "word": "<span class='font-bold'>y</span>es",
                 "british": true,
                 "american": true,
                 "id": 23
             },
             {
-                "phoneme": "/ j /",
-                "word": "<span class='font-bold'>y</span>es",
+                "phoneme": "/ x /",
+                "word": "lo<span class='font-bold'>ch</span>",
                 "british": true,
                 "american": true,
                 "id": 24

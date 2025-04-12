@@ -16,7 +16,6 @@ export function useRecordingFunction(
     setRecordingAvailability,
     isRecording,
     mediaRecorder,
-    findPhonemeDetails,
     sound,
     accent,
     recordingAvailability,
@@ -27,10 +26,9 @@ export function useRecordingFunction(
 
     const getRecordingKey = useCallback(
         (cardIndex) => {
-            const { index, type } = findPhonemeDetails(sound.phoneme);
-            return `${accent}-${type}${index + 1}_${cardIndex}`;
+            return `${accent}-${sound.type}${sound.id}_${cardIndex}`;
         },
-        [findPhonemeDetails, sound.phoneme, accent] // Dependencies array
+        [sound.type, sound.id, accent]
     );
 
     const handleRecording = useCallback(

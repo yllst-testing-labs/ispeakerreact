@@ -170,7 +170,7 @@ const SoundList = () => {
     }, [t]);
 
     useEffect(() => {
-        document.title = `${t("navigation.sounds")} | iSpeakerReact v${import.meta.env.VITE_APP_VERSION}`;
+        document.title = `${t("navigation.sounds")} | iSpeakerReact v${__APP_VERSION__}`;
     }, [t]);
 
     const filteredSounds = useMemo(() => {

@@ -10,7 +10,7 @@ import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
 
-const PracticeSound = lazy(() => import("./PracticeSound"));
+const SoundMain = lazy(() => import("./SoundMain"));
 
 const SoundCard = ({
     sound,
@@ -185,7 +185,7 @@ const SoundList = () => {
                 <h1 className="py-6 text-3xl font-bold md:text-4xl">{t("navigation.sounds")}</h1>
                 {selectedSound ? (
                     <Suspense fallback={isElectron() ? null : <LoadingOverlay />}>
-                        <PracticeSound
+                        <SoundMain
                             sound={selectedSound.sound}
                             accent={selectedSound.accent}
                             phonemesData={phonemesData}

@@ -1,0 +1,388 @@
+{
+    "phonemes": {
+        "consonants": [
+            {
+                "phoneme": "/ p /",
+                "word": "<span class='font-bold'>p</span>en",
+                "british": true,
+                "american": true,
+                "id": 1
+            },
+            {
+                "phoneme": "/ b /",
+                "word": "<span class='font-bold'>b</span>ad",
+                "british": true,
+                "american": true,
+                "id": 2
+            },
+            {
+                "phoneme": "/ t /",
+                "word": "<span class='font-bold'>t</span>ea",
+                "british": true,
+                "american": true,
+                "id": 3
+            },
+            {
+                "phoneme": "/ d /",
+                "word": "<span class='font-bold'>d</span>id",
+                "british": true,
+                "american": true,
+                "id": 4
+            },
+            {
+                "phoneme": "/ k /",
+                "word": "<span class='font-bold'>c</span>at",
+                "british": true,
+                "american": true,
+                "id": 5
+            },
+            {
+                "phoneme": "/ ɡ /",
+                "word": "<span class='font-bold'>g</span>et",
+                "british": true,
+                "american": true,
+                "id": 6
+            },
+            {
+                "phoneme": "/ m /",
+                "word": "<span class='font-bold'>m</span>an",
+                "british": true,
+                "american": true,
+                "id": 7
+            },
+            {
+                "phoneme": "/ n /",
+                "word": "<span class='font-bold'>n</span>ow",
+                "british": true,
+                "american": true,
+                "id": 8
+            },
+            {
+                "phoneme": "/ ŋ /",
+                "word": "si<span class='font-bold'>ng</span>",
+                "british": true,
+                "american": true,
+                "id": 9
+            },
+            {
+                "phoneme": "/ f /",
+                "word": "<span class='font-bold'>f</span>all",
+                "british": true,
+                "american": true,
+                "id": 10
+            },
+            {
+                "phoneme": "/ v /",
+                "word": "<span class='font-bold'>v</span>an",
+                "british": true,
+                "american": true,
+                "id": 11
+            },
+            {
+                "phoneme": "/ θ /",
+                "word": "<span class='font-bold'>th</span>in",
+                "british": true,
+                "american": true,
+                "id": 12
+            },
+            {
+                "phoneme": "/ ð /",
+                "word": "<span class='font-bold'>th</span>is",
+                "british": true,
+                "american": true,
+                "id": 13
+            },
+            {
+                "phoneme": "/ s /",
+                "word": "<span class='font-bold'>s</span>ee",
+                "british": true,
+                "american": true,
+                "id": 14
+            },
+            {
+                "phoneme": "/ z /",
+                "word": "<span class='font-bold'>z</span>oo",
+                "british": true,
+                "american": true,
+                "id": 15
+            },
+            {
+                "phoneme": "/ ʃ /",
+                "word": "<span class='font-bold'>sh</span>oe",
+                "british": true,
+                "american": true,
+                "id": 16
+            },
+            {
+                "phoneme": "/ ʒ /",
+                "word": "vi<span class='font-bold'>s</span>ion",
+                "british": true,
+                "american": true,
+                "id": 17
+            },
+            {
+                "phoneme": "/ tʃ /",
+                "word": "<span class='font-bold'>ch</span>ain",
+                "british": true,
+                "american": true,
+                "id": 18
+            },
+            {
+                "phoneme": "/ dʒ /",
+                "word": "<span class='font-bold'>j</span>am",
+                "british": true,
+                "american": true,
+                "id": 19
+            },
+            {
+                "phoneme": "/ l /",
+                "word": "<span class='font-bold'>l</span>eg",
+                "british": true,
+                "american": true,
+                "id": 20
+            },
+            {
+                "phoneme": "/ r /",
+                "word": "<span class='font-bold'>r</span>ed",
+                "british": true,
+                "american": true,
+                "id": 21
+            },
+            {
+                "phoneme": "/ h /",
+                "word": "<span class='font-bold'>h</span>at",
+                "british": true,
+                "american": true,
+                "id": 22
+            },
+            {
+                "phoneme": "/ x /",
+                "word": "lo<span class='font-bold'>ch</span>",
+                "british": true,
+                "american": true,
+                "id": 23
+            },
+            {
+                "phoneme": "/ j /",
+                "word": "<span class='font-bold'>y</span>es",
+                "british": true,
+                "american": true,
+                "id": 24
+            },
+            {
+                "phoneme": "/ w /",
+                "word": "<span class='font-bold'>w</span>et",
+                "british": true,
+                "american": true,
+                "id": 25
+            },
+            {
+                "phoneme": "/ t̬ /",
+                "word": "ci<span class='font-bold'>t</span>y",
+                "british": false,
+                "american": true,
+                "id": 26
+            }
+        ],
+        "vowels": [
+            {
+                "phoneme": "/ iː /",
+                "word": "s<span class='font-bold'>ee</span>",
+                "british": true,
+                "american": true,
+                "id": 1
+            },
+            {
+                "phoneme": "/ i /",
+                "word": "happ<span class='font-bold'>y</span>",
+                "british": true,
+                "american": true,
+                "id": 2
+            },
+            {
+                "phoneme": "/ ɪ /",
+                "word": "s<span class='font-bold'>i</span>t",
+                "british": true,
+                "american": true,
+                "id": 3
+            },
+            {
+                "phoneme": "/ e /",
+                "word": "b<span class='font-bold'>e</span>d",
+                "british": true,
+                "american": true,
+                "id": 4
+            },
+            {
+                "phoneme": "/ æ /",
+                "word": "c<span class='font-bold'>a</span>t",
+                "british": true,
+                "american": true,
+                "id": 5
+            },
+            {
+                "phoneme": "/ ə /",
+                "word": "<span class='font-bold'>a</span>bout",
+                "british": true,
+                "american": true,
+                "id": 6
+            },
+            {
+                "phoneme": "/ ɜː /",
+                "word": "f<span class='font-bold'>ur</span>",
+                "british": true,
+                "american": false,
+                "id": 7
+            },
+            {
+                "phoneme": "/ ɜːr /",
+                "word": "f<span class='font-bold'>ur</span>",
+                "british": false,
+                "american": true,
+                "id": 8
+            },
+            {
+                "phoneme": "/ ʌ /",
+                "word": "c<span class='font-bold'>u</span>p",
+                "british": true,
+                "american": true,
+                "id": 9
+            },
+            {
+                "phoneme": "/ uː /",
+                "word": "t<span class='font-bold'>oo</span>",
+                "british": true,
+                "american": true,
+                "id": 10
+            },
+            {
+                "phoneme": "/ u /",
+                "word": "act<span class='font-bold'>u</span>al",
+                "british": true,
+                "american": true,
+                "id": 11
+            },
+            {
+                "phoneme": "/ ʊ /",
+                "word": "p<span class='font-bold'>u</span>t",
+                "british": true,
+                "american": true,
+                "id": 12
+            },
+            {
+                "phoneme": "/ ɔː /",
+                "word": "s<span class='font-bold'>aw</span>",
+                "british": true,
+                "american": true,
+                "id": 13
+            },
+            {
+                "phoneme": "/ ɒ /",
+                "word": "g<span class='font-bold'>o</span>t",
+                "british": true,
+                "american": false,
+                "id": 14
+            },
+            {
+                "phoneme": "/ ɑː /",
+                "word": "f<span class='font-bold'>a</span>ther",
+                "british": true,
+                "american": true,
+                "id": 15
+            },
+            {
+                "phoneme": "/ ɑ̃ /",
+                "word": "<span class='font-bold'>en</span> suite",
+                "british": true,
+                "american": true,
+                "id": 16
+            }
+        ],
+        "diphthongs": [
+            {
+                "phoneme": "/ eɪ /",
+                "word": "s<span class='font-bold'>ay</span>",
+                "british": true,
+                "american": true,
+                "id": 1
+            },
+            {
+                "phoneme": "/ əʊ /",
+                "word": "g<span class='font-bold'>o</span>",
+                "british": true,
+                "american": false,
+                "id": 2
+            },
+            {
+                "phoneme": "/ oʊ /",
+                "word": "g<span class='font-bold'>o</span>",
+                "british": false,
+                "american": true,
+                "id": 3
+            },
+            {
+                "phoneme": "/ aɪ /",
+                "word": "m<span class='font-bold'>y</span>",
+                "british": true,
+                "american": true,
+                "id": 4
+            },
+            {
+                "phoneme": "/ aʊ /",
+                "word": "n<span class='font-bold'>ow</span>",
+                "british": true,
+                "american": true,
+                "id": 5
+            },
+            {
+                "phoneme": "/ ɔɪ /",
+                "word": "b<span class='font-bold'>oy</span>",
+                "british": true,
+                "american": true,
+                "id": 6
+            },
+            {
+                "phoneme": "/ ɪə /",
+                "word": "n<span class='font-bold'>ear</span>",
+                "british": true,
+                "american": false,
+                "id": 7
+            },
+            {
+                "phoneme": "/ ɪr /",
+                "word": "n<span class='font-bold'>ear</span>",
+                "british": false,
+                "american": true,
+                "id": 8
+            },
+            {
+                "phoneme": "/ eə /",
+                "word": "h<span class='font-bold'>air</span>",
+                "british": true,
+                "american": false,
+                "id": 9
+            },
+            {
+                "phoneme": "/ er /",
+                "word": "h<span class='font-bold'>air</span>",
+                "british": false,
+                "american": true,
+                "id": 10
+            },
+            {
+                "phoneme": "/ ʊə /",
+                "word": "p<span class='font-bold'>ure</span>",
+                "british": true,
+                "american": false,
+                "id": 11
+            },
+            {
+                "phoneme": "/ ʊr /",
+                "word": "p<span class='font-bold'>ure</span>",
+                "british": false,
+                "american": true,
+                "id": 12
+            }
+        ]
+    }
+}

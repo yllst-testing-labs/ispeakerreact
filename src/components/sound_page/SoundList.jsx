@@ -8,6 +8,7 @@ import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
 import { useScrollTo } from "../../utils/useScrollTo";
+import PropTypes from "prop-types";
 
 const PracticeSound = lazy(() => import("./PracticeSound"));
 
@@ -38,7 +39,7 @@ const SoundCard = ({
                     <h2 className="card-title" lang="en">
                         {he.decode(sound.phoneme)}
                     </h2>
-                    <p lang="en">{sound.example_word}</p>
+                    <p lang="en" className="italic" dangerouslySetInnerHTML={{ __html: sound.word }} />
                 </div>
                 <div className="card-actions px-6">
                     <button
@@ -56,6 +57,24 @@ const SoundCard = ({
     );
 };
 
+SoundCard.propTypes = {
+    sound: PropTypes.shape({
+        phoneme: PropTypes.string.isRequired,
+        word: PropTypes.string.isRequired,
+        british: PropTypes.bool.isRequired,
+        american: PropTypes.bool.isRequired,
+        id: PropTypes.number.isRequired,
+    }).isRequired,
+    index: PropTypes.number.isRequired,
+    selectedAccent: PropTypes.string.isRequired,
+    handlePracticeClick: PropTypes.func.isRequired,
+    getBadgeColor: PropTypes.func.isRequired,
+    getReviewText: PropTypes.func.isRequired,
+    getReviewKey: PropTypes.func.isRequired,
+    reviews: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+};
+
 const SoundList = () => {
     const { t } = useTranslation();
     const { ref: scrollRef, scrollTo } = useScrollTo();
@@ -63,11 +82,12 @@ const SoundList = () => {
     const [selectedSound, setSelectedSound] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedAccent, setSelectedAccent] = AccentLocalStorage();
-    const [activeTab, setActiveTab] = useState("tab1");
+    const [activeTab, setActiveTab] = useState("consonants");
 
-    const [soundsData, setSoundsData] = useState({
+    const [phonemesData, setPhonemesData] = useState({
         consonants: [],
-        vowels_n_diphthongs: [],
+        vowels: [],
+        diphthongs: [],
     });
 
     const [reviews, setReviews] = useState({});
@@ -94,9 +114,7 @@ const SoundList = () => {
     };
 
     const getReviewKey = (sound, index) => {
-        const type = soundsData.consonants.some((s) => s.phoneme === sound.phoneme)
-            ? "consonant"
-            : "vowel";
+        const type = activeTab;
         return `${type}${index + 1}`;
     };
 
@@ -129,11 +147,11 @@ const SoundList = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${import.meta.env.BASE_URL}json/sounds_data.json`);
+                const response = await fetch(`${import.meta.env.BASE_URL}json/sounds_menu.json`);
                 const data = await response.json();
-                setSoundsData(data);
+                setPhonemesData(data.phonemes);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching menu data:", error);
                 alert(t("sound_page.loadError"));
             } finally {
                 setLoading(false);
@@ -144,18 +162,13 @@ const SoundList = () => {
     }, [t]);
 
     useEffect(() => {
-        document.title = `${t("navigation.sounds")} | iSpeakerReact v${__APP_VERSION__}`;
+        document.title = `${t("navigation.sounds")} | iSpeakerReact v${import.meta.env.VITE_APP_VERSION}`;
     }, [t]);
 
     const filteredSounds = useMemo(() => {
-        const currentTabData =
-            activeTab === "tab1" ? soundsData.consonants : soundsData.vowels_n_diphthongs;
-        return currentTabData.filter(
-            (sound) =>
-                (selectedAccent === "british" && sound.b_s === "yes") ||
-                (selectedAccent === "american" && sound.a_s === "yes")
-        );
-    }, [activeTab, selectedAccent, soundsData]);
+        const currentTabData = phonemesData[activeTab] || [];
+        return currentTabData.filter((sound) => sound[selectedAccent]);
+    }, [activeTab, selectedAccent, phonemesData]);
 
     return (
         <>
@@ -167,7 +180,7 @@ const SoundList = () => {
                         <PracticeSound
                             sound={selectedSound.sound}
                             accent={selectedSound.accent}
-                            soundsData={soundsData}
+                            phonemesData={phonemesData}
                             index={selectedSound.index}
                             onBack={handleGoBack}
                         />
@@ -186,11 +199,11 @@ const SoundList = () => {
                                                 <a
                                                     role="tab"
                                                     onClick={() => {
-                                                        setActiveTab("tab1");
+                                                        setActiveTab("consonants");
                                                         scrollTo();
                                                     }}
                                                     className={`tab md:text-base ${
-                                                        activeTab === "tab1"
+                                                        activeTab === "consonants"
                                                             ? "tab-active font-semibold"
                                                             : ""
                                                     }`}
@@ -200,16 +213,30 @@ const SoundList = () => {
                                                 <a
                                                     role="tab"
                                                     className={`tab md:text-base ${
-                                                        activeTab === "tab2"
+                                                        activeTab === "vowels"
                                                             ? "tab-active font-semibold"
                                                             : ""
                                                     }`}
                                                     onClick={() => {
-                                                        setActiveTab("tab2");
+                                                        setActiveTab("vowels");
                                                         scrollTo();
                                                     }}
                                                 >
-                                                    {t("sound_page.vowels_dipthongs")}
+                                                    {t("sound_page.vowels")}
+                                                </a>
+                                                <a
+                                                    role="tab"
+                                                    className={`tab md:text-base ${
+                                                        activeTab === "diphthongs"
+                                                            ? "tab-active font-semibold"
+                                                            : ""
+                                                    }`}
+                                                    onClick={() => {
+                                                        setActiveTab("diphthongs");
+                                                        scrollTo();
+                                                    }}
+                                                >
+                                                    {t("sound_page.diphthongs")}
                                                 </a>
                                             </div>
                                         </div>
@@ -220,7 +247,7 @@ const SoundList = () => {
                                     >
                                         {filteredSounds.map((sound, index) => (
                                             <SoundCard
-                                                key={index}
+                                                key={sound.id}
                                                 sound={sound}
                                                 index={index}
                                                 selectedAccent={selectedAccent}

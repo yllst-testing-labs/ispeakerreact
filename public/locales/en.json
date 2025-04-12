@@ -89,7 +89,8 @@
     },
     "sound_page": {
         "consonants": "Consonants",
-        "vowels_dipthongs": "Vowels and diphthongs",
+        "vowels": "Vowels",
+        "diphthongs": "Diphthongs",
         "practiceBtn": "Practice",
         "reviewGood": "good",
         "reviewNeutral": "neutral",

@@ -4,11 +4,13 @@ import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { IoInformationCircleOutline } from "react-icons/io5";
 import { isElectron } from "../../utils/isElectron";
 
 const WatchVideoCard = ({ videoData, accent, t }) => {
     const [iframeLoading, setIframeLoading] = useState(true);
     const [localVideoUrl, setLocalVideoUrl] = useState(null);
+    const [useOnlineVideo, setUseOnlineVideo] = useState(false);
 
     useEffect(() => {
         const checkLocalVideo = async () => {
@@ -22,10 +24,20 @@ const WatchVideoCard = ({ videoData, accent, t }) => {
                     const response = await fetch(localUrl, { method: "HEAD" });
                     if (response.ok) {
                         setLocalVideoUrl(localUrl);
+                        setUseOnlineVideo(false);
+                    } else {
+                        console.warn("Local video not found, falling back to online version");
+                        setUseOnlineVideo(true);
                     }
                 } catch (error) {
-                    console.warn("Error checking local video:", error);
+                    console.warn(
+                        "Error checking local video, falling back to online version:",
+                        error
+                    );
+                    setUseOnlineVideo(true);
                 }
+            } else {
+                setUseOnlineVideo(true);
             }
         };
 
@@ -36,7 +48,7 @@ const WatchVideoCard = ({ videoData, accent, t }) => {
         setIframeLoading(false);
     };
 
-    const videoUrl = isElectron() ? localVideoUrl : videoData?.mainOnlineVideo;
+    const videoUrl = isElectron() && !useOnlineVideo ? localVideoUrl : videoData?.mainOnlineVideo;
 
     return (
         <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
@@ -44,7 +56,7 @@ const WatchVideoCard = ({ videoData, accent, t }) => {
                 <div className={`${iframeLoading ? "overflow-hidden" : ""}`}>
                     <div className="aspect-video">
                         <div className="relative h-full w-full">
-                            {localVideoUrl ? (
+                            {localVideoUrl && !useOnlineVideo ? (
                                 <MediaPlayer src={localVideoUrl} className="h-full w-full">
                                     <MediaProvider />
                                     <DefaultVideoLayout
@@ -71,6 +83,14 @@ const WatchVideoCard = ({ videoData, accent, t }) => {
                         </div>
                     </div>
                 </div>
+                {isElectron() && useOnlineVideo ? (
+                    <div role="alert" className="alert mt-5">
+                        <IoInformationCircleOutline className="h-6 w-6" />
+                        <span>{t("alert.alertOnlineVideo")}</span>
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
         </div>
     );

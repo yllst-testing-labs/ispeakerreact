@@ -3,14 +3,16 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoChevronBackOutline } from "react-icons/io5";
-import { MdOutlineOndemandVideo } from "react-icons/md";
+import { MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 import LoadingOverlay from "../general/LoadingOverlay";
+import SoundPracticeCard from "./SoundPracticeCard";
 import WatchVideoCard from "./WatchVideoCard";
 
 const PracticeSound = ({ sound, accent, onBack }) => {
     const { t } = useTranslation();
     const [soundsData, setSoundsData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState("watchTab");
 
     // Fetch sounds data
     useEffect(() => {
@@ -72,16 +74,71 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                 <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-4">
                     <div className="flex flex-col items-center">
                         <div role="tablist" className="tabs tabs-box">
-                            <a role="tab" className="tab tab-active font-semibold md:text-base">
+                            <a
+                                role="tab"
+                                onClick={() => setActiveTab("watchTab")}
+                                className={`tab md:text-base ${
+                                    activeTab === "watchTab" ? "tab-active font-semibold" : ""
+                                }`}
+                            >
                                 <MdOutlineOndemandVideo className="me-1 h-6 w-6" />
                                 {t("buttonConversationExam.watchBtn")}
+                            </a>
+                            <a
+                                role="tab"
+                                onClick={() => setActiveTab("practieTab")}
+                                className={`tab md:text-base ${
+                                    activeTab === "practieTab" ? "tab-active font-semibold" : ""
+                                }`}
+                            >
+                                <MdKeyboardVoice className="me-1 h-6 w-6" />
+                                {t("buttonConversationExam.practiceBtn")}
                             </a>
                         </div>
                     </div>
                 </div>
 
                 <div className="mt-4">
-                    <WatchVideoCard videoData={accentData} accent={accent} t={t} />
+                    {activeTab === "watchTab" && (
+                        <WatchVideoCard videoData={accentData} accent={accent} t={t} />
+                    )}
+                    {activeTab === "practieTab" && (
+                        <div className="space-y-4">
+                            {accentData && (
+                                <>
+                                    {/* Main Phoneme Video */}
+                                    <SoundPracticeCard
+                                        key="main"
+                                        textContent={sound.phoneme}
+                                        videoUrl={accentData.mainOnlineVideo}
+                                        offlineVideo={accentData.mainOfflineVideo}
+                                        accent={accent}
+                                        t={t}
+                                        phoneme={sound.phoneme}
+                                    />
+                                    {/* Practice Videos */}
+                                    {["initial", "medial", "final"].map(
+                                        (position, index) =>
+                                            accentData[position] && (
+                                                <SoundPracticeCard
+                                                    key={position}
+                                                    textContent={accentData[position]}
+                                                    videoUrl={
+                                                        accentData.practiceOnlineVideos[index + 1]
+                                                    }
+                                                    offlineVideo={
+                                                        accentData.practiceOfflineVideos[index + 1]
+                                                    }
+                                                    accent={accent}
+                                                    t={t}
+                                                    phoneme={sound.phoneme}
+                                                />
+                                            )
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

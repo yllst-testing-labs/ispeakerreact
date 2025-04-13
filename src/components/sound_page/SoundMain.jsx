@@ -115,6 +115,9 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                                         accent={accent}
                                         t={t}
                                         phoneme={sound.phoneme}
+                                        phonemeId={sound.id}
+                                        index={0}
+                                        type={sound.type === "consonants" ? "constant" : sound.type === "vowels" ? "vowel" : "dipthong"}
                                     />
                                     {/* Practice Videos */}
                                     {["initial", "medial", "final"].map(
@@ -132,6 +135,9 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                                                     accent={accent}
                                                     t={t}
                                                     phoneme={sound.phoneme}
+                                                    phonemeId={sound.id}
+                                                    index={index + 1}
+                                                    type={sound.type === "consonants" ? "constant" : sound.type === "vowels" ? "vowel" : "dipthong"}
                                                 />
                                             )
                                     )}

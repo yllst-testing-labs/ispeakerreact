@@ -1,8 +1,9 @@
-import PropTypes from "prop-types";
-import { useRef, useState } from "react";
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
 import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/layouts/default";
+import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { useTheme } from "../../../utils/ThemeContext/useTheme";
 import { SoundVideoDialogContext } from "./useSoundVideoDialogContext";
 
 export const SoundVideoDialogProvider = ({ children }) => {
@@ -20,6 +21,26 @@ export const SoundVideoDialogProvider = ({ children }) => {
 
     const dialogRef = useRef(null);
     const mediaPlayerRef = useRef(null);
+    const { theme } = useTheme();
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const updateTheme = () => {
+            const systemPrefersDark = mediaQuery.matches;
+            setIsDarkMode(theme === "auto" ? systemPrefersDark : theme === "dark");
+        };
+
+        updateTheme();
+        if (theme === "auto") {
+            mediaQuery.addEventListener("change", updateTheme);
+        }
+
+        return () => {
+            mediaQuery.removeEventListener("change", updateTheme);
+        };
+    }, [theme]);
 
     const showDialog = (state) => {
         setDialogState({ ...state, isOpen: true, iframeLoading: true });
@@ -55,7 +76,7 @@ export const SoundVideoDialogProvider = ({ children }) => {
                                         <MediaProvider />
                                         <DefaultVideoLayout
                                             icons={defaultLayoutIcons}
-                                            colorScheme="light"
+                                            colorScheme={isDarkMode ? "dark" : "light"}
                                         />
                                     </MediaPlayer>
                                 ) : (

@@ -34,6 +34,8 @@ const SoundPracticeCard = ({
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
     const recordingStartTimeRef = useRef(null);
+    const [currentAudioSource, setCurrentAudioSource] = useState(null);
+    const [currentAudioElement, setCurrentAudioElement] = useState(null);
 
     const { showDialog } = useSoundVideoDialog();
 
@@ -114,12 +116,31 @@ const SoundPracticeCard = ({
     };
 
     const handlePlayRecording = async () => {
-        if (isPlaying) return;
+        if (isPlaying) {
+            // Stop playback
+            if (currentAudioSource) {
+                currentAudioSource.stop();
+                setCurrentAudioSource(null);
+            }
+            if (currentAudioElement) {
+                currentAudioElement.pause();
+                currentAudioElement.currentTime = 0;
+                setCurrentAudioElement(null);
+            }
+            setIsPlaying(false);
+            return;
+        }
 
         setIsPlaying(true);
         await playRecording(
             recordingKey,
-            () => {},
+            (audio, audioSource) => {
+                if (audioSource) {
+                    setCurrentAudioSource(audioSource);
+                } else {
+                    setCurrentAudioElement(audio);
+                }
+            },
             (error) => {
                 console.error("Error playing recording:", error);
                 sonnerErrorToast(t("toast.playbackFailed"));
@@ -127,6 +148,8 @@ const SoundPracticeCard = ({
             },
             () => {
                 setIsPlaying(false);
+                setCurrentAudioSource(null);
+                setCurrentAudioElement(null);
             }
         );
     };
@@ -208,6 +231,7 @@ const SoundPracticeCard = ({
                         <button
                             className={`btn btn-circle ${isRecording ? "btn-error" : "btn-primary"}`}
                             onClick={isRecording ? stopRecording : startRecording}
+                            disabled={isPlaying}
                         >
                             {isRecording ? (
                                 <MdStop className="h-6 w-6" />

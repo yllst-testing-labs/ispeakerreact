@@ -104,7 +104,7 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                         <WatchVideoCard videoData={accentData} accent={accent} t={t} />
                     )}
                     {activeTab === "practieTab" && (
-                        <SoundVideoDialogProvider>
+                        <SoundVideoDialogProvider t={t}>
                             <div className="space-y-4">
                                 {accentData && (
                                     <>

@@ -37,9 +37,10 @@ const SoundPracticeCard = ({
     const [currentAudioSource, setCurrentAudioSource] = useState(null);
     const [currentAudioElement, setCurrentAudioElement] = useState(null);
 
-    const { showDialog } = useSoundVideoDialog();
+    const { showDialog, isAnyCardActive, setCardActive } = useSoundVideoDialog();
 
     const recordingKey = `${type}-${accent}-${phonemeId}-${index}`;
+    const cardId = `${type}-${accent}-${phonemeId}-${index}`;
 
     useEffect(() => {
         // Check if recording exists when component mounts
@@ -52,6 +53,7 @@ const SoundPracticeCard = ({
 
     const startRecording = async () => {
         try {
+            setCardActive(cardId, true);
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             // Get supported MIME types
             const mimeTypes = ["audio/webm", "audio/mp4", "audio/ogg", "audio/wav"];
@@ -101,6 +103,7 @@ const SoundPracticeCard = ({
             }
             sonnerErrorToast(`${t("toast.recordingFailed")} ${error.message}`);
             setIsRecording(false);
+            setCardActive(cardId, false);
         }
     };
 
@@ -112,6 +115,7 @@ const SoundPracticeCard = ({
             }
             mediaRecorderRef.current.stop();
             setIsRecording(false);
+            setCardActive(cardId, false);
         }
     };
 
@@ -128,10 +132,12 @@ const SoundPracticeCard = ({
                 setCurrentAudioElement(null);
             }
             setIsPlaying(false);
+            setCardActive(cardId, false);
             return;
         }
 
         setIsPlaying(true);
+        setCardActive(cardId, true);
         await playRecording(
             recordingKey,
             (audio, audioSource) => {
@@ -145,11 +151,13 @@ const SoundPracticeCard = ({
                 console.error("Error playing recording:", error);
                 sonnerErrorToast(t("toast.playbackFailed"));
                 setIsPlaying(false);
+                setCardActive(cardId, false);
             },
             () => {
                 setIsPlaying(false);
                 setCurrentAudioSource(null);
                 setCurrentAudioElement(null);
+                setCardActive(cardId, false);
             }
         );
     };
@@ -249,13 +257,17 @@ const SoundPracticeCard = ({
                         </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <button className="btn btn-primary btn-circle" onClick={handleShow}>
+                        <button
+                            className="btn btn-primary btn-circle"
+                            onClick={handleShow}
+                            disabled={isAnyCardActive || isRecording || isPlaying}
+                        >
                             <MdOutlineOndemandVideo className="h-6 w-6" />
                         </button>
                         <button
                             className={`btn btn-circle ${isRecording ? "btn-error" : "btn-primary"}`}
                             onClick={isRecording ? stopRecording : startRecording}
-                            disabled={isPlaying}
+                            disabled={(!isRecording && isAnyCardActive) || isPlaying}
                         >
                             {isRecording ? (
                                 <MdStop className="h-6 w-6" />
@@ -266,7 +278,9 @@ const SoundPracticeCard = ({
                         <button
                             className="btn btn-primary btn-circle"
                             onClick={handlePlayRecording}
-                            disabled={!hasRecording || isRecording}
+                            disabled={
+                                !hasRecording || (!isPlaying && isAnyCardActive) || isRecording
+                            }
                         >
                             {isPlaying ? (
                                 <MdStop className="h-6 w-6" />

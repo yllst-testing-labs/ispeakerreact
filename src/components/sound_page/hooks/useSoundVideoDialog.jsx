@@ -6,7 +6,7 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 import { useTheme } from "../../../utils/ThemeContext/useTheme";
 import { SoundVideoDialogContext } from "./useSoundVideoDialogContext";
 
-export const SoundVideoDialogProvider = ({ children }) => {
+export const SoundVideoDialogProvider = ({ children, t }) => {
     const [dialogState, setDialogState] = useState({
         isOpen: false,
         videoUrl: null,
@@ -18,6 +18,9 @@ export const SoundVideoDialogProvider = ({ children }) => {
         showOnlineVideoAlert: false,
         t: null,
     });
+
+    const [activeCard, setActiveCard] = useState(null);
+    const [isAnyCardActive, setIsAnyCardActive] = useState(false);
 
     const dialogRef = useRef(null);
     const mediaPlayerRef = useRef(null);
@@ -56,13 +59,30 @@ export const SoundVideoDialogProvider = ({ children }) => {
         setDialogState((prev) => ({ ...prev, iframeLoading: false }));
     };
 
+    const setCardActive = (cardId, isActive) => {
+        setActiveCard(isActive ? cardId : null);
+        setIsAnyCardActive(isActive);
+    };
+
     return (
-        <SoundVideoDialogContext.Provider value={{ showDialog }}>
+        <SoundVideoDialogContext.Provider
+            value={{
+                showDialog,
+                closeDialog,
+                handleIframeLoad,
+                dialogState,
+                activeCard,
+                isAnyCardActive,
+                setCardActive,
+                t,
+            }}
+        >
             {children}
             <dialog className="modal" ref={dialogRef}>
                 <div className="modal-box w-11/12 max-w-5xl">
                     <h3 className="pb-4 text-lg">
-                        <span dangerouslySetInnerHTML={{ __html: dialogState.title }} />
+                        <span className="font-bold">{t("sound_page.clipModalTitle")}</span>: {" "}
+                        <span className="italic" dangerouslySetInnerHTML={{ __html: dialogState.title }} />
                     </h3>
                     <div className={`${dialogState.iframeLoading ? "overflow-hidden" : ""}`}>
                         <div className="aspect-video">
@@ -79,40 +99,37 @@ export const SoundVideoDialogProvider = ({ children }) => {
                                             colorScheme={isDarkMode ? "dark" : "light"}
                                         />
                                     </MediaPlayer>
-                                ) : (
-                                    dialogState.isOpen &&
-                                    dialogState.videoUrl && (
-                                        <>
-                                            {dialogState.iframeLoading && (
-                                                <div className="skeleton absolute inset-0 h-full w-full"></div>
-                                            )}
-                                            <iframe
-                                                src={dialogState.videoUrl}
-                                                title={`${dialogState.phoneme} - ${dialogState.title}`}
-                                                allowFullScreen
-                                                onLoad={handleIframeLoad}
-                                                className={`h-full w-full transition-opacity duration-300 ${
-                                                    dialogState.iframeLoading
-                                                        ? "opacity-0"
-                                                        : "opacity-100"
-                                                }`}
-                                            />
-                                        </>
-                                    )
-                                )}
+                                ) : dialogState.isOpen && dialogState.videoUrl ? (
+                                    <>
+                                        {dialogState.iframeLoading && (
+                                            <div className="skeleton absolute inset-0 h-full w-full"></div>
+                                        )}
+                                        <iframe
+                                            src={dialogState.videoUrl}
+                                            title={`${dialogState.phoneme} - ${dialogState.title}`}
+                                            allowFullScreen
+                                            onLoad={handleIframeLoad}
+                                            className={`h-full w-full transition-opacity duration-300 ${
+                                                dialogState.iframeLoading
+                                                    ? "opacity-0"
+                                                    : "opacity-100"
+                                            }`}
+                                        />
+                                    </>
+                                ) : null}
                             </div>
                         </div>
                     </div>
                     {dialogState.showOnlineVideoAlert && (
                         <div role="alert" className="alert mt-5">
                             <IoInformationCircleOutline className="h-6 w-6" />
-                            <span>{dialogState.t("alert.alertOnlineVideo")}</span>
+                            <span>{t("alert.alertOnlineVideo")}</span>
                         </div>
                     )}
                     <div className="modal-action">
                         <form method="dialog">
                             <button type="button" className="btn" onClick={closeDialog}>
-                                {dialogState.t?.("sound_page.closeBtn")}
+                                {t("sound_page.closeBtn")}
                             </button>
                         </form>
                     </div>
@@ -124,4 +141,5 @@ export const SoundVideoDialogProvider = ({ children }) => {
 
 SoundVideoDialogProvider.propTypes = {
     children: PropTypes.node.isRequired,
+    t: PropTypes.func.isRequired,
 };

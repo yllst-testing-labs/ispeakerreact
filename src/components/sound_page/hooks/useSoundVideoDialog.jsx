@@ -19,6 +19,7 @@ export const SoundVideoDialogProvider = ({ children }) => {
     });
 
     const dialogRef = useRef(null);
+    const mediaPlayerRef = useRef(null);
 
     const showDialog = (state) => {
         setDialogState({ ...state, isOpen: true, iframeLoading: true });
@@ -45,10 +46,11 @@ export const SoundVideoDialogProvider = ({ children }) => {
                     <div className={`${dialogState.iframeLoading ? "overflow-hidden" : ""}`}>
                         <div className="aspect-video">
                             <div className="relative h-full w-full">
-                                {dialogState.isLocalVideo ? (
+                                {dialogState.isOpen && dialogState.isLocalVideo ? (
                                     <MediaPlayer
                                         src={dialogState.videoUrl}
                                         className="h-full w-full"
+                                        ref={mediaPlayerRef}
                                     >
                                         <MediaProvider />
                                         <DefaultVideoLayout

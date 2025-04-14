@@ -207,6 +207,30 @@ const SoundPracticeCard = ({
         checkLocalVideo();
     }, [offlineVideo, accent]);
 
+    // Add cleanup effect
+    useEffect(() => {
+        return () => {
+            // Cleanup recording resources
+            if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+                mediaRecorderRef.current.stop();
+            }
+
+            // Cleanup audio playback resources
+            if (currentAudioSource) {
+                currentAudioSource.stop();
+            }
+            if (currentAudioElement) {
+                currentAudioElement.pause();
+                currentAudioElement.currentTime = 0;
+            }
+
+            // Cleanup any active media streams
+            if (mediaRecorderRef.current?.stream) {
+                mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
+            }
+        };
+    }, [currentAudioSource, currentAudioElement]);
+
     return (
         <div className="card bg-base-200">
             <div className="card-body">

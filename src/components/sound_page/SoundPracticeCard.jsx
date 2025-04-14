@@ -41,7 +41,7 @@ const SoundPracticeCard = ({
     const audioChunksRef = useRef([]);
     const recordingStartTimeRef = useRef(null);
 
-    const recordingKey = `${type}-${phonemeId}-${index}`;
+    const recordingKey = `${type}-${accent}-${phonemeId}-${index}`;
 
     useEffect(() => {
         // Check if recording exists when component mounts

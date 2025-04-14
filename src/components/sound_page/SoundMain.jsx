@@ -99,7 +99,7 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                     </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="my-4">
                     {activeTab === "watchTab" && (
                         <WatchVideoCard videoData={accentData} accent={accent} t={t} />
                     )}

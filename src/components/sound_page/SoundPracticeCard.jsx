@@ -8,7 +8,7 @@ import {
     sonnerSuccessToast,
     sonnerWarningToast,
 } from "../../utils/sonnerCustomToast";
-import { useSoundVideoDialog } from "./hooks/useSoundVideoDialog";
+import { useSoundVideoDialog } from "./hooks/useSoundVideoDialogContext";
 
 const MAX_RECORDING_DURATION_MS = 2 * 60 * 1000; // 2 minutes
 

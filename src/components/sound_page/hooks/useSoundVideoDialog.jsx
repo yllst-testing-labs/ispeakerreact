@@ -1,10 +1,9 @@
-import { createContext, useContext, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { useRef, useState } from "react";
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
 import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/layouts/default";
 import { IoInformationCircleOutline } from "react-icons/io5";
-
-const SoundVideoDialogContext = createContext(null);
+import { SoundVideoDialogContext } from "./useSoundVideoDialogContext";
 
 export const SoundVideoDialogProvider = ({ children }) => {
     const [dialogState, setDialogState] = useState({
@@ -22,13 +21,17 @@ export const SoundVideoDialogProvider = ({ children }) => {
     const dialogRef = useRef(null);
 
     const showDialog = (state) => {
-        setDialogState({ ...state, isOpen: true });
+        setDialogState({ ...state, isOpen: true, iframeLoading: true });
         dialogRef.current?.showModal();
     };
 
     const closeDialog = () => {
         setDialogState((prev) => ({ ...prev, isOpen: false }));
         dialogRef.current?.close();
+    };
+
+    const handleIframeLoad = () => {
+        setDialogState((prev) => ({ ...prev, iframeLoading: false }));
     };
 
     return (
@@ -43,7 +46,10 @@ export const SoundVideoDialogProvider = ({ children }) => {
                         <div className="aspect-video">
                             <div className="relative h-full w-full">
                                 {dialogState.isLocalVideo ? (
-                                    <MediaPlayer src={dialogState.videoUrl} className="h-full w-full">
+                                    <MediaPlayer
+                                        src={dialogState.videoUrl}
+                                        className="h-full w-full"
+                                    >
                                         <MediaProvider />
                                         <DefaultVideoLayout
                                             icons={defaultLayoutIcons}
@@ -61,7 +67,7 @@ export const SoundVideoDialogProvider = ({ children }) => {
                                                 src={dialogState.videoUrl}
                                                 title={`${dialogState.phoneme} - ${dialogState.title}`}
                                                 allowFullScreen
-                                                onLoad={dialogState.onIframeLoad}
+                                                onLoad={handleIframeLoad}
                                                 className={`h-full w-full transition-opacity duration-300 ${
                                                     dialogState.iframeLoading
                                                         ? "opacity-0"
@@ -96,11 +102,3 @@ export const SoundVideoDialogProvider = ({ children }) => {
 SoundVideoDialogProvider.propTypes = {
     children: PropTypes.node.isRequired,
 };
-
-export const useSoundVideoDialog = () => {
-    const context = useContext(SoundVideoDialogContext);
-    if (!context) {
-        throw new Error("useSoundVideoDialog must be used within a SoundVideoDialogProvider");
-    }
-    return context;
-}; 

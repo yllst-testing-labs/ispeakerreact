@@ -1,10 +1,5 @@
-import { MediaPlayer, MediaProvider } from "@vidstack/react";
-import { defaultLayoutIcons, DefaultVideoLayout } from "@vidstack/react/player/layouts/default";
-import "@vidstack/react/player/styles/default/layouts/video.css";
-import "@vidstack/react/player/styles/default/theme.css";
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
-import { IoInformationCircleOutline } from "react-icons/io5";
 import { MdMic, MdStop, MdOutlineOndemandVideo, MdPlayArrow } from "react-icons/md";
 import { checkRecordingExists, playRecording, saveRecording } from "../../utils/databaseOperations";
 import { isElectron } from "../../utils/isElectron";
@@ -13,6 +8,7 @@ import {
     sonnerSuccessToast,
     sonnerWarningToast,
 } from "../../utils/sonnerCustomToast";
+import { useSoundVideoDialog } from "./hooks/useSoundVideoDialog";
 
 const MAX_RECORDING_DURATION_MS = 2 * 60 * 1000; // 2 minutes
 
@@ -32,14 +28,14 @@ const SoundPracticeCard = ({
     const [iframeLoadingStates, setIframeLoadingStates] = useState({
         modalIframe: true,
     });
-    const [showIframe, setShowIframe] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [hasRecording, setHasRecording] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
-    const soundVideoModal = useRef(null);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
     const recordingStartTimeRef = useRef(null);
+
+    const { showDialog } = useSoundVideoDialog();
 
     const recordingKey = `${type}-${accent}-${phonemeId}-${index}`;
 
@@ -148,17 +144,16 @@ const SoundPracticeCard = ({
     };
 
     const handleShow = () => {
-        setShowIframe(true);
-        setIframeLoadingStates((prevStates) => ({
-            ...prevStates,
-            modalIframe: true,
-        }));
-        soundVideoModal.current?.showModal();
-    };
-
-    const handleClose = () => {
-        setShowIframe(false);
-        soundVideoModal.current?.close();
+        showDialog({
+            videoUrl: isElectron() && !useOnlineVideo ? localVideoUrl : videoUrl,
+            title: textContent.split(" - ")[0],
+            phoneme,
+            isLocalVideo: localVideoUrl && !useOnlineVideo,
+            onIframeLoad: () => handleIframeLoad("modalIframe"),
+            iframeLoading: iframeLoadingStates.modalIframe,
+            showOnlineVideoAlert: isElectron() && useOnlineVideo,
+            t,
+        });
     };
 
     useEffect(() => {
@@ -188,8 +183,6 @@ const SoundPracticeCard = ({
 
         checkLocalVideo();
     }, [offlineVideo, accent]);
-
-    const videoUrlToUse = isElectron() && !useOnlineVideo ? localVideoUrl : videoUrl;
 
     return (
         <div className="card bg-base-200">
@@ -236,64 +229,6 @@ const SoundPracticeCard = ({
                     </div>
                 </div>
             </div>
-
-            <dialog className="modal" ref={soundVideoModal}>
-                <div className="modal-box w-11/12 max-w-5xl">
-                    <h3 className="pb-4 text-lg">
-                        <span
-                            dangerouslySetInnerHTML={{ __html: `${textContent.split(" - ")[0]}` }}
-                        />
-                    </h3>
-                    <div className={`${iframeLoadingStates.modalIframe ? "overflow-hidden" : ""}`}>
-                        <div className="aspect-video">
-                            <div className="relative h-full w-full">
-                                {localVideoUrl && !useOnlineVideo ? (
-                                    <MediaPlayer src={localVideoUrl} className="h-full w-full">
-                                        <MediaProvider />
-                                        <DefaultVideoLayout
-                                            icons={defaultLayoutIcons}
-                                            colorScheme="light"
-                                        />
-                                    </MediaPlayer>
-                                ) : (
-                                    showIframe &&
-                                    videoUrlToUse && (
-                                        <>
-                                            {iframeLoadingStates.modalIframe && (
-                                                <div className="skeleton absolute inset-0 h-full w-full"></div>
-                                            )}
-                                            <iframe
-                                                src={videoUrlToUse}
-                                                title={`${phoneme} - ${textContent.split(" - ")[0]}`}
-                                                allowFullScreen
-                                                onLoad={() => handleIframeLoad("modalIframe")}
-                                                className={`h-full w-full transition-opacity duration-300 ${
-                                                    iframeLoadingStates.modalIframe
-                                                        ? "opacity-0"
-                                                        : "opacity-100"
-                                                }`}
-                                            />
-                                        </>
-                                    )
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    {isElectron() && useOnlineVideo && (
-                        <div role="alert" className="alert mt-5">
-                            <IoInformationCircleOutline className="h-6 w-6" />
-                            <span>{t("alert.alertOnlineVideo")}</span>
-                        </div>
-                    )}
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button type="button" className="btn" onClick={handleClose}>
-                                {t("sound_page.closeBtn")}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
         </div>
     );
 };

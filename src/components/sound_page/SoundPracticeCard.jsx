@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
-import { MdMic, MdStop, MdOutlineOndemandVideo, MdPlayArrow } from "react-icons/md";
+import { MdMic, MdOutlineOndemandVideo, MdPlayArrow, MdStop } from "react-icons/md";
 import { checkRecordingExists, playRecording, saveRecording } from "../../utils/databaseOperations";
 import { isElectron } from "../../utils/isElectron";
 import {

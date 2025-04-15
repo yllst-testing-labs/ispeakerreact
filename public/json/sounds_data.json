@@ -1185,7 +1185,7 @@
         },
         {
             "phoneme": "/ t̬ /",
-            "shouldShow": false,
+            "shouldShowPhoneme": false,
             "info": "ci<strong>t</strong>y",
             "id": 26,
             "british": null,
@@ -1197,12 +1197,12 @@
                     "mainOnlineVideo": "https://player.vimeo.com/video/708223419?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_t_flapped_1.mp4",
                     "practiceOnlineVideos": [
-                        "https://player.vimeo.com/video/708223419?byline=0&portrait=0&title=0",
+                        null,
                         "https://player.vimeo.com/video/708223419?byline=0&portrait=0&title=0",
                         null
                     ],
                     "practiceOfflineVideos": [
-                        "OALD_US_Pron_t_flapped_1.mp4",
+                        null,
                         "OALD_US_Pron_t_flapped_1.mp4",
                         null
                     ]

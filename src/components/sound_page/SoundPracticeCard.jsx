@@ -22,6 +22,7 @@ const SoundPracticeCard = ({
     phonemeId,
     index,
     type,
+    shouldShowPhoneme = true,
 }) => {
     const [localVideoUrl, setLocalVideoUrl] = useState(null);
     const [useOnlineVideo, setUseOnlineVideo] = useState(false);
@@ -239,6 +240,10 @@ const SoundPracticeCard = ({
         };
     }, [currentAudioSource, currentAudioElement]);
 
+    if (!shouldShowPhoneme) {
+        return null;
+    }
+
     return (
         <div className="card bg-base-200">
             <div className="card-body">
@@ -310,6 +315,7 @@ SoundPracticeCard.propTypes = {
     phonemeId: PropTypes.number.isRequired,
     index: PropTypes.number.isRequired,
     type: PropTypes.oneOf(["constant", "vowel", "dipthong"]).isRequired,
+    shouldShowPhoneme: PropTypes.bool,
 };
 
 export default SoundPracticeCard;

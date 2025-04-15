@@ -117,7 +117,20 @@ const PracticeSound = ({ sound, accent, onBack }) => {
 
                 <div className="my-4">
                     {activeTab === "watchTab" && (
-                        <WatchVideoCard videoData={accentData} accent={accent} t={t} />
+                        <WatchVideoCard
+                            videoData={accentData}
+                            accent={accent}
+                            t={t}
+                            phoneme={{
+                                type:
+                                    sound.type === "consonants"
+                                        ? "consonant"
+                                        : sound.type === "vowels"
+                                          ? "vowel"
+                                          : "diphthong",
+                                key: sound.key,
+                            }}
+                        />
                     )}
                     {activeTab === "practieTab" && (
                         <SoundVideoDialogProvider t={t}>
@@ -141,6 +154,9 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                                                     : sound.type === "vowels"
                                                       ? "vowel"
                                                       : "dipthong"
+                                            }
+                                            shouldShowPhoneme={
+                                                soundData?.shouldShowPhoneme !== false
                                             }
                                         />
                                         {/* Practice Videos */}
@@ -197,11 +213,9 @@ const PracticeSound = ({ sound, accent, onBack }) => {
 PracticeSound.propTypes = {
     sound: PropTypes.shape({
         phoneme: PropTypes.string.isRequired,
-        word: PropTypes.string.isRequired,
-        british: PropTypes.bool.isRequired,
-        american: PropTypes.bool.isRequired,
         id: PropTypes.number.isRequired,
         type: PropTypes.oneOf(["consonants", "vowels", "diphthongs"]).isRequired,
+        key: PropTypes.string.isRequired,
     }).isRequired,
     accent: PropTypes.oneOf(["british", "american"]).isRequired,
     onBack: PropTypes.func.isRequired,

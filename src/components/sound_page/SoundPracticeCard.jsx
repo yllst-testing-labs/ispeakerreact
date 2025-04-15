@@ -246,7 +246,11 @@ const SoundPracticeCard = ({
                     <div className="flex items-center space-x-4">
                         <div className="avatar">
                             <div className="w-12 rounded-full">
-                                <img src={imgPhonemeThumbSrc} alt="Phoneme thumbnail" />
+                                <img
+                                    src={imgPhonemeThumbSrc}
+                                    alt="Phoneme thumbnail"
+                                    loading="lazy"
+                                />
                             </div>
                         </div>
                         <div>

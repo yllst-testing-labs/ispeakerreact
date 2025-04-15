@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoChevronBackOutline } from "react-icons/io5";
-import { MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
+import { MdChecklist, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
 import LoadingOverlay from "../general/LoadingOverlay";
+import { SoundVideoDialogProvider } from "./hooks/useSoundVideoDialog";
+import ReviewCard from "./ReviewCard";
 import SoundPracticeCard from "./SoundPracticeCard";
 import WatchVideoCard from "./WatchVideoCard";
-import { SoundVideoDialogProvider } from "./hooks/useSoundVideoDialog";
 
 const PracticeSound = ({ sound, accent, onBack }) => {
     const { t } = useTranslation();
@@ -35,6 +36,11 @@ const PracticeSound = ({ sound, accent, onBack }) => {
     // Find the sound data using the type and phoneme from sounds_menu.json
     const soundData = soundsData?.[sound.type]?.find((item) => item.id === sound.id);
     const accentData = soundData?.[accent]?.[0];
+
+    const handleReviewUpdate = () => {
+        // This function is intentionally empty as the review update is handled by the ReviewCard component
+        // We just need to pass a function to trigger the parent component's re-render
+    };
 
     // Show loading while fetching data
     if (loading) {
@@ -94,6 +100,16 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                             >
                                 <MdKeyboardVoice className="me-1 h-6 w-6" />
                                 {t("buttonConversationExam.practiceBtn")}
+                            </a>
+                            <a
+                                role="tab"
+                                onClick={() => setActiveTab("reviewTab")}
+                                className={`tab md:text-base ${
+                                    activeTab === "reviewTab" ? "tab-active font-semibold" : ""
+                                }`}
+                            >
+                                <MdChecklist className="me-1 h-6 w-6" />
+                                {t("buttonConversationExam.reviewBtn")}
                             </a>
                         </div>
                     </div>
@@ -163,6 +179,14 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                                 )}
                             </div>
                         </SoundVideoDialogProvider>
+                    )}
+                    {activeTab === "reviewTab" && (
+                        <ReviewCard
+                            sound={sound}
+                            accent={accent}
+                            t={t}
+                            onReviewUpdate={handleReviewUpdate}
+                        />
                     )}
                 </div>
             </div>

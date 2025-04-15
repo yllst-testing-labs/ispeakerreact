@@ -12,6 +12,65 @@ import TopNavBar from "../general/TopNavBar";
 
 const SoundMain = lazy(() => import("./SoundMain"));
 
+const BADGE_COLORS = {
+    good: "badge-success",
+    neutral: "badge-warning",
+    bad: "badge-error",
+};
+
+const TabNavigation = ({ activeTab, onTabChange, scrollTo, t }) => {
+    const tabs = ["consonants", "vowels", "diphthongs"];
+    
+    return (
+        <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-8">
+            <div className="flex justify-center">
+                <div role="tablist" className="tabs tabs-box">
+                    {tabs.map((tab) => (
+                        <a
+                            key={tab}
+                            role="tab"
+                            onClick={() => {
+                                onTabChange(tab);
+                                scrollTo();
+                            }}
+                            className={`tab md:text-base ${
+                                activeTab === tab ? "tab-active font-semibold" : ""
+                            }`}
+                        >
+                            {t(`sound_page.${tab}`)}
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+TabNavigation.propTypes = {
+    activeTab: PropTypes.string.isRequired,
+    onTabChange: PropTypes.func.isRequired,
+    scrollTo: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired,
+};
+
+const useReviews = (selectedAccent) => {
+    const [reviews, setReviews] = useState({});
+    const [reviewsUpdateTrigger, setReviewsUpdateTrigger] = useState(0);
+
+    useEffect(() => {
+        const fetchReviews = () => {
+            const ispeakerData = JSON.parse(localStorage.getItem("ispeaker") || "{}");
+            const accentReviews = ispeakerData.soundReview?.[selectedAccent] || {};
+            setReviews(accentReviews);
+        };
+        fetchReviews();
+    }, [selectedAccent, reviewsUpdateTrigger]);
+
+    const triggerReviewsUpdate = () => setReviewsUpdateTrigger((prev) => prev + 1);
+
+    return { reviews, triggerReviewsUpdate };
+};
+
 const SoundCard = ({
     sound,
     index,
@@ -94,19 +153,7 @@ const SoundList = () => {
         diphthongs: [],
     });
 
-    const [reviews, setReviews] = useState({});
-    const [reviewsUpdateTrigger, setReviewsUpdateTrigger] = useState(0);
-
-    useEffect(() => {
-        const fetchReviews = () => {
-            const ispeakerData = JSON.parse(localStorage.getItem("ispeaker") || "{}");
-            const accentReviews = ispeakerData.soundReview?.[selectedAccent] || {};
-            setReviews(accentReviews);
-        };
-        fetchReviews();
-    }, [selectedAccent, reviewsUpdateTrigger]);
-
-    const triggerReviewsUpdate = () => setReviewsUpdateTrigger((prev) => prev + 1);
+    const { reviews, triggerReviewsUpdate } = useReviews(selectedAccent);
 
     const handlePracticeClick = (sound, accent, index) => {
         setSelectedSound({
@@ -121,35 +168,14 @@ const SoundList = () => {
         triggerReviewsUpdate();
     };
 
-    const getReviewKey = (sound, index) => {
-        const type = activeTab;
-        return `${type}${index + 1}`;
-    };
+    const getReviewKey = (sound, index) => `${activeTab}${index + 1}`;
 
     const getBadgeColor = (sound, index) => {
         const reviewKey = getReviewKey(sound, index);
-        const review = reviews[reviewKey];
-        return (
-            {
-                good: "badge-success",
-                neutral: "badge-warning",
-                bad: "badge-error",
-            }[review] || null
-        );
+        return BADGE_COLORS[reviews[reviewKey]] || null;
     };
 
-    const getReviewText = (review) => {
-        switch (review) {
-            case "good":
-                return t("sound_page.reviewGood");
-            case "neutral":
-                return t("sound_page.reviewNeutral");
-            case "bad":
-                return t("sound_page.reviewBad");
-            default:
-                return "";
-        }
-    };
+    const getReviewText = (review) => t(`sound_page.review${review?.charAt(0).toUpperCase() + review?.slice(1)}`);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -170,7 +196,7 @@ const SoundList = () => {
     }, [t]);
 
     useEffect(() => {
-        document.title = `${t("navigation.sounds")} | iSpeakerReact v${__APP_VERSION__}`;
+        document.title = `${t("navigation.sounds")} | iSpeakerReact v${import.meta.env.VITE_APP_VERSION || '1.0.0'}`;
     }, [t]);
 
     const filteredSounds = useMemo(() => {
@@ -201,54 +227,12 @@ const SoundList = () => {
                                 <LoadingOverlay />
                             ) : (
                                 <>
-                                    <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-8">
-                                        <div className="flex justify-center">
-                                            <div role="tablist" className="tabs tabs-box">
-                                                <a
-                                                    role="tab"
-                                                    onClick={() => {
-                                                        setActiveTab("consonants");
-                                                        scrollTo();
-                                                    }}
-                                                    className={`tab md:text-base ${
-                                                        activeTab === "consonants"
-                                                            ? "tab-active font-semibold"
-                                                            : ""
-                                                    }`}
-                                                >
-                                                    {t("sound_page.consonants")}
-                                                </a>
-                                                <a
-                                                    role="tab"
-                                                    className={`tab md:text-base ${
-                                                        activeTab === "vowels"
-                                                            ? "tab-active font-semibold"
-                                                            : ""
-                                                    }`}
-                                                    onClick={() => {
-                                                        setActiveTab("vowels");
-                                                        scrollTo();
-                                                    }}
-                                                >
-                                                    {t("sound_page.vowels")}
-                                                </a>
-                                                <a
-                                                    role="tab"
-                                                    className={`tab md:text-base ${
-                                                        activeTab === "diphthongs"
-                                                            ? "tab-active font-semibold"
-                                                            : ""
-                                                    }`}
-                                                    onClick={() => {
-                                                        setActiveTab("diphthongs");
-                                                        scrollTo();
-                                                    }}
-                                                >
-                                                    {t("sound_page.diphthongs")}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <TabNavigation
+                                        activeTab={activeTab}
+                                        onTabChange={setActiveTab}
+                                        scrollTo={scrollTo}
+                                        t={t}
+                                    />
                                     <div
                                         ref={scrollRef}
                                         className="my-4 flex flex-wrap place-items-center justify-center gap-5"

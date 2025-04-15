@@ -255,6 +255,7 @@ const SoundPracticeCard = ({
                         </div>
                         <div>
                             <p
+                                lang="en"
                                 className="text-base"
                                 dangerouslySetInnerHTML={{ __html: textContent }}
                             />

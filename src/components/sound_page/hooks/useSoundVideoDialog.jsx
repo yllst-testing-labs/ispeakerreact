@@ -81,8 +81,12 @@ export const SoundVideoDialogProvider = ({ children, t }) => {
             <dialog className="modal" ref={dialogRef}>
                 <div className="modal-box w-11/12 max-w-5xl">
                     <h3 className="pb-4 text-lg">
-                        <span className="font-bold">{t("sound_page.clipModalTitle")}</span>: {" "}
-                        <span className="italic" dangerouslySetInnerHTML={{ __html: dialogState.title }} />
+                        <span className="font-bold">{t("sound_page.clipModalTitle")}</span>:{" "}
+                        <span
+                            lang="en"
+                            className="italic"
+                            dangerouslySetInnerHTML={{ __html: dialogState.title }}
+                        />
                     </h3>
                     <div className={`${dialogState.iframeLoading ? "overflow-hidden" : ""}`}>
                         <div className="aspect-video">

@@ -22,6 +22,32 @@
                         "OALD_UK_Pron_p_3.mp4",
                         "OALD_UK_Pron_p_4.mp4",
                         "OALD_UK_Pron_p_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "If practice makes perfect and perfect needs practice, I'm perfectly practiced and practically perfect."
+                        },
+                        {
+                            "text": "A proper cup of coffee, made in a proper copper coffee pot."
+                        },
+                        {
+                            "text": "Picky people pick Peter Pan Peanut Butter. This is the peanut butter picky people pick."
+                        },
+                        {
+                            "text": "Pete’s pa, Pete, poked to the pea patch to pick a pack of peas for the poor pink pig in the pine hole pig pen."
+                        },
+                        {
+                            "text": "A pleasant place to place a plaice is a place where a plaice is pleased to be placed."
+                        },
+                        {
+                            "title": "Peter Piper",
+                            "lines": [
+                                "Peter Piper picked a peck of pickled peppers.",
+                                "A peck of pickled peppers Peter Piper picked.",
+                                "If Peter Piper picked a peck of pickled peppers,",
+                                "Where's the peck of pickled peppers Peter Piper picked?"
+                            ]
+                        }
                     ]
                 }
             ],
@@ -43,6 +69,32 @@
                         "OALD_US_Pron_p_3.mp4",
                         "OALD_US_Pron_p_4.mp4",
                         "OALD_US_Pron_p_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "If practice makes perfect and perfect needs practice, I'm perfectly practiced and practically perfect."
+                        },
+                        {
+                            "text": "A proper cup of coffee, made in a proper copper coffee pot."
+                        },
+                        {
+                            "text": "Picky people pick Peter Pan Peanut Butter. This is the peanut butter picky people pick."
+                        },
+                        {
+                            "text": "Pete’s pa, Pete, poked to the pea patch to pick a pack of peas for the poor pink pig in the pine hole pig pen."
+                        },
+                        {
+                            "text": "A pleasant place to place a plaice is a place where a plaice is pleased to be placed."
+                        },
+                        {
+                            "title": "Peter Piper",
+                            "lines": [
+                                "Peter Piper picked a peck of pickled peppers.",
+                                "A peck of pickled peppers Peter Piper picked.",
+                                "If Peter Piper picked a peck of pickled peppers,",
+                                "Where's the peck of pickled peppers Peter Piper picked?"
+                            ]
+                        }
                     ]
                 }
             ]

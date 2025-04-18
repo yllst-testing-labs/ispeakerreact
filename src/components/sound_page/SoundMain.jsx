@@ -8,6 +8,7 @@ import LoadingOverlay from "../general/LoadingOverlay";
 import { SoundVideoDialogProvider } from "./hooks/useSoundVideoDialog";
 import ReviewCard from "./ReviewCard";
 import SoundPracticeCard from "./SoundPracticeCard";
+import TongueTwister from "./TongueTwister";
 import WatchVideoCard from "./WatchVideoCard";
 
 const PracticeSound = ({ sound, accent, onBack }) => {
@@ -137,62 +138,58 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                             <div className="space-y-4">
                                 {accentData && (
                                     <>
-                                        {/* Main Phoneme Video */}
-                                        <SoundPracticeCard
-                                            key="main"
-                                            textContent={sound.phoneme}
-                                            videoUrl={accentData.mainOnlineVideo}
-                                            offlineVideo={accentData.mainOfflineVideo}
-                                            accent={accent}
-                                            t={t}
-                                            phoneme={sound.phoneme}
-                                            phonemeId={sound.id}
-                                            index={0}
-                                            type={
-                                                sound.type === "consonants"
-                                                    ? "constant"
-                                                    : sound.type === "vowels"
-                                                      ? "vowel"
-                                                      : "dipthong"
+                                        {["main", "initial", "medial", "final"].map(
+                                            (position, index) => {
+                                                const isMain = position === "main";
+                                                const videoUrl = isMain
+                                                    ? accentData.mainOnlineVideo
+                                                    : accentData.practiceOnlineVideos[index];
+                                                const offlineVideo = isMain
+                                                    ? accentData.mainOfflineVideo
+                                                    : accentData.practiceOfflineVideos[index];
+                                                const textContent = isMain
+                                                    ? sound.phoneme
+                                                    : accentData[position];
+                                                const cardIndex = isMain ? 0 : index;
+                                                const type =
+                                                    sound.type === "consonants"
+                                                        ? "constant"
+                                                        : sound.type === "vowels"
+                                                          ? "vowel"
+                                                          : "dipthong";
+
+                                                return (
+                                                    (isMain || accentData[position]) && (
+                                                        <SoundPracticeCard
+                                                            key={position}
+                                                            textContent={textContent}
+                                                            videoUrl={videoUrl}
+                                                            offlineVideo={offlineVideo}
+                                                            accent={accent}
+                                                            t={t}
+                                                            phoneme={sound.phoneme}
+                                                            phonemeId={sound.id}
+                                                            index={cardIndex}
+                                                            type={type}
+                                                            shouldShowPhoneme={
+                                                                isMain
+                                                                    ? soundData?.shouldShowPhoneme !==
+                                                                      false
+                                                                    : undefined
+                                                            }
+                                                        />
+                                                    )
+                                                );
                                             }
-                                            shouldShowPhoneme={
-                                                soundData?.shouldShowPhoneme !== false
-                                            }
-                                        />
-                                        {/* Practice Videos */}
-                                        {["initial", "medial", "final"].map(
-                                            (position, index) =>
-                                                accentData[position] && (
-                                                    <SoundPracticeCard
-                                                        key={position}
-                                                        textContent={accentData[position]}
-                                                        videoUrl={
-                                                            accentData.practiceOnlineVideos[
-                                                                index + 1
-                                                            ]
-                                                        }
-                                                        offlineVideo={
-                                                            accentData.practiceOfflineVideos[
-                                                                index + 1
-                                                            ]
-                                                        }
-                                                        accent={accent}
-                                                        t={t}
-                                                        phoneme={sound.phoneme}
-                                                        phonemeId={sound.id}
-                                                        index={index + 1}
-                                                        type={
-                                                            sound.type === "consonants"
-                                                                ? "constant"
-                                                                : sound.type === "vowels"
-                                                                  ? "vowel"
-                                                                  : "dipthong"
-                                                        }
-                                                    />
-                                                )
                                         )}
                                     </>
                                 )}
+                                <TongueTwister
+                                    tongueTwisters={accentData.tongueTwister}
+                                    t={t}
+                                    sound={sound}
+                                    accent={accent}
+                                />
                             </div>
                         </SoundVideoDialogProvider>
                     )}

@@ -105,6 +105,8 @@
         "clipModalTitle": "Pronunciation clip",
         "recordInstructions": "Watch pronunciation clips, and use the <0>{{icon}}</0> button to record your own sound.",
         "reviewInstructions": "How do you pronounce the sound <0>{{phoneme}}</0>?",
+        "tongueTwister": "Tongue twister",
+        "tongueTwisterInstructions": "Improve your pronunciation and fluency by pronouncing these tongue twisters.",
         "soundInstructions": {
             "howToPronounce": "How to pronounce this sound",
             "consonant": {

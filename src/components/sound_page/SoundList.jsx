@@ -20,7 +20,7 @@ const BADGE_COLORS = {
 
 const TabNavigation = ({ activeTab, onTabChange, scrollTo, t }) => {
     const tabs = ["consonants", "vowels", "diphthongs"];
-    
+
     return (
         <div className="bg-base-100 sticky top-[calc(5rem)] z-10 py-8">
             <div className="flex justify-center">
@@ -175,7 +175,8 @@ const SoundList = () => {
         return BADGE_COLORS[reviews[reviewKey]] || null;
     };
 
-    const getReviewText = (review) => t(`sound_page.review${review?.charAt(0).toUpperCase() + review?.slice(1)}`);
+    const getReviewText = (review) =>
+        t(`sound_page.review${review?.charAt(0).toUpperCase() + review?.slice(1)}`);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -196,7 +197,7 @@ const SoundList = () => {
     }, [t]);
 
     useEffect(() => {
-        document.title = `${t("navigation.sounds")} | iSpeakerReact v${import.meta.env.VITE_APP_VERSION || '1.0.0'}`;
+        document.title = `${t("navigation.sounds")} | iSpeakerReact v${__APP_VERSION__}`;
     }, [t]);
 
     const filteredSounds = useMemo(() => {

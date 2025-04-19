@@ -25,7 +25,7 @@
                     ],
                     "tongueTwister": [
                         {
-                            "text": "If practice makes perfect and perfect needs practice, I'm perfectly practiced and practically perfect."
+                            "text": "If practice makes perfect and perfect needs practise, I’m perfectly practised and practically perfect."
                         },
                         {
                             "text": "A proper cup of coffee, made in a proper copper coffee pot."
@@ -45,7 +45,7 @@
                                 "Peter Piper picked a peck of pickled peppers.",
                                 "A peck of pickled peppers Peter Piper picked.",
                                 "If Peter Piper picked a peck of pickled peppers,",
-                                "Where's the peck of pickled peppers Peter Piper picked?"
+                                "Where’s the peck of pickled peppers Peter Piper picked?"
                             ]
                         }
                     ]
@@ -72,7 +72,7 @@
                     ],
                     "tongueTwister": [
                         {
-                            "text": "If practice makes perfect and perfect needs practice, I'm perfectly practiced and practically perfect."
+                            "text": "If practice makes perfect and perfect needs practice, I’m perfectly practiced and practically perfect."
                         },
                         {
                             "text": "A proper cup of coffee, made in a proper copper coffee pot."
@@ -92,7 +92,7 @@
                                 "Peter Piper picked a peck of pickled peppers.",
                                 "A peck of pickled peppers Peter Piper picked.",
                                 "If Peter Piper picked a peck of pickled peppers,",
-                                "Where's the peck of pickled peppers Peter Piper picked?"
+                                "Where’s the peck of pickled peppers Peter Piper picked?"
                             ]
                         }
                     ]
@@ -121,6 +121,40 @@
                         "OALD_UK_Pron_b_3.mp4",
                         "OALD_UK_Pron_b_4.mp4",
                         "OALD_UK_Pron_b_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Bob’s building brick buildings by Botany Bay." },
+                        {
+                            "text": "How many berries could a bare berry carry, if a bare berry could carry berries?"
+                        },
+                        { "text": "The busy bee buzzed the buzzy busy beehive." },
+                        {
+                            "text": "I bought a bit of baking powder and baked a batch of biscuits. I brought a big basket of biscuits back to the bakery and baked a basket of big biscuits. Then I took the big basket of biscuits and the basket of big biscuits and mixed the big biscuits with the basket of biscuits that was next to the big basket and put a bunch of biscuits from the basket into a biscuit mixer and brought the basket of biscuits and the box of mixed biscuits and the biscuit mixer to the bakery and opened a tin of sardines."
+                        },
+                        {
+                            "title": "Betty Botter",
+                            "lines": [
+                                "Betty Botter bought some butter. But, she said, the butter’s bitter.",
+                                "If I put it in my batter. It will make my batter bitter.",
+                                "But a bit of better butter. That would make my batter better.",
+                                "So she bought a bit of butter. Better than her bitter butter.",
+                                "And she put it in her batter. And the batter was not bitter.",
+                                "So it was better Betty Botter bought a bit of better butter."
+                            ]
+                        },
+                        {
+                            "title": "The Bear and the Boar",
+                            "lines": [
+                                "Once upon a barren moor",
+                                "There dwelt a bear, also a boar.",
+                                "The bear could not bear the boar.",
+                                "The boar thought the bear a bore.",
+                                "At last the bear could bear no more",
+                                "Of that boar that bored him on the moor,",
+                                "And so one morn he bored the boar—",
+                                "That boar will bore the bear no more."
+                            ]
+                        }
                     ]
                 }
             ],
@@ -142,6 +176,40 @@
                         "OALD_US_Pron_b_3.mp4",
                         "OALD_US_Pron_b_4.mp4",
                         "OALD_US_Pron_b_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Bob’s building brick buildings by Botany Bay." },
+                        {
+                            "text": "How many berries could a bare berry carry, if a bare berry could carry berries?"
+                        },
+                        { "text": "The busy bee buzzed the buzzy busy beehive." },
+                        {
+                            "text": "I bought a bit of baking powder and baked a batch of biscuits. I brought a big basket of biscuits back to the bakery and baked a basket of big biscuits. Then I took the big basket of biscuits and the basket of big biscuits and mixed the big biscuits with the basket of biscuits that was next to the big basket and put a bunch of biscuits from the basket into a biscuit mixer and brought the basket of biscuits and the box of mixed biscuits and the biscuit mixer to the bakery and opened a tin of sardines."
+                        },
+                        {
+                            "title": "Betty Botter",
+                            "lines": [
+                                "Betty Botter bought some butter. But, she said, the butter’s bitter.",
+                                "If I put it in my batter. It will make my batter bitter.",
+                                "But a bit of better butter. That would make my batter better.",
+                                "So she bought a bit of butter. Better than her bitter butter.",
+                                "And she put it in her batter. And the batter was not bitter.",
+                                "So it was better Betty Botter bought a bit of better butter."
+                            ]
+                        },
+                        {
+                            "title": "The Bear and the Boar",
+                            "lines": [
+                                "Once upon a barren moor",
+                                "There dwelt a bear, also a boar.",
+                                "The bear could not bear the boar.",
+                                "The boar thought the bear a bore.",
+                                "At last the bear could bear no more",
+                                "Of that boar that bored him on the moor,",
+                                "And so one morn he bored the boar—",
+                                "That boar will bore the bear no more."
+                            ]
+                        }
                     ]
                 }
             ]
@@ -168,6 +236,29 @@
                         "OALD_UK_Pron_t_3.mp4",
                         "OALD_UK_Pron_t_4.mp4",
                         "OALD_UK_Pron_t_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "“Under the mother otter,” muttered the other otter." },
+                        { "text": "To have truck to truck two trucks of truck." },
+                        {
+                            "text": "Don’t trouble trouble, until trouble troubles you! If you trouble trouble, triple trouble troubles you!"
+                        },
+                        {
+                            "text": "If three tree turtles took turns talking tongue twisters, where are the twisters that the three tree turtles talked about?"
+                        },
+                        {
+                            "text": "She can tie a tie and untie a tie. If she can tie a tie and untie a tie, why can’t I tie a tie and untie a tie?"
+                        },
+                        {
+                            "title": "Twister of Twists",
+                            "lines": [
+                                "A twister of twists once twisted a twist,",
+                                "And the twist that he twisted was a three-twisted twist,",
+                                "Now in twisting this twist,",
+                                "If a twist should untwist,",
+                                "Would the twist that untwisted untwist the twists?"
+                            ]
+                        }
                     ]
                 }
             ],
@@ -189,6 +280,29 @@
                         "OALD_US_Pron_t_3.mp4",
                         "OALD_US_Pron_t_4.mp4",
                         "OALD_US_Pron_t_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "“Under the mother otter,” muttered the other otter." },
+                        { "text": "To have truck to truck two trucks of truck." },
+                        {
+                            "text": "Don’t trouble trouble, until trouble troubles you! If you trouble trouble, triple trouble troubles you!"
+                        },
+                        {
+                            "text": "If three tree turtles took turns talking tongue twisters, where are the twisters that the three tree turtles talked about?"
+                        },
+                        {
+                            "text": "She can tie a tie and untie a tie. If she can tie a tie and untie a tie, why can’t I tie a tie and untie a tie?"
+                        },
+                        {
+                            "title": "Twister of Twists",
+                            "lines": [
+                                "A twister of twists once twisted a twist,",
+                                "And the twist that he twisted was a three-twisted twist,",
+                                "Now in twisting this twist,",
+                                "If a twist should untwist,",
+                                "Would the twist that untwisted untwist the twists?"
+                            ]
+                        }
                     ]
                 }
             ]
@@ -388,7 +502,7 @@
             "british": [
                 {
                     "initial": "<strong>j</strong>oke - /dʒəʊk/",
-                    "medial": "en<strong>j</strong>oy - /ɪn'dʒɔɪ /",
+                    "medial": "en<strong>j</strong>oy - /ɪn'dʒɔɪ/",
                     "final": "bri<strong>dge</strong> - /brɪdʒ/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693912675?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_j_1.mp4",
@@ -409,7 +523,7 @@
             "american": [
                 {
                     "initial": "<strong>j</strong>oke - /dʒoʊk/",
-                    "medial": "en<strong>j</strong>oy - /ɪn'dʒɔɪ /",
+                    "medial": "en<strong>j</strong>oy - /ɪn'dʒɔɪ/",
                     "final": "bri<strong>dge</strong> - /brɪdʒ/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693905923?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_j_1.mp4",
@@ -436,7 +550,7 @@
                 {
                     "initial": "<strong>f</strong>un - /fʌn/",
                     "medial": "tra<strong>ff</strong>ic - /'træfɪk/",
-                    "final": "o<strong>ff</strong> - /ɒf /",
+                    "final": "o<strong>ff</strong> - /ɒf/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693912052?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_f_1.mp4",
                     "practiceOnlineVideos": [
@@ -865,7 +979,7 @@
             "id": 7,
             "british": [
                 {
-                    "initial": "<strong>m</strong>ap - /mæp /",
+                    "initial": "<strong>m</strong>ap - /mæp/",
                     "medial": "e<strong>m</strong>ail - /'i:meɪl/",
                     "final": "ar<strong>m</strong> - /ɑ:m/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693911914?byline=0&portrait=0&title=0",
@@ -886,7 +1000,7 @@
             ],
             "american": [
                 {
-                    "initial": "<strong>m</strong>ap - /mæp /",
+                    "initial": "<strong>m</strong>ap - /mæp/",
                     "medial": "e<strong>m</strong>ail - /'i:meɪl/",
                     "final": "ar<strong>m</strong> - /ɑ:rm/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693905493?byline=0&portrait=0&title=0",
@@ -913,7 +1027,7 @@
             "british": [
                 {
                     "initial": "<strong>n</strong>ow - /naʊ/",
-                    "medial": "u<strong>n</strong>it - /'ju:nɪt /",
+                    "medial": "u<strong>n</strong>it - /'ju:nɪt/",
                     "final": "su<strong>n</strong> - /sʌn/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693911960?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_n_1.mp4",
@@ -934,7 +1048,7 @@
             "american": [
                 {
                     "initial": "<strong>n</strong>ow - /naʊ/",
-                    "medial": "u<strong>n</strong>it - /'ju:nɪt /",
+                    "medial": "u<strong>n</strong>it - /'ju:nɪt/",
                     "final": "su<strong>n</strong> - /sʌn/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693905525?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_n_1.mp4",
@@ -1007,7 +1121,7 @@
             "british": [
                 {
                     "initial": "<strong>l</strong>eg - /leg/",
-                    "medial": "co<strong>l</strong>our - /'kʌlə /",
+                    "medial": "co<strong>l</strong>our - /'kʌlə/",
                     "final": "ba<strong>ll</strong> - /bɔ:l/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693912771?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_L_1.mp4",
@@ -1028,7 +1142,7 @@
             "american": [
                 {
                     "initial": "<strong>l</strong>eg - /leg/",
-                    "medial": "co<strong>l</strong>our - /'kʌlər /",
+                    "medial": "co<strong>l</strong>our - /'kʌlər/",
                     "final": "ba<strong>ll</strong> - /bɔ:l/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693905962?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_L_1.mp4",
@@ -1054,7 +1168,7 @@
             "british": [
                 {
                     "initial": "<strong>r</strong>ed - /red/",
-                    "medial": "a<strong>rr</strong>ive - /ə'raɪv /",
+                    "medial": "a<strong>rr</strong>ive - /ə'raɪv/",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693912912?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_r_1.mp4",
@@ -1075,7 +1189,7 @@
             "american": [
                 {
                     "initial": "<strong>r</strong>ed - /red/",
-                    "medial": "a<strong>rr</strong>ive - /ə'raɪv /",
+                    "medial": "a<strong>rr</strong>ive - /ə'raɪv/",
                     "final": "ca<strong>r</strong> - /kɑ:r/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693905994?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_r_1.mp4",
@@ -1148,7 +1262,7 @@
             "british": [
                 {
                     "initial": "<strong>w</strong>et - /wet/",
-                    "medial": "a<strong>w</strong>ay - /ə'weɪ /",
+                    "medial": "a<strong>w</strong>ay - /ə'weɪ/",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693913744?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_w_1.mp4",
@@ -1169,7 +1283,7 @@
             "american": [
                 {
                     "initial": "<strong>w</strong>et - /wet/",
-                    "medial": "a<strong>w</strong>ay - /ə'weɪ /",
+                    "medial": "a<strong>w</strong>ay - /ə'weɪ/",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693906145?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_w_1.mp4",
@@ -1243,7 +1357,7 @@
             "british": null,
             "american": [
                 {
-                    "initial": "ci<strong>t</strong>y - /'sɪt̬i /",
+                    "initial": "ci<strong>t</strong>y - /'sɪt̬i/",
                     "medial": "",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/708223419?byline=0&portrait=0&title=0",
@@ -1253,11 +1367,7 @@
                         "https://player.vimeo.com/video/708223419?byline=0&portrait=0&title=0",
                         null
                     ],
-                    "practiceOfflineVideos": [
-                        null,
-                        "OALD_US_Pron_t_flapped_1.mp4",
-                        null
-                    ]
+                    "practiceOfflineVideos": [null, "OALD_US_Pron_t_flapped_1.mp4", null]
                 }
             ]
         }
@@ -1504,8 +1614,8 @@
             "id": 15,
             "british": [
                 {
-                    "initial": "<strong>ar</strong>m - /ɑ:m /",
-                    "medial": "f<strong>a</strong>ther - /'fɑ:ðə /",
+                    "initial": "<strong>ar</strong>m - /ɑ:m/",
+                    "medial": "f<strong>a</strong>ther - /'fɑ:ðə/",
                     "final": "c<strong>ar</strong> - /kɑ:/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693915052?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_ar_1.mp4",
@@ -1525,8 +1635,8 @@
             ],
             "american": [
                 {
-                    "initial": "<strong>ar</strong>m - /ɑ:rm /",
-                    "medial": "f<strong>a</strong>ther - /'fɑ:ðər /",
+                    "initial": "<strong>ar</strong>m - /ɑ:rm/",
+                    "medial": "f<strong>a</strong>ther - /'fɑ:ðər/",
                     "final": "hurr<strong>ah</strong> - /hə'rɑ:/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693906584?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_ah_1.mp4",
@@ -1672,7 +1782,7 @@
             "id": 11,
             "british": [
                 {
-                    "initial": "act<strong>u</strong>al - /'æktʃuəl /",
+                    "initial": "act<strong>u</strong>al - /'æktʃuəl/",
                     "medial": "",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693914893?byline=0&portrait=0&title=0",
@@ -1693,7 +1803,7 @@
             ],
             "american": [
                 {
-                    "initial": "act<strong>u</strong>al - /'æktʃuəl /",
+                    "initial": "act<strong>u</strong>al - /'æktʃuəl/",
                     "medial": "",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693906474?byline=0&portrait=0&title=0",
@@ -1813,8 +1923,8 @@
             "id": 7,
             "british": [
                 {
-                    "initial": "<strong>ear</strong>th - /ɜ:θ /",
-                    "medial": "b<strong>ir</strong>d - /bɜ:d /",
+                    "initial": "<strong>ear</strong>th - /ɜ:θ ",
+                    "medial": "b<strong>ir</strong>d - /bɜ:d/",
                     "final": "f<strong>ur</strong> - /fɜ:/",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693914679?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_er_1.mp4",
@@ -1841,8 +1951,8 @@
             "british": null,
             "american": [
                 {
-                    "initial": "<strong>ear</strong>th - /ɜ:rθ /",
-                    "medial": "b<strong>ir</strong>d - /bɜ:rd /",
+                    "initial": "<strong>ear</strong>th - /ɜ:rθ/",
+                    "medial": "b<strong>ir</strong>d - /bɜ:rd/",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/693906374?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_er_1.mp4",
@@ -1914,8 +2024,8 @@
             "id": 16,
             "british": [
                 {
-                    "initial": "<strong>en</strong> suite - /ˌɒ̃ 'swi:t /",
-                    "medial": "p<strong>en</strong>ch<strong>ant</strong> - /'pɒ̃ʃɒ̃ /",
+                    "initial": "<strong>en</strong> suite - /ˌɒ̃ 'swi:t/",
+                    "medial": "p<strong>en</strong>ch<strong>ant</strong> - /'pɒ̃ʃɒ̃/",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/705042786?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_UK_Pron_en_1.mp4",
@@ -1935,8 +2045,8 @@
             ],
             "american": [
                 {
-                    "initial": "<strong>en</strong> suite - /ˌɑ̃: 'swi:t /",
-                    "medial": "p<strong>en</strong>ch<strong>ant</strong> - /'pɒ̃ʃɒ̃ /",
+                    "initial": "<strong>en</strong> suite - /ˌɑ̃: 'swi:t/",
+                    "medial": "p<strong>en</strong>ch<strong>ant</strong> - /'pɒ̃ʃɒ̃/",
                     "final": "",
                     "mainOnlineVideo": "https://player.vimeo.com/video/705400529?byline=0&portrait=0&title=0",
                     "mainOfflineVideo": "OALD_US_Pron_en_1.mp4",

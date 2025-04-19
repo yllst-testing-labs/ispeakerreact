@@ -28,7 +28,7 @@
     "alert": {
         "alertOnlineVideo": "Want to watch the video offline? Head to the “Settings” page to download it.",
         "alertAppNoInternet": "No Internet connection. Please check your connection and try again.",
-        "appNewVersionGitHub": "A new update is found. Go to the project's GitHub page for more information.",
+        "appNewVersionGitHub": "A new update is found. Go to the project’s GitHub page for more information.",
         "appVersionLatest": "You are already using the latest version.",
         "appUpdateError": "Error checking for updates. Please try again.",
         "rateLimited": "Cannot check for new version due to rate limiting. Please try again after {{time}}."
@@ -106,7 +106,7 @@
         "recordInstructions": "Watch pronunciation clips, and use the <0>{{icon}}</0> button to record your own sound.",
         "reviewInstructions": "How do you pronounce the sound <0>{{phoneme}}</0>?",
         "tongueTwister": "Tongue twister",
-        "tongueTwisterInstructions": "Improve your pronunciation and fluency by pronouncing these tongue twisters.",
+        "tongueTwisterInstructions": "Practice these tongue twisters to improve your pronunciation, fluency, and control of tricky sounds. Try to say them as fast as possible, but correctly.",
         "soundInstructions": {
             "howToPronounce": "How to pronounce this sound",
             "consonant": {
@@ -246,7 +246,7 @@
                 ],
                 "urFur_r": [
                     "This is the r-colored mid-central vowel found in American English. It is a type of long vowel sound.",
-                    "To pronounce this phoneme, start with the tongue in a central position and curl the tip slightly upward toward the roof of the mouth to create the 'r' coloring. The vocal cords vibrate throughout."
+                    "To pronounce this phoneme, start with the tongue in a central position and curl the tip slightly upward toward the roof of the mouth to create the “r” coloring. The vocal cords vibrate throughout."
                 ],
                 "uCup": [
                     "This is the open-mid back unrounded vowel. It is a type of short vowel sound.",
@@ -278,7 +278,7 @@
                 ],
                 "aEnSuite": [
                     "This is the open back nasal vowel /ɑ̃/. It is a type of nasal vowel sound, found in French loanwords.",
-                    "To pronounce this phoneme, start with the tongue in the position for /ɑ/ (as in 'father'), then lower the soft palate to allow air to pass through the nose. The lips stay relaxed and unrounded while the sound is nasalized."
+                    "To pronounce this phoneme, start with the tongue in the position for /ɑ/ (as in “father”), then lower the soft palate to allow air to pass through the nose. The lips stay relaxed and unrounded while the sound is nasalized."
                 ]
             },
             "diphthong": {
@@ -312,7 +312,7 @@
                 ],
                 "earNear_r": [
                     "This is the r-colored diphthong that starts with /ɪ/ and moves to /r/ in American English. It is a type of diphthong.",
-                    "To pronounce this phoneme, start with the tongue high and toward the front, then curl the tip toward the roof of the mouth to create the 'r' coloring. The lips start slightly spread and end in a more rounded position."
+                    "To pronounce this phoneme, start with the tongue high and toward the front, then curl the tip toward the roof of the mouth to create the “r” coloring. The lips start slightly spread and end in a more rounded position."
                 ],
                 "airHair": [
                     "This is the centering diphthong that starts with /e/ and moves to /ə/ in British English. It is a type of diphthong.",
@@ -320,7 +320,7 @@
                 ],
                 "airHair_r": [
                     "This is the r-colored diphthong that starts with /e/ and moves to /r/ in American English. It is a type of diphthong.",
-                    "To pronounce this phoneme, start with the tongue in a mid-front position, then curl the tip toward the roof of the mouth to create the 'r' coloring. The lips start slightly spread and end in a more rounded position."
+                    "To pronounce this phoneme, start with the tongue in a mid-front position, then curl the tip toward the roof of the mouth to create the “r” coloring. The lips start slightly spread and end in a more rounded position."
                 ],
                 "urePure": [
                     "This is the centering diphthong that starts with /ʊ/ and moves to /ə/ in British English. It is a type of diphthong.",
@@ -328,7 +328,7 @@
                 ],
                 "urePure_r": [
                     "This is the r-colored diphthong that starts with /ʊ/ and moves to /r/ in American English. It is a type of diphthong.",
-                    "To pronounce this phoneme, start with the tongue high and toward the back with rounded lips, then curl the tip toward the roof of the mouth to create the 'r' coloring. The lips start rounded and end in a more rounded position."
+                    "To pronounce this phoneme, start with the tongue high and toward the back with rounded lips, then curl the tip toward the roof of the mouth to create the “r” coloring. The lips start rounded and end in a more rounded position."
                 ]
             }
         }
@@ -553,7 +553,7 @@
                 ],
                 "homophones": [
                     "Look at the two words. Are they pronounced the same or different?",
-                    "Select “Yes” if you think the pronunciation is the same, and “No” if you think it's different.",
+                    "Select “Yes” if you think the pronunciation is the same, and “No” if you think it’s different.",
                     "Can you complete the game before the timer runs out?",
                     "When you want to stop, select “Quit” to see your score in this session."
                 ],
@@ -657,8 +657,8 @@
             "expressingCertaintyReview1": "I can express certainty in a variety of ways.",
             "expressingCertaintyReview2": "I can express uncertainty in a variety of ways.",
             "expressingIgnoranceTitle": "Expressing ignorance",
-            "expressingIgnoranceInfo": "There are different ways of telling people that you haven't got the information they're asking for.",
-            "expressingIgnoranceCheckbox": "Saying that you don't know something",
+            "expressingIgnoranceInfo": "There are different ways of telling people that you haven’t got the information they’re asking for.",
+            "expressingIgnoranceCheckbox": "Saying that you don’t know something",
             "expressingIgnoranceReview": "I can say that I don’t know something in a variety of ways.",
             "expressingLikelihoodTitle": "Expressing likelihood",
             "expressingLikelihoodInfo": "When you are talking about possible situations, you can express how likely you think they are.",
@@ -667,7 +667,7 @@
             "expressingLikelihoodReview1": "I can say things are likely in a variety of ways.",
             "expressingLikelihoodReview2": "I can say things are unlikely in a variety of ways.",
             "speculatingTitle": "Speculating",
-            "speculatingInfo": "There are various ways of giving your opinion when you don't know all the details or facts about something.",
+            "speculatingInfo": "There are various ways of giving your opinion when you don’t know all the details or facts about something.",
             "speculatingCheckbox": "Speculating",
             "speculatingReview": "I can speculate in a variety of ways."
         },
@@ -694,7 +694,7 @@
             "makingComplaintsCheckbox": "Making complaints",
             "makingComplaintsReview": "I can make complaints in a variety of ways.",
             "thankingSomebodyTitle": "Thanking somebody",
-            "thankingSomebodyInfo": "When someone gives you something, or does something for you, there are different ways of saying more than just a brief 'thank you'.",
+            "thankingSomebodyInfo": "When someone gives you something, or does something for you, there are different ways of saying more than just a brief ‘thank you’.",
             "thankingSomebodyCheckbox1": "Thanking somebody for something",
             "thankingSomebodyCheckbox2": "Responding to thanks",
             "thankingSomebodyReview1": "I can thank somebody for something in a variety of ways.",
@@ -758,7 +758,7 @@
             "givingOrdersCheckbox": "Telling somebody to do something",
             "givingOrdersReview": "I can tell somebody to do something in a variety of ways.",
             "makingRequestsTitle": "Making requests",
-            "makingRequestsInfo": "Whether you are in shops or restaurants or in somebody's home, you can use polite questions to get what you want.",
+            "makingRequestsInfo": "Whether you are in shops or restaurants or in somebody’s home, you can use polite questions to get what you want.",
             "makingRequestsCheckbox1": "Making requests",
             "makingRequestsCheckbox2": "Responding to a request",
             "makingRequestsReview1": "I can make requests in a variety of ways.",
@@ -947,7 +947,7 @@
                     "Explain which part of the picture you’re talking about.",
                     "Speculate about what might be true about the picture or photograph.",
                     "If appropriate, describe what you think might have happened before or after the scene in the picture or photograph.",
-                    "Ff the photograph or picture contains people, describe what you think the relationship is between them.",
+                    "If the photograph or picture contains people, describe what you think the relationship is between them.",
                     "Use the present continuous tense to say what is happening in the picture.",
                     "If you have to look at two photographs or pictures, think about how you could compare them.",
                     "Try to guess which questions you may be asked about the photograph or picture.",
@@ -1295,7 +1295,7 @@
         "featureSameContentDesc": "The offline version includes all the same functions, exercises, and content as the online app—so you won’t miss a thing. You can also manually check for updates anytime in the settings.",
         "faq": "Frequently asked questions",
         "faqSystemReqTitle": "What are the system requirements?",
-        "faqSystemReqAnswer": "If your device can run the latest version of a modern browser (e.g. Google Chrome, Microsoft Edge, or Mozilla Firefox) smoothly, it should work just fine. You'll also need at least 2GB of free storage for the offline version.",
+        "faqSystemReqAnswer": "If your device can run the latest version of a modern browser (e.g. Google Chrome, Microsoft Edge, or Mozilla Firefox) smoothly, it should work just fine. You’ll also need at least 2GB of free storage for the offline version.",
         "faqCheckUpdatesTitle": "How do I check for updates?",
         "faqCheckUpdatesAnswer": "By going to the Settings section, you can click on the “Check for updates” button. A notification will tell you if there’s a new version or not. We plan to add automatic updates in the future — if you know coding, you can help! In the meantime, download the latest version from GitHub and replace all files with the new version.",
         "faqIsFreeTitle": "Is this app free?",

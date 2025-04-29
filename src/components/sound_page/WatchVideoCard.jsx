@@ -69,6 +69,10 @@ const WatchVideoCard = ({ videoData, accent, t, phoneme }) => {
         <>
             <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
                 <div className="card-body">
+                    <div className="text-xl font-semibold">
+                        {t("tabConversationExam.watchCard")}
+                    </div>
+                    <div className="divider divider-secondary mt-0 mb-4"></div>
                     <div className={`${iframeLoading ? "overflow-hidden" : ""}`}>
                         <div className="aspect-video">
                             <div className="relative h-full w-full">
@@ -113,7 +117,9 @@ const WatchVideoCard = ({ videoData, accent, t, phoneme }) => {
             {pronunciationInstructions && (
                 <div className="card card-lg card-border mb-6 w-full shadow-md dark:border-slate-600">
                     <div className="card-body">
-                        <h3 className="card-title font-semibold">{t("sound_page.soundInstructions.howToPronounce")}</h3>
+                        <h3 className="card-title font-semibold">
+                            {t("sound_page.soundInstructions.howToPronounce")}
+                        </h3>
                         <div className="divider divider-secondary m-0"></div>
                         <div className="space-y-4">
                             {pronunciationInstructions.map((instruction, index) => (

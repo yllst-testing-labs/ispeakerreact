@@ -62,7 +62,7 @@ const TongueTwister = ({ tongueTwisters, t, sound, accent }) => {
                 mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
             }
         };
-    }, []);
+    }, [currentAudioSource, currentAudioElement]);
 
     const startRecording = async (index) => {
         try {
@@ -182,16 +182,17 @@ const TongueTwister = ({ tongueTwisters, t, sound, accent }) => {
     }
 
     return (
-        <div className="mt-6">
-            <h4 className="mb-2 text-xl font-semibold">{t("sound_page.tongueTwister")}</h4>
-            <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        <div className="my-6">
+            <div className="divider divider-secondary"></div>
+            <h4 className="my-2 text-2xl font-semibold">{t("sound_page.tongueTwister")}</h4>
+            <p className="mb-4 text-gray-600 dark:text-gray-400">
                 {t("sound_page.tongueTwisterInstructions")}
             </p>
             <div className="space-y-4">
                 {tongueTwisters.map((twister, index) => (
                     <div key={index} className="card bg-base-200">
                         <div className="card-body text-base">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                                 <div className="flex-1">
                                     {twister.title && (
                                         <h5 className="mb-1 font-semibold">{twister.title}</h5>
@@ -210,14 +211,17 @@ const TongueTwister = ({ tongueTwisters, t, sound, accent }) => {
                                         </p>
                                     )}
                                 </div>
-                                <div className="flex items-center justify-end sm:justify-start space-x-2">
+                                <div className="flex items-center justify-end space-x-2 sm:justify-start">
                                     <button
                                         className={`btn btn-circle ${isRecording ? "btn-error" : "btn-primary"}`}
                                         onClick={
-                                            isRecording ? stopRecording : () => startRecording(index)
+                                            isRecording
+                                                ? stopRecording
+                                                : () => startRecording(index)
                                         }
                                         disabled={
-                                            isPlaying || (isRecording && currentPlayingIndex !== index)
+                                            isPlaying ||
+                                            (isRecording && currentPlayingIndex !== index)
                                         }
                                     >
                                         {isRecording && currentPlayingIndex === index ? (

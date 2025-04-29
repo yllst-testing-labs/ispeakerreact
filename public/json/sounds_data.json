@@ -329,6 +329,22 @@
                         "OALD_UK_Pron_d_3.mp4",
                         "OALD_UK_Pron_d_4.mp4",
                         "OALD_UK_Pron_d_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Double bubble gum bubbles double." },
+                        { "text": "Doctors diagnosed David and deemed he dreamed drunkenly." },
+                        {
+                            "text": "Deer, deer, oh dear, oh dear, your career as a deer is over here."
+                        },
+                        {
+                            "text": "How much dough would Bob Dole dole if Bob Dole could dole dough? Bob Dole would dole as much dough as Bob Dole could dole if Bob Dole could dole dough."
+                        },
+                        {
+                            "text": "How much dew does a dewdrop drop if dewdrops do drop dew? They do drop, they do as do dewdrops drop if dewdrops do drop dew."
+                        },
+                        {
+                            "text": "When a doctor doctors a doctor, does the doctor doing the doctoring doctor as the doctor being doctored wants to be doctored or does the doctor doing the doctoring doctor as he wants to doctor?"
+                        }
                     ]
                 }
             ],
@@ -350,6 +366,22 @@
                         "OALD_US_Pron_d_3.mp4",
                         "OALD_US_Pron_d_4.mp4",
                         "OALD_US_Pron_d_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Double bubble gum bubbles double." },
+                        { "text": "Doctors diagnosed David and deemed he dreamed drunkenly." },
+                        {
+                            "text": "Deer, deer, oh dear, oh dear, your career as a deer is over here."
+                        },
+                        {
+                            "text": "How much dough would Bob Dole dole if Bob Dole could dole dough? Bob Dole would dole as much dough as Bob Dole could dole if Bob Dole could dole dough."
+                        },
+                        {
+                            "text": "How much dew does a dewdrop drop if dewdrops do drop dew? They do drop, they do as do dewdrops drop if dewdrops do drop dew."
+                        },
+                        {
+                            "text": "When a doctor doctors a doctor, does the doctor doing the doctoring doctor as the doctor being doctored wants to be doctored or does the doctor doing the doctoring doctor as he wants to doctor?"
+                        }
                     ]
                 }
             ]
@@ -376,6 +408,16 @@
                         "OALD_UK_Pron_k_3.mp4",
                         "OALD_UK_Pron_k_4.mp4",
                         "OALD_UK_Pron_k_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Kate trekked to Bangkok with a backpack and checkbook." },
+                        { "text": "The kid kicked a kelpie kennel." },
+                        { "text": "Kebabs, kimchi, and ketchup in a Korean kitchen." },
+                        { "text": "Kevin can't backtalk in a kangaroo court." },
+                        { "text": "K keys on kiosk keyboards." },
+                        {
+                            "text": "A skunk sat on a stump and thunk the stump stunk, but the stump thunk the skunk stunk."
+                        }
                     ]
                 }
             ],
@@ -397,6 +439,16 @@
                         "OALD_US_Pron_k_3.mp4",
                         "OALD_US_Pron_k_4.mp4",
                         "OALD_US_Pron_k_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Kate trekked to Bangkok with a backpack and checkbook." },
+                        { "text": "The kid kicked a kelpie kennel." },
+                        { "text": "Kebabs, kimchi, and ketchup in a Korean kitchen." },
+                        { "text": "Kevin can't backtalk in a kangaroo court." },
+                        { "text": "K keys on kiosk keyboards." },
+                        {
+                            "text": "A skunk sat on a stump and thunk the stump stunk, but the stump thunk the skunk stunk."
+                        }
                     ]
                 }
             ]
@@ -423,6 +475,25 @@
                         "OALD_UK_Pron_g_3.mp4",
                         "OALD_UK_Pron_g_4.mp4",
                         "OALD_UK_Pron_g_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "Gillian's grandmother grew aghast and gulped at Gillian's grammar."
+                        },
+                        { "text": "Glittering glassy glossy glaciers." },
+                        { "text": "Blue glue gun, green glue gun." },
+                        { "text": "Gobbling gargoyles gobbled gobbling goblins." },
+                        {
+                            "text": "Glen forgot again the gambling game and Gavin got the gram of gold."
+                        },
+                        {
+                            "title": "Greedy Grandma",
+                            "lines": [
+                                "Greedy Grandma Gabby Grimmer grabbed a gallon of gummy goulash.",
+                                "If greedy Grandma Gabby Grimmer grabbed a gallon of gummy goulash,",
+                                "How many gallons of gummy goulash did greedy Grandma Gabby Grimmer grab?"
+                            ]
+                        }
                     ]
                 }
             ],
@@ -444,6 +515,25 @@
                         "OALD_US_Pron_g_3.mp4",
                         "OALD_US_Pron_g_4.mp4",
                         "OALD_US_Pron_g_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "Gillian's grandmother grew aghast and gulped at Gillian's grammar."
+                        },
+                        { "text": "Glittering glassy glossy glaciers." },
+                        { "text": "Blue glue gun, green glue gun." },
+                        { "text": "Gobbling gargoyles gobbled gobbling goblins." },
+                        {
+                            "text": "Glen forgot again the gambling game and Gavin got the gram of gold."
+                        },
+                        {
+                            "title": "Greedy Grandma",
+                            "lines": [
+                                "Greedy Grandma Gabby Grimmer grabbed a gallon of gummy goulash.",
+                                "If greedy Grandma Gabby Grimmer grabbed a gallon of gummy goulash,",
+                                "How many gallons of gummy goulash did greedy Grandma Gabby Grimmer grab?"
+                            ]
+                        }
                     ]
                 }
             ]
@@ -564,6 +654,25 @@
                         "OALD_UK_Pron_f_3.mp4",
                         "OALD_UK_Pron_f_4.mp4",
                         "OALD_UK_Pron_f_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "Fresh fried fish, fish fresh fried, fried fish fresh, fish fried fresh."
+                        },
+                        { "text": "Can a flying fish flee from a free fish fry?" },
+                        { "text": "Five fat friars frying flat fish." },
+                        { "text": "Fred fed Ted bread, and Ted fed Fred bread." },
+                        { "text": "I've never felt felt that felt like that felt felt." },
+                        {
+                            "title": "The Fisherman",
+                            "lines": [
+                                "There was a fisherman named Fisher",
+                                "who fished for some fish in a fissure.",
+                                "Till a fish with a grin,",
+                                "pulled the fisherman in.",
+                                "Now they're fishing the fissure for Fisher."
+                            ]
+                        }
                     ]
                 }
             ],
@@ -585,6 +694,25 @@
                         "OALD_US_Pron_f_3.mp4",
                         "OALD_US_Pron_f_4.mp4",
                         "OALD_US_Pron_f_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "Fresh fried fish, fish fresh fried, fried fish fresh, fish fried fresh."
+                        },
+                        { "text": "Can a flying fish flee from a free fish fry?" },
+                        { "text": "Five fat friars frying flat fish." },
+                        { "text": "Fred fed Ted bread, and Ted fed Fred bread." },
+                        { "text": "I've never felt felt that felt like that felt felt." },
+                        {
+                            "title": "The Fisherman",
+                            "lines": [
+                                "There was a fisherman named Fisher",
+                                "who fished for some fish in a fissure.",
+                                "Till a fish with a grin,",
+                                "pulled the fisherman in.",
+                                "Now they're fishing the fissure for Fisher."
+                            ]
+                        }
                     ]
                 }
             ]
@@ -611,6 +739,14 @@
                         "OALD_UK_Pron_v_3.mp4",
                         "OALD_UK_Pron_v_4.mp4",
                         "OALD_UK_Pron_v_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Vlad and Victor videoed various volatile volcanoes." },
+                        { "text": "Vincent vowed vengeance very vehemently." },
+                        { "text": "Vacant vehicles vanished in Venezuela." },
+                        { "text": "A version of the vision was visible to the vicar." },
+                        { "text": "The view over Dover isn't overly vivid." },
+                        { "text": "Virtuous volunteers value aloe vera." }
                     ]
                 }
             ],
@@ -632,6 +768,14 @@
                         "OALD_US_Pron_v_3.mp4",
                         "OALD_US_Pron_v_4.mp4",
                         "OALD_US_Pron_v_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Vlad and Victor videoed various volatile volcanoes." },
+                        { "text": "Vincent vowed vengeance very vehemently." },
+                        { "text": "Vacant vehicles vanished in Venezuela." },
+                        { "text": "A version of the vision was visible to the vicar." },
+                        { "text": "The view over Dover isn't overly vivid." },
+                        { "text": "Virtuous volunteers value aloe vera." }
                     ]
                 }
             ]
@@ -662,6 +806,26 @@
                         "OALD_UK_Pron_TH_unvoiced_3.mp4",
                         "OALD_UK_Pron_TH_unvoiced_4.mp4",
                         "OALD_UK_Pron_TH_unvoiced_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Thirty-six thick silk threads." },
+                        { "text": "Three tired tigers try to throw three trees." },
+                        {
+                            "text": "I thought a thought. But the thought I thought wasn't the thought I thought I thought."
+                        },
+                        {
+                            "text": "Thirty-three thousand people think that Thursday is their thirtieth birthday."
+                        },
+                        {
+                            "text": "They think that their teeth get thinner at times they want to taste thick meat."
+                        },
+                        {
+                            "title": "King Thistle",
+                            "lines": [
+                                "If King Thistle stuck a thousand thistles in the thistle of his thumb,",
+                                "How many thistles did King Thistle stick in the thistle of his thumb?"
+                            ]
+                        }
                     ]
                 }
             ],
@@ -683,6 +847,26 @@
                         "OALD_US_Pron_TH_unvoiced_3.mp4",
                         "OALD_US_Pron_TH_unvoiced_4.mp4",
                         "OALD_US_Pron_TH_unvoiced_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Thirty-six thick silk threads." },
+                        { "text": "Three tired tigers try to throw three trees." },
+                        {
+                            "text": "I thought a thought. But the thought I thought wasn't the thought I thought I thought."
+                        },
+                        {
+                            "text": "Thirty-three thousand people think that Thursday is their thirtieth birthday."
+                        },
+                        {
+                            "text": "They think that their teeth get thinner at times they want to taste thick meat."
+                        },
+                        {
+                            "title": "King Thistle",
+                            "lines": [
+                                "If King Thistle stuck a thousand thistles in the thistle of his thumb,",
+                                "How many thistles did King Thistle stick in the thistle of his thumb?"
+                            ]
+                        }
                     ]
                 }
             ]
@@ -713,6 +897,28 @@
                         "OALD_UK_Pron_TH_voiced_3.mp4",
                         "OALD_UK_Pron_TH_voiced_4.mp4",
                         "OALD_UK_Pron_TH_voiced_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "There those thousand thinkers were thinking how did the other three thieves go through."
+                        },
+                        {
+                            "text": "Is it this, that, those, these, and there or for when that I eat this?"
+                        },
+                        {
+                            "text": "They thankfully think this thing is the best thing that they can throw the three times they need to throw a thing."
+                        },
+                        {
+                            "text": "Thank the other three brothers on their father's mother's brother's side."
+                        },
+                        {
+                            "title": "Weather",
+                            "lines": [
+                                "Whether the weather is fine or whether the weather is not.",
+                                "Whether the weather is cold or whether the weather is hot.",
+                                "We'll weather the weather whether we like it or not."
+                            ]
+                        }
                     ]
                 }
             ],
@@ -734,6 +940,29 @@
                         "OALD_US_Pron_TH_voiced_3.mp4",
                         "OALD_US_Pron_TH_voiced_4.mp4",
                         "OALD_US_Pron_TH_voiced_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        {
+                            "text": "There those thousand thinkers were thinking how did the other three thieves go through."
+                        },
+
+                        {
+                            "text": "Is it this, that, those, these, and there or for when that I eat this?"
+                        },
+                        {
+                            "text": "They thankfully think this thing is the best thing that they can throw the three times they need to throw a thing."
+                        },
+                        {
+                            "text": "Thank the other three brothers on their father's mother's brother's side."
+                        },
+                        {
+                            "title": "Weather",
+                            "lines": [
+                                "Whether the weather is fine or whether the weather is not.",
+                                "Whether the weather is cold or whether the weather is hot.",
+                                "We'll weather the weather whether we like it or not."
+                            ]
+                        }
                     ]
                 }
             ]
@@ -995,6 +1224,24 @@
                         "OALD_UK_Pron_m_3.mp4",
                         "OALD_UK_Pron_m_4.mp4",
                         "OALD_UK_Pron_m_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "A missing mixture measure." },
+                        { "text": "Mary makes a mess most Mondays." },
+                        { "text": "Macho musclemen moving mountains at midday." },
+                        { "text": "I miss my Swiss miss and my Swiss miss misses me." },
+                        {
+                            "text": "Imagine an imaginary menagerie manager imagining managing an imaginary menagerie?"
+                        },
+                        {
+                            "title": "Mary Mac",
+                            "lines": [
+                                "Mary Mac's mother's making Mary Mac marry me.",
+                                "My mother's making me marry Mary Mac.",
+                                "Will I always be so merry when Mary's taking care of me?",
+                                "Will I always be so merry when I marry Mary Mac?"
+                            ]
+                        }
                     ]
                 }
             ],
@@ -1016,6 +1263,24 @@
                         "OALD_US_Pron_m_3.mp4",
                         "OALD_US_Pron_m_4.mp4",
                         "OALD_US_Pron_m_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "A missing mixture measure." },
+                        { "text": "Mary makes a mess most Mondays." },
+                        { "text": "Macho musclemen moving mountains at midday." },
+                        { "text": "I miss my Swiss miss and my Swiss miss misses me." },
+                        {
+                            "text": "Imagine an imaginary menagerie manager imagining managing an imaginary menagerie?"
+                        },
+                        {
+                            "title": "Mary Mac",
+                            "lines": [
+                                "Mary Mac's mother's making Mary Mac marry me.",
+                                "My mother's making me marry Mary Mac.",
+                                "Will I always be so merry when Mary's taking care of me?",
+                                "Will I always be so merry when I marry Mary Mac?"
+                            ]
+                        }
                     ]
                 }
             ]
@@ -1042,6 +1307,26 @@
                         "OALD_UK_Pron_n_3.mp4",
                         "OALD_UK_Pron_n_4.mp4",
                         "OALD_UK_Pron_n_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Nine nice night nurses nursing nicely." },
+                        {
+                            "text": "Nancy knows no banana names if Nancy knew banana names Nancy would know bananas."
+                        },
+                        { "text": "Many an anemone sees an enemy anemone." },
+                        { "text": "The nanny is conning Donny into binning nice onions." },
+                        {
+                            "text": "A noisy nattering nest of nomadic narwhals nodding and nuzzling noses."
+                        },
+                        {
+                            "title": "Needles",
+                            "lines": [
+                                "I need not your needles, they're needless to me",
+                                "For needing needles is needless, you see",
+                                "But did my neat trousers but need to be kneed,",
+                                "I then should have need of your needles indeed."
+                            ]
+                        }
                     ]
                 }
             ],
@@ -1063,6 +1348,26 @@
                         "OALD_US_Pron_n_3.mp4",
                         "OALD_US_Pron_n_4.mp4",
                         "OALD_US_Pron_n_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Nine nice night nurses nursing nicely." },
+                        {
+                            "text": "Nancy knows no banana names if Nancy knew banana names Nancy would know bananas."
+                        },
+                        { "text": "Many an anemone sees an enemy anemone." },
+                        { "text": "The nanny is conning Donny into binning nice onions." },
+                        {
+                            "text": "A noisy nattering nest of nomadic narwhals nodding and nuzzling noses."
+                        },
+                        {
+                            "title": "Needles",
+                            "lines": [
+                                "I need not your needles, they're needless to me",
+                                "For needing needles is needless, you see",
+                                "But did my neat trousers but need to be kneed,",
+                                "I then should have need of your needles indeed."
+                            ]
+                        }
                     ]
                 }
             ]

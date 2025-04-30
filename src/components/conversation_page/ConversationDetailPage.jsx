@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoChevronBackOutline } from "react-icons/io5";
@@ -231,6 +232,13 @@ const ConversationDetailPage = ({ id, accent, title, onBack }) => {
             )}
         </>
     );
+};
+
+ConversationDetailPage.propTypes = {
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    accent: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    onBack: PropTypes.func.isRequired,
 };
 
 export default ConversationDetailPage;

@@ -124,7 +124,7 @@
                 ],
                 "dDid": [
                     "This is the voiced alveolar plosive. It is a type of plosive consonant.",
-                    "To pronounce this phoneme, place the tongue against the alveolar ridge to block airflow, then release it. The vocal cords vibrate during the sound."
+                    "To pronounce this phoneme, place the tongue against the alveolar ridge (the ridge just behind your upper front teeth) to block airflow, then release it. The vocal cords vibrate during the sound."
                 ],
                 "kCat": [
                     "This is the voiceless velar plosive. It is a type of plosive consonant.",
@@ -144,7 +144,7 @@
                 ],
                 "ngSing": [
                     "This is the voiced velar nasal. It is a type of nasal consonant.",
-                    "To pronounce this phoneme, raise the back of your tongue to touch the soft palate (velum), blocking the mouth and allowing air to flow through the nose. The vocal cords vibrate. It is never found at the beginning of English words."
+                    "To pronounce this phoneme, raise the back of your tongue to touch the soft palate (the velum), blocking the mouth and allowing air to flow through the nose. The vocal cords vibrate. This sound is never found at the beginning of English words."
                 ],
                 "fFall": [
                     "This is the voiceless labiodental fricative. It is a type of fricative consonant.",
@@ -164,23 +164,23 @@
                 ],
                 "sSee": [
                     "This is the voiceless alveolar fricative. It is a type of fricative consonant.",
-                    "To pronounce this phoneme, place the tip of your tongue close to the alveolar ridge without touching it. Blow air through the narrow space. The vocal cords do not vibrate."
+                    "To pronounce this phoneme, place the tip of your tongue close to the alveolar ridge (the ridge just behind your upper front teeth) without touching it. Blow air through the narrow space. The vocal cords do not vibrate."
                 ],
                 "zZoo": [
                     "This is the voiced alveolar fricative. It is a type of fricative consonant.",
-                    "To pronounce this phoneme, place the tongue near the alveolar ridge and allow air to pass through while vibrating your vocal cords."
+                    "To pronounce this phoneme, place the tongue near the alveolar ridge (the ridge just behind your upper front teeth) and allow air to pass through while vibrating your vocal cords."
                 ],
                 "shShoe": [
                     "This is the voiceless postalveolar fricative. It is a type of fricative consonant.",
-                    "To pronounce this phoneme, raise the tongue close to the area just behind the alveolar ridge without touching it, and blow air through the narrow space. The vocal cords do not vibrate."
+                    "To pronounce this phoneme, raise the tongue close to the area just behind the alveolar ridge (the ridge just behind your upper front teeth) without touching it, and blow air through the narrow space. The vocal cords do not vibrate."
                 ],
                 "sVision": [
                     "This is the voiced postalveolar fricative. It is a type of fricative consonant.",
-                    "To pronounce this phoneme, position the tongue just behind the alveolar ridge and allow air to flow through while vibrating your vocal cords."
+                    "To pronounce this phoneme, position the tongue just behind the alveolar ridge (the ridge just behind your upper front teeth) and allow air to flow through while vibrating your vocal cords."
                 ],
                 "chChain": [
                     "This is the voiceless postalveolar affricate. It is a type of affricate consonant.",
-                    "To pronounce this phoneme, start by blocking the airflow with the tongue at the alveolar ridge, then release it into a fricative sound like /ʃ/. The vocal cords do not vibrate."
+                    "To pronounce this phoneme, start by blocking the airflow with the tongue at the alveolar ridge (the ridge just behind your upper front teeth), then release it into a fricative sound like /ʃ/. The vocal cords do not vibrate."
                 ],
                 "jJam": [
                     "This is the voiced postalveolar affricate. It is a type of affricate consonant.",
@@ -188,7 +188,7 @@
                 ],
                 "lLeg": [
                     "This is the voiced alveolar lateral approximant. It is a type of approximant consonant.",
-                    "To pronounce this phoneme, touch the tip of your tongue to the alveolar ridge and let air flow around the sides of the tongue. The vocal cords vibrate."
+                    "To pronounce this phoneme, touch the tip of your tongue to the alveolar ridge (the ridge just behind your upper front teeth) and let air flow around the sides of the tongue. The vocal cords vibrate."
                 ],
                 "rRed": [
                     "This is the voiced postalveolar approximant. It is a type of approximant consonant.",
@@ -196,11 +196,11 @@
                 ],
                 "yYes": [
                     "This is the voiced palatal approximant. It is a type of approximant consonant.",
-                    "To pronounce this phoneme, raise the middle of your tongue close to the hard palate and let air pass through. The vocal cords vibrate."
+                    "To pronounce this phoneme, raise the middle of your tongue close to the hard palate (the roof of your mouth) and let air pass through. The vocal cords vibrate."
                 ],
                 "wWet": [
                     "This is the voiced labio-velar approximant. It is a type of approximant consonant.",
-                    "To pronounce this phoneme, round your lips and raise the back of your tongue toward the soft palate. Let air pass through freely while vibrating the vocal cords."
+                    "To pronounce this phoneme, round your lips and raise the back of your tongue toward the soft palate (the roof of your mouth). Let air pass through freely while vibrating the vocal cords."
                 ],
                 "hHat": [
                     "This is the voiceless glottal fricative. It is a type of fricative consonant.",
@@ -208,11 +208,11 @@
                 ],
                 "chLoch": [
                     "This is the voiceless velar fricative. It is a type of fricative consonant.",
-                    "To pronounce this phoneme, raise the back of the tongue toward the soft palate and force air through the narrow gap. The vocal cords do not vibrate. This sound is common in Scottish English and some other languages."
+                    "To pronounce this phoneme, raise the back of the tongue toward the soft palate (the roof of your mouth) and force air through the narrow gap. The vocal cords do not vibrate. This sound is common in Scottish English, Vietnamese, and some other languages."
                 ],
                 "tCity": [
                     "This is the voiced alveolar tap or flap. It is a type of tap consonant, common in American English.",
-                    "To pronounce this phoneme, quickly tap the tip of your tongue against the alveolar ridge. It is similar to a very fast /d/ sound and often occurs between two vowels."
+                    "To pronounce this phoneme, quickly tap the tip of your tongue against the alveolar ridge (the ridge just behind your upper front teeth). It is similar to a very fast /d/ sound and often occurs between two vowels."
                 ]
             },
             "vowel": {

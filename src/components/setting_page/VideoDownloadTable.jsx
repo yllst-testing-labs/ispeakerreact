@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
-const VideoDownloadTable = ({ t, data, isDownloaded }) => {
+const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
     const [, setShowVerifyModal] = useState(false);
     const [showProgressModal, setShowProgressModal] = useState(false);
     const [selectedZip, setSelectedZip] = useState(null);
@@ -13,6 +13,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
     const [isSuccess, setIsSuccess] = useState(null);
     const [progressText, setProgressText] = useState("");
     const [isPercentage, setIsPercentage] = useState(false);
+    const [progressError, setProgressError] = useState(false);
 
     const verifyModal = useRef(null);
     const progressModal = useRef(null);
@@ -40,6 +41,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
             );
             setIsSuccess(true);
             setShowProgressModal(false); // Hide modal after success
+            if (onStatusChange) onStatusChange(); // Trigger parent to refresh status
         };
 
         const handleVerificationError = (event, data) => {
@@ -53,6 +55,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
             );
             setIsSuccess(false);
             setShowProgressModal(false); // Hide modal on error
+            if (onStatusChange) onStatusChange(); // Trigger parent to refresh status
         };
 
         window.electron.ipcRenderer.on("progress-update", handleProgressUpdate);
@@ -66,19 +69,50 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
             window.electron.ipcRenderer.removeAllListeners("verification-success");
             window.electron.ipcRenderer.removeAllListeners("verification-error");
         };
-    }, [t, data.messageKey, data.param]);
+    }, [t, data.messageKey, data.param, onStatusChange]);
 
-    const handleVerify = (zip) => {
+    const handleVerify = async (zip) => {
+        if (onStatusChange) {
+            // Await refresh if onStatusChange returns a promise
+            await onStatusChange();
+        }
+        // Find the latest file status after refresh
+        const fileStatus = isDownloaded.find((status) => status.zipFile === zip.zipFile);
+        const fileToVerify =
+            fileStatus && zip.name && (fileStatus.isDownloaded || fileStatus.hasExtractedFolder)
+                ? [{ name: zip.name }]
+                : [];
         setSelectedZip(zip);
-        const fileToVerify = zip.name ? [{ name: zip.name }] : [];
         setVerifyFiles(fileToVerify);
         setShowVerifyModal(true);
         verifyModal.current?.showModal();
     };
 
-    const handleNextModal = () => {
+    const handleNextModal = async () => {
+        if (onStatusChange) {
+            await onStatusChange();
+        }
+        const fileStatus = isDownloaded.find((status) => status.zipFile === selectedZip?.zipFile);
+        const fileToVerify =
+            fileStatus &&
+            selectedZip?.name &&
+            (fileStatus.isDownloaded || fileStatus.hasExtractedFolder)
+                ? [{ name: selectedZip.name }]
+                : [];
+        if (fileToVerify.length === 0) {
+            setShowVerifyModal(false);
+            setShowProgressModal(false);
+            setIsSuccess(false);
+            setProgressError(true);
+            setProgressText("");
+            setModalMessage(t("settingPage.videoDownloadSettings.verifyFailedMessage"));
+            progressModal.current?.showModal();
+            verifyModal.current?.close();
+            return;
+        }
         setShowVerifyModal(false);
         setShowProgressModal(true);
+        setProgressError(false);
         setProgressText(t("settingPage.videoDownloadSettings.verifyinProgressMsg"));
         window.electron.ipcRenderer.send("verify-and-extract", selectedZip);
         progressModal.current?.showModal();
@@ -164,7 +198,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
                                         <button
                                             type="button"
                                             className="btn btn-accent btn-sm"
-                                            onClick={() => handleVerify(item)}
+                                            onClick={async () => await handleVerify(item)}
                                             disabled={
                                                 !fileStatus ||
                                                 (!fileStatus.isDownloaded &&
@@ -216,10 +250,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
                                 </p>
                             </>
                         ) : (
-                            <p>
-                                Either you haven’t downloaded the file(s) yet, or the filename does
-                                not match.
-                            </p>
+                            <p>{t("settingPage.videoDownloadSettings.verifyFailedMessage")}</p>
                         )}
                     </div>
                     <div className="modal-action">
@@ -228,7 +259,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
                         </button>
                         <button
                             className="btn btn-primary"
-                            onClick={handleNextModal}
+                            onClick={async () => await handleNextModal()}
                             disabled={verifyFiles.length === 0}
                         >
                             {t("settingPage.videoDownloadSettings.nextBtn")}
@@ -247,7 +278,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
                               : t("settingPage.videoDownloadSettings.verifyFailed")}
                     </h3>
                     <div className="py-4">
-                        {showProgressModal === true ? (
+                        {showProgressModal === true && !progressError ? (
                             <>
                                 <p>{progressText}</p>
                                 <progress
@@ -266,7 +297,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded }) => {
                         <button
                             className="btn"
                             onClick={handleCloseProgressModal}
-                            disabled={showProgressModal === true}
+                            disabled={showProgressModal === true && !progressError}
                         >
                             {t("sound_page.closeBtn")}
                         </button>
@@ -281,6 +312,7 @@ VideoDownloadTable.propTypes = {
     t: PropTypes.func.isRequired,
     data: PropTypes.array.isRequired,
     isDownloaded: PropTypes.array.isRequired,
+    onStatusChange: PropTypes.func,
 };
 
 export default VideoDownloadTable;

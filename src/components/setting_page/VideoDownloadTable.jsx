@@ -14,6 +14,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
     const [progressText, setProgressText] = useState("");
     const [isPercentage, setIsPercentage] = useState(false);
     const [progressError, setProgressError] = useState(false);
+    const [verificationErrors, setVerificationErrors] = useState([]);
 
     const verifyModal = useRef(null);
     const progressModal = useRef(null);
@@ -41,6 +42,7 @@ const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
             );
             setIsSuccess(true);
             setShowProgressModal(false); // Hide modal after success
+            setVerificationErrors([]);
             if (onStatusChange) onStatusChange(); // Trigger parent to refresh status
         };
 
@@ -55,19 +57,29 @@ const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
             );
             setIsSuccess(false);
             setShowProgressModal(false); // Hide modal on error
+            setVerificationErrors([]);
             if (onStatusChange) onStatusChange(); // Trigger parent to refresh status
+        };
+
+        const handleVerificationErrors = (event, errors) => {
+            setVerificationErrors(errors);
+            setIsSuccess(false);
+            setShowProgressModal(false);
+            setModalMessage("");
         };
 
         window.electron.ipcRenderer.on("progress-update", handleProgressUpdate);
         window.electron.ipcRenderer.on("progress-text", handleProgressText);
         window.electron.ipcRenderer.on("verification-success", handleVerificationSuccess);
         window.electron.ipcRenderer.on("verification-error", handleVerificationError);
+        window.electron.ipcRenderer.on("verification-errors", handleVerificationErrors);
 
         return () => {
             window.electron.ipcRenderer.removeAllListeners("progress-update");
             window.electron.ipcRenderer.removeAllListeners("progress-text");
             window.electron.ipcRenderer.removeAllListeners("verification-success");
             window.electron.ipcRenderer.removeAllListeners("verification-error");
+            window.electron.ipcRenderer.removeAllListeners("verification-errors");
         };
     }, [t, data.messageKey, data.param, onStatusChange]);
 
@@ -78,8 +90,11 @@ const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
         }
         // Find the latest file status after refresh
         const fileStatus = isDownloaded.find((status) => status.zipFile === zip.zipFile);
+        // Allow verify if extracted folder exists, even if not downloaded
         const fileToVerify =
             fileStatus && zip.name && (fileStatus.isDownloaded || fileStatus.hasExtractedFolder)
+                ? [{ name: zip.name }]
+                : fileStatus && fileStatus.hasExtractedFolder && zip.name
                 ? [{ name: zip.name }]
                 : [];
         setSelectedZip(zip);
@@ -93,10 +108,11 @@ const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
             await onStatusChange();
         }
         const fileStatus = isDownloaded.find((status) => status.zipFile === selectedZip?.zipFile);
+        // Allow verify if extracted folder exists, even if not downloaded
         const fileToVerify =
-            fileStatus &&
-            selectedZip?.name &&
-            (fileStatus.isDownloaded || fileStatus.hasExtractedFolder)
+            fileStatus && selectedZip?.name && (fileStatus.isDownloaded || fileStatus.hasExtractedFolder)
+                ? [{ name: selectedZip.name }]
+                : fileStatus && fileStatus.hasExtractedFolder && selectedZip?.name
                 ? [{ name: selectedZip.name }]
                 : [];
         if (fileToVerify.length === 0) {
@@ -121,12 +137,14 @@ const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
 
     const handleCloseVerifyModal = () => {
         setShowVerifyModal(false);
-        //setVerifyFiles([]);
+        setVerificationErrors([]);
+        setModalMessage("");
         verifyModal.current?.close();
     };
 
     const handleCloseProgressModal = () => {
         setModalMessage("");
+        setVerificationErrors([]);
         progressModal.current?.close();
     };
 
@@ -288,6 +306,19 @@ const VideoDownloadTable = ({ t, data, isDownloaded, onStatusChange }) => {
                                 >
                                     {isPercentage ? `${progress}%` : null}
                                 </progress>
+                            </>
+                        ) : verificationErrors.length > 0 ? (
+                            <>
+                                <p>
+                                    {verificationErrors.some(err => err.type === "missing")
+                                        ? t("settingPage.videoDownloadSettings.fileMissing")
+                                        : t("settingPage.videoDownloadSettings.hashMismatch")}
+                                </p>
+                                <ul className="my-2 list-inside list-disc px-4">
+                                    {verificationErrors.map((err, idx) => (
+                                        <li key={idx}>{err.name}</li>
+                                    ))}
+                                </ul>
                             </>
                         ) : (
                             <p>{modalMessage}</p>

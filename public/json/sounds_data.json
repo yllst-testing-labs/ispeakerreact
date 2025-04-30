@@ -412,7 +412,7 @@
                     "tongueTwister": [
                         { "text": "Kate trekked to Bangkok with a backpack and checkbook." },
                         { "text": "The kid kicked a kelpie kennel." },
-                        { "text": "Kebabs, kimchi, and ketchup in a Korean kitchen." },
+                        { "text": "Six sick hicks nick six slick bricks with picks and sticks." },
                         { "text": "Kevin can't backtalk in a kangaroo court." },
                         { "text": "K keys on kiosk keyboards." },
                         {
@@ -443,7 +443,7 @@
                     "tongueTwister": [
                         { "text": "Kate trekked to Bangkok with a backpack and checkbook." },
                         { "text": "The kid kicked a kelpie kennel." },
-                        { "text": "Kebabs, kimchi, and ketchup in a Korean kitchen." },
+                        { "text": "Six sick hicks nick six slick bricks with picks and sticks." },
                         { "text": "Kevin can't backtalk in a kangaroo court." },
                         { "text": "K keys on kiosk keyboards." },
                         {
@@ -560,6 +560,12 @@
                         "OALD_UK_Pron_ch_3.mp4",
                         "OALD_UK_Pron_ch_4.mp4",
                         "OALD_UK_Pron_ch_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Chester Cheetah chews a chunk of cheep cheddar cheese." },
+                        { "text": "Charles and Richard chewed cheese and chewed chocolate." },
+                        { "text": "Cheerful children chant charming tunes." },
+                        { "text": "If two witches watched two watches, which witch would watch which watch?" }
                     ]
                 }
             ],
@@ -581,6 +587,12 @@
                         "OALD_US_Pron_ch_3.mp4",
                         "OALD_US_Pron_ch_4.mp4",
                         "OALD_US_Pron_ch_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Chester Cheetah chews a chunk of cheep cheddar cheese." },
+                        { "text": "Charles and Richard chewed cheese and chewed chocolate." },
+                        { "text": "Cheerful children chant charming tunes." },
+                        { "text": "If two witches watched two watches, which witch would watch which watch?" }
                     ]
                 }
             ]
@@ -607,6 +619,14 @@
                         "OALD_UK_Pron_j_3.mp4",
                         "OALD_UK_Pron_j_4.mp4",
                         "OALD_UK_Pron_j_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Justin jumping joyous joined in Johnna's jubilee." },
+                        { "text": "Jean, Joan, George and Gerald judged generally." },
+                        { "text": "Jolly Jack and joyful Jill jumping down the jagged hill." },
+                        { "text": "Georgia, put the orange juice into the fridge." },
+                        { "text": "Jenny in her blue jacket watches the jaguar jump in its cage." },
+                        { "text": "An aged judge urges the jury to be just but generous." }
                     ]
                 }
             ],
@@ -628,6 +648,14 @@
                         "OALD_US_Pron_j_3.mp4",
                         "OALD_US_Pron_j_4.mp4",
                         "OALD_US_Pron_j_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Justin jumping joyous joined in Johnna's jubilee." },
+                        { "text": "Jean, Joan, George and Gerald judged generally." },
+                        { "text": "Jolly Jack and joyful Jill jumping down the jagged hill." },
+                        { "text": "Georgia, put the orange juice into the fridge." },
+                        { "text": "Jenny in her blue jacket watches the jaguar jump in its cage." },
+                        { "text": "An aged judge urges the jury to be just but generous." }
                     ]
                 }
             ]
@@ -989,6 +1017,14 @@
                         "OALD_UK_Pron_s_3.mp4",
                         "OALD_UK_Pron_s_4.mp4",
                         "OALD_UK_Pron_s_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "I saw Susie sitting in a shoeshine shop. Where she sits she shines, and where she shines she sits." },
+                        { "text": "Sam's shop stocks short spotted socks." },
+                        { "text": "She sells seashells on the seashore. The seashells she sells are seashells she is sure. So, if she sells shells on the seashore, I'm sure she sells seashore shells." },
+                        { "text": "Miss Smith's fish-sauce shop seldom sells shellfish." },
+                        { "text": "She says she shall sew a sheet." },
+                        { "text": "His shirt soon shrank in the suds." }
                     ]
                 }
             ],
@@ -1010,6 +1046,14 @@
                         "OALD_US_Pron_s_3.mp4",
                         "OALD_US_Pron_s_4.mp4",
                         "OALD_US_Pron_s_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "I saw Susie sitting in a shoeshine shop. Where she sits she shines, and where she shines she sits." },
+                        { "text": "Sam's shop stocks short spotted socks." },
+                        { "text": "She sells seashells on the seashore. The seashells she sells are seashells she is sure. So, if she sells shells on the seashore, I'm sure she sells seashore shells." },
+                        { "text": "Miss Smith's fish-sauce shop seldom sells shellfish." },
+                        { "text": "She says she shall sew a sheet." },
+                        { "text": "His shirt soon shrank in the suds." }
                     ]
                 }
             ]
@@ -1036,6 +1080,16 @@
                         "OALD_UK_Pron_z_zone_3.mp4",
                         "OALD_UK_Pron_z_zone_4.mp4",
                         "OALD_UK_Pron_z_zone_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Busy buzzing bumble bees." },
+                        { "text": "Scissors sizzle, thistles sizzle." },
+                        { "text": "Zombie zits resemble zucchinis." },
+                        { "text": "Xander examines xylophones while xeroxing x-rays." },
+                        { "text": "A dozen wizards bedazzling demons in the drizzle." },
+                        {
+                            "text": "Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair. Fuzzy Wuzzy wasn't fuzzy, was he?"
+                        }
                     ]
                 }
             ],
@@ -1057,6 +1111,16 @@
                         "OALD_US_Pron_z_zone_3.mp4",
                         "OALD_US_Pron_z_zone_4.mp4",
                         "OALD_US_Pron_z_zone_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Busy buzzing bumble bees." },
+                        { "text": "Scissors sizzle, thistles sizzle." },
+                        { "text": "Zombie zits resemble zucchinis." },
+                        { "text": "Xander examines xylophones while xeroxing x-rays." },
+                        { "text": "A dozen wizards bedazzling demons in the drizzle." },
+                        {
+                            "text": "Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair. Fuzzy Wuzzy wasn't fuzzy, was he?"
+                        }
                     ]
                 }
             ]
@@ -1083,6 +1147,14 @@
                         "OALD_UK_Pron_sh_3.mp4",
                         "OALD_UK_Pron_sh_4.mp4",
                         "OALD_UK_Pron_sh_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "No shark shares swordfish steak." },
+                        { "text": "His shirt soon shrank in the suds." },
+                        { "text": "Sure, sir, the ship's sure shipshape, sir." },
+                        { "text": "Should Sheila sell seashells or should she sell shoes?" },
+                        { "text": "She sells seashells on the seashore. The seashells she sells are seashells she is sure. So, if she sells shells on the seashore, I'm sure she sells seashore shells." },
+                        { "text": "Sheila is selling her shop at the seashore. For shops at the seashore are so sure to lose. And she's not so sure of what she should be selling." }
                     ]
                 }
             ],
@@ -1104,6 +1176,14 @@
                         "OALD_US_Pron_sh_3.mp4",
                         "OALD_US_Pron_sh_4.mp4",
                         "OALD_US_Pron_sh_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "No shark shares swordfish steak." },
+                        { "text": "His shirt soon shrank in the suds." },
+                        { "text": "Sure, sir, the ship's sure shipshape, sir." },
+                        { "text": "Should Sheila sell seashells or should she sell shoes?" },
+                        { "text": "She sells seashells on the seashore. The seashells she sells are seashells she is sure. So, if she sells shells on the seashore, I'm sure she sells seashore shells." },
+                        { "text": "Sheila is selling her shop at the seashore. For shops at the seashore are so sure to lose. And she's not so sure of what she should be selling." }
                     ]
                 }
             ]
@@ -1130,6 +1210,12 @@
                         "OALD_UK_Pron_Z_3.mp4",
                         "OALD_UK_Pron_Z_4.mp4",
                         "OALD_UK_Pron_Z_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "This genre is usually a pleasure." },
+                        { "text": "A camouflage corsage was on the collage." },
+                        { "text": "Usually leisure is measured in massages." },
+                        { "text": "He measured his pleasure in treasure." }
                     ]
                 }
             ],
@@ -1151,6 +1237,12 @@
                         "OALD_US_Pron_Z_gilet_3.mp4",
                         "OALD_US_Pron_Z_gilet_4.mp4",
                         "OALD_US_Pron_Z_gilet_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "This genre is usually a pleasure." },
+                        { "text": "A camouflage corsage was on the collage." },
+                        { "text": "Usually leisure is measured in massages." },
+                        { "text": "He measured his pleasure in treasure." }
                     ]
                 }
             ]
@@ -1177,6 +1269,14 @@
                         "OALD_UK_Pron_h_3.mp4",
                         "OALD_UK_Pron_h_4.mp4",
                         null
+                    ],
+                    "tongueTwister": [
+                        { "text": "A hole in a heater is a hazardous hamster habitat." },
+                        { "text": "Hold the hog hocks for him as he halves the ham." },
+                        { "text": "Healthy hippo hiccups, healthy hippo hiccups, healthy hippo hiccups." },
+                        { "text": "Harry the hungry, hungry hippo is happily eating ham in his house." },
+                        { "text": "He has done his whole homework at home by himself." },
+                        { "text": "How many hamburgers could a hungry hamster have if a hungry hamster could have hamburgers?" }
                     ]
                 }
             ],
@@ -1198,6 +1298,14 @@
                         "OALD_US_Pron_h_3.mp4",
                         "OALD_US_Pron_h_4.mp4",
                         null
+                    ],
+                    "tongueTwister": [
+                        { "text": "A hole in a heater is a hazardous hamster habitat." },
+                        { "text": "Hold the hog hocks for him as he halves the ham." },
+                        { "text": "Healthy hippo hiccups, healthy hippo hiccups, healthy hippo hiccups." },
+                        { "text": "Harry the hungry, hungry hippo is happily eating ham in his house." },
+                        { "text": "He has done his whole homework at home by himself." },
+                        { "text": "How many hamburgers could a hungry hamster have if a hungry hamster could have hamburgers?" }
                     ]
                 }
             ]
@@ -1441,6 +1549,14 @@
                         "OALD_UK_Pron_L_3.mp4",
                         "OALD_UK_Pron_L_4.mp4",
                         "OALD_UK_Pron_L_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Lou Lou licked on lollipops while Larry lit a light." },
+                        { "text": "Larry sent the latter a letter later." },
+                        { "text": "Little Lenny Lou leopard led leprechauns leaping like lemmings." },
+                        { "text": "A learned lady loved a lawyer and longed to lure him from his laboratory." },
+                        { "text": "Larry Hurley, a burly squirrel hurler, hurled a furry squirrel through a curly grill." },
+                        { "text": "Love's a feeling you feel when you feel you're going to feel the feeling you've never felt before." }
                     ]
                 }
             ],
@@ -1462,6 +1578,14 @@
                         "OALD_US_Pron_L_3.mp4",
                         "OALD_US_Pron_L_4.mp4",
                         "OALD_US_Pron_L_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Lou Lou licked on lollipops while Larry lit a light." },
+                        { "text": "Larry sent the latter a letter later." },
+                        { "text": "Little Lenny Lou leopard led leprechauns leaping like lemmings." },
+                        { "text": "A learned lady loved a lawyer and longed to lure him from his laboratory." },
+                        { "text": "Larry Hurley, a burly squirrel hurler, hurled a furry squirrel through a curly grill." },
+                        { "text": "Love's a feeling you feel when you feel you're going to feel the feeling you've never felt before." }
                     ]
                 }
             ]
@@ -1488,6 +1612,23 @@
                         "OALD_UK_Pron_r_3.mp4",
                         "OALD_UK_Pron_r_4.mp4",
                         null
+                    ],
+                    "tongueTwister": [
+                        { "text": "Roberta ran rings around the Roman ruins." },
+                        { "text": "Rory's lawn rake rarely rakes really right." },
+                        { "text": "Ripe white wheat reapers reap ripe white wheat." },
+                        { "text": "Rory the warrior and Roger the worrier were reared wrongly in a rural brewery." },
+                        { "text": "Round and round the rugged rock the ragged rascal ran." },
+                        {
+                            "title": "R Rhyme",
+                            "lines": [
+                                "Rats race on rainbows,",
+                                "Red roses are rare,",
+                                "Roger rode a rollercoaster,",
+                                "Rabbits run really rapidly,",
+                                "And Rusty robots repair rockets."
+                            ]
+                        }
                     ]
                 }
             ],
@@ -1509,6 +1650,23 @@
                         "OALD_US_Pron_r_3.mp4",
                         "OALD_US_Pron_r_4.mp4",
                         "OALD_US_Pron_r_5.mp4"
+                    ],
+                    "tongueTwister": [
+                        { "text": "Roberta ran rings around the Roman ruins." },
+                        { "text": "Rory's lawn rake rarely rakes really right." },
+                        { "text": "Ripe white wheat reapers reap ripe white wheat." },
+                        { "text": "Rory the warrior and Roger the worrier were reared wrongly in a rural brewery." },
+                        { "text": "Round and round the rugged rock the ragged rascal ran." },
+                        {
+                            "title": "R Rhyme",
+                            "lines": [
+                                "Rats race on rainbows,",
+                                "Red roses are rare,",
+                                "Roger rode a rollercoaster,",
+                                "Rabbits run really rapidly,",
+                                "And Rusty robots repair rockets."
+                            ]
+                        }
                     ]
                 }
             ]
@@ -1557,6 +1715,7 @@
                         "OALD_US_Pron_y_4.mp4",
                         null
                     ]
+                    
                 }
             ]
         },
@@ -1582,6 +1741,14 @@
                         "OALD_UK_Pron_w_3.mp4",
                         "OALD_UK_Pron_w_4.mp4",
                         null
+                    ],
+                    "tongueTwister": [
+                        { "text": "Wetter weather never weathered wetter weather better." },
+                        { "text": "Was wheat what we wanted?" },
+                        { "text": "Which is the witch that wished the wicked wish?" },
+                        { "text": "We want waffles when we wake." },
+                        { "text": "Will you, William? Will you, William? Will you, William?" },
+                        { "text": "When you write copy you have the right to copyright the copy you write." }
                     ]
                 }
             ],
@@ -1603,6 +1770,14 @@
                         "OALD_US_Pron_w_3.mp4",
                         "OALD_US_Pron_w_4.mp4",
                         null
+                    ],
+                    "tongueTwister": [
+                        { "text": "Wetter weather never weathered wetter weather better." },
+                        { "text": "Was wheat what we wanted?" },
+                        { "text": "Which is the witch that wished the wicked wish?" },
+                        { "text": "We want waffles when we wake." },
+                        { "text": "Will you, William? Will you, William? Will you, William?" },
+                        { "text": "When you write copy you have the right to copyright the copy you write." }
                     ]
                 }
             ]

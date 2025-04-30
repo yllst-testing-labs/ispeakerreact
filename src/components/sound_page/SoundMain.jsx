@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { MdChecklist, MdKeyboardVoice, MdOutlineOndemandVideo } from "react-icons/md";
+import { useScrollTo } from "../../utils/useScrollTo";
 import LoadingOverlay from "../general/LoadingOverlay";
 import { SoundVideoDialogProvider } from "./hooks/useSoundVideoDialog";
 import ReviewCard from "./ReviewCard";
@@ -16,6 +17,7 @@ const PracticeSound = ({ sound, accent, onBack }) => {
     const [soundsData, setSoundsData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("watchTab");
+    const { ref: scrollRef, scrollTo } = useScrollTo();
 
     // Fetch sounds data
     useEffect(() => {
@@ -84,7 +86,10 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                         <div role="tablist" className="tabs tabs-box">
                             <a
                                 role="tab"
-                                onClick={() => setActiveTab("watchTab")}
+                                onClick={() => {
+                                    setActiveTab("watchTab");
+                                    scrollTo();
+                                }}
                                 className={`tab md:text-base ${
                                     activeTab === "watchTab" ? "tab-active font-semibold" : ""
                                 }`}
@@ -94,7 +99,10 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                             </a>
                             <a
                                 role="tab"
-                                onClick={() => setActiveTab("practieTab")}
+                                onClick={() => {
+                                    setActiveTab("practieTab");
+                                    scrollTo();
+                                }}
                                 className={`tab md:text-base ${
                                     activeTab === "practieTab" ? "tab-active font-semibold" : ""
                                 }`}
@@ -104,7 +112,10 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                             </a>
                             <a
                                 role="tab"
-                                onClick={() => setActiveTab("reviewTab")}
+                                onClick={() => {
+                                    setActiveTab("reviewTab");
+                                    scrollTo();
+                                }}
                                 className={`tab md:text-base ${
                                     activeTab === "reviewTab" ? "tab-active font-semibold" : ""
                                 }`}
@@ -116,7 +127,7 @@ const PracticeSound = ({ sound, accent, onBack }) => {
                     </div>
                 </div>
 
-                <div className="my-4">
+                <div ref={scrollRef} className="my-4">
                     {activeTab === "watchTab" && (
                         <WatchVideoCard
                             videoData={accentData}

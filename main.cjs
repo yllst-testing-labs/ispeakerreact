@@ -4,7 +4,7 @@ const path = require("path");
 const net = require("net");
 const isDev = process.env.NODE_ENV === "development";
 const fs = require("fs");
-const JS7z = require("./libraries/js7z/js7z.cjs");
+const JS7z = require("js7z-tools");
 const crypto = require("crypto");
 
 const express = require("express");

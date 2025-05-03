@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import { IoVolumeHigh, IoVolumeHighOutline } from "react-icons/io5";
 import { LiaCheckCircle, LiaChevronCircleRightSolid, LiaTimesCircle } from "react-icons/lia";
 import { ShuffleArray } from "../../utils/ShuffleArray";
+import { sonnerErrorToast } from "../../utils/sonnerToast";
 import useCountdownTimer from "../../utils/useCountdownTimer";
 import SortableWord from "./SortableWord";
 
@@ -159,9 +160,7 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                     return newLoadingState;
                 });
                 console.error("Error loading the audio file:", audioSrc);
-                alert(
-                    "There was an error loading the audio file. Please check your connection or try again later."
-                );
+                sonnerErrorToast(t("toast.audioPlayFailed"));
             };
         }
     };

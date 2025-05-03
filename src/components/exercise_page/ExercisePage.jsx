@@ -5,6 +5,7 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
 import { isElectron } from "../../utils/isElectron";
+import { sonnerErrorToast } from "../../utils/sonnerToast";
 import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";
@@ -166,9 +167,7 @@ const ExercisePage = () => {
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                alert(
-                    "Error while loading the data for this section. Please check your Internet connection."
-                );
+                sonnerErrorToast(t("toast.dataLoadFailed"));
             }
         };
         fetchData();

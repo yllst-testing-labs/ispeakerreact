@@ -180,10 +180,7 @@ const DictationQuiz = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
                         key={index}
                         className={`my-2 inline-block ${hasValueAndTextbox ? "w-48" : "w-full lg:w-3/4"}`}
                     >
-                        <label
-                            lang="en"
-                            className="input items-center gap-0 md:gap-2"
-                        >
+                        <label lang="en" className="input items-center gap-0 md:gap-2">
                             <input
                                 type="text"
                                 value={answer}

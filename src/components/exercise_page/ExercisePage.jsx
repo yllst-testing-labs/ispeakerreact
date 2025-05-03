@@ -5,7 +5,7 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 import Container from "../../ui/Container";
 import AccentLocalStorage from "../../utils/AccentLocalStorage";
 import { isElectron } from "../../utils/isElectron";
-import { sonnerErrorToast } from "../../utils/sonnerToast";
+import { sonnerErrorToast } from "../../utils/sonnerCustomToast";
 import AccentDropdown from "../general/AccentDropdown";
 import LoadingOverlay from "../general/LoadingOverlay";
 import TopNavBar from "../general/TopNavBar";

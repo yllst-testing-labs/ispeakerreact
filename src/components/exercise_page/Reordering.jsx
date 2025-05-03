@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import { IoInformationCircleOutline, IoVolumeHigh, IoVolumeHighOutline } from "react-icons/io5";
 import { LiaCheckCircle, LiaChevronCircleRightSolid, LiaTimesCircle } from "react-icons/lia";
 import { ShuffleArray } from "../../utils/ShuffleArray";
-import { sonnerErrorToast } from "../../utils/sonnerToast";
+import { sonnerErrorToast } from "../../utils/sonnerCustomToast";
 import useCountdownTimer from "../../utils/useCountdownTimer";
 import SortableWord from "./SortableWord";
 

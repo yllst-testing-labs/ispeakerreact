@@ -7,7 +7,7 @@ import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { IoVolumeHigh, IoVolumeHighOutline } from "react-icons/io5";
 import { LiaChevronCircleRightSolid, LiaTimesCircle } from "react-icons/lia";
 import { ShuffleArray } from "../../utils/ShuffleArray";
-import { sonnerErrorToast } from "../../utils/sonnerToast";
+import { sonnerErrorToast } from "../../utils/sonnerCustomToast";
 import useCountdownTimer from "../../utils/useCountdownTimer";
 
 const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {

@@ -6550,6 +6550,7 @@
         {
             "exercise": "Sentences",
             "id": "sentences",
+            "type": "sentence",
             "info": "Test your listening and spelling with sentence dictations",
             "british_shown": true,
             "american_shown": true,

@@ -1,21 +1,32 @@
-const applog = require("electron-log");
-const { app, Menu, BrowserWindow, ipcMain, shell } = require("electron");
-const path = require("path");
-const net = require("net");
+/* global setImmediate */ // for eslint because setImmediate is node global
+import cors from "cors";
+import crypto from "crypto";
+import { app, BrowserWindow, ipcMain, Menu, shell } from "electron";
+import applog from "electron-log";
+import express from "express";
+import fs from "fs";
+import JS7z from "js7z-tools";
+import net from "net";
+import { Buffer } from "node:buffer";
+import process from "node:process";
+import path from "path";
+import { fileURLToPath } from "url";
+import version from "./package.json" with { type: "json" };
 const isDev = process.env.NODE_ENV === "development";
-const fs = require("fs");
-const JS7z = require("js7z-tools");
-const crypto = require("crypto");
-
-const express = require("express");
 const DEFAULT_PORT = 8998;
 const MIN_PORT = 1024; // Minimum valid port number
 const MAX_PORT = 65535; // Maximum valid port number
-const cors = require("cors");
 
-const { version } = require("./package.json");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-if (require("electron-squirrel-startup")) app.quit();
+let electronSquirrelStartup = false;
+try {
+    electronSquirrelStartup = (await import("electron-squirrel-startup")).default;
+} catch (e) {
+    console.log(e);
+}
+if (electronSquirrelStartup) app.quit();
 
 // Create Express server
 const expressApp = express();
@@ -423,7 +434,7 @@ ipcMain.handle("play-recording", async (event, key) => {
     try {
         const data = await fs.promises.readFile(filePath);
         return data.buffer; // Return the ArrayBuffer to the renderer process
-    } catch (error) {
+    } catch (e) {
         console.error("File not found:", filePath);
         throw new Error("Recording file not found");
     }
@@ -454,7 +465,7 @@ ipcMain.handle("get-video-file-data", async () => {
 });
 
 // Handle the IPC event to get and open the folder
-ipcMain.handle("get-video-save-folder", (event) => {
+ipcMain.handle("get-video-save-folder", () => {
     const saveFolder = getSaveFolder();
     const videoFolder = path.join(saveFolder, "video_files");
 
@@ -480,7 +491,7 @@ ipcMain.handle("get-port", () => {
     return server?.address()?.port || DEFAULT_PORT;
 });
 
-ipcMain.handle("open-log-folder", (event) => {
+ipcMain.handle("open-log-folder", () => {
     // Open the folder in the file manager
     shell.openPath(logDirectory); // Open the folder
 
@@ -499,7 +510,7 @@ const calculateFileHash = (filePath) => {
 };
 
 // Check video extracted folder
-ipcMain.handle("check-extracted-folder", (event, folderName, zipContents) => {
+ipcMain.handle("check-extracted-folder", (folderName, zipContents) => {
     const saveFolder = getSaveFolder();
     const extractedFolder = path.join(saveFolder, "video_files", folderName);
 
@@ -562,13 +573,13 @@ async function fileVerification(event, zipContents, extractedFolder) {
                 "settingPage.videoDownloadSettings.electronVerifyMessage.extractedSuccessMsg",
             param: extractedFolder,
         });
-        applog.log(`All extracted files are verified for \"${extractedFolder}\"`);
+        applog.log(`All extracted files are verified for "${extractedFolder}"`);
         return;
     } else {
         // Send all errors as an array
         event.sender.send("verification-errors", fileErrors);
         applog.log(
-            `Verification found errors in extracted files for \"${extractedFolder}\"`,
+            `Verification found errors in extracted files for "${extractedFolder}"`,
             fileErrors
         );
         return;

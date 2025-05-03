@@ -5,7 +5,7 @@
     "private": true,
     "version": "3.3.3",
     "type": "module",
-    "main": "main.cjs",
+    "main": "main.js",
     "license": "Apache-2.0",
     "scripts": {
         "dev": "vite",

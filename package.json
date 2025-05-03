@@ -9,7 +9,7 @@
     "license": "Apache-2.0",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vite build && node scripts/minify-dist-jsons.js",
         "lint": "eslint .",
         "preview": "vite preview",
         "start": "concurrently \"cross-env NODE_ENV=development vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",

@@ -760,30 +760,29 @@ app.on("activate", () => {
 });
 
 app.whenReady()
-    .then(async () => {
-        try {
-            // Create splash window and main window
-            createSplashWindow();
-            createWindow();
-            // Start the Express server
-            await startExpressServer();
+    .then(() => {
+        // 1. Show splash window immediately
+        createSplashWindow();
 
-            // Wait for log settings from renderer
-            await new Promise((resolve) => {
-                ipcMain.once("update-log-settings", (event, settings) => {
-                    currentLogSettings = settings;
-                    applog.info("Log settings received from renderer:", settings);
-                    resolve();
-                });
+        // 2. Start heavy work in parallel after splash is shown
+        setImmediate(() => {
+            // Start Express server in background
+            startExpressServer().then((srv) => {
+                server = srv;
             });
 
-            // Call manageLogFiles after receiving settings
-            await manageLogFiles();
-            applog.info("Log files managed successfully.");
-        } catch (error) {
-            // Catch and log any errors during the app initialization process
-            applog.error("Error during app initialization:", error);
-        }
+            // Create main window (can be shown after splash)
+            createWindow();
+
+            // Wait for log settings and manage logs in background
+            ipcMain.once("update-log-settings", (event, settings) => {
+                currentLogSettings = settings;
+                applog.info("Log settings received from renderer:", settings);
+                manageLogFiles().then(() => {
+                    applog.info("Log files managed successfully.");
+                });
+            });
+        });
     })
     .catch((error) => {
         // Catch any errors thrown in the app.whenReady() promise itself

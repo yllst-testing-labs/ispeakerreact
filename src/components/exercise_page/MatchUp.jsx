@@ -38,6 +38,7 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
     const { formatTime, clearTimer, startTimer } = useCountdownTimer(timer, () =>
         setTimeIsUp(true)
     );
+    const [exerciseType, setExerciseType] = useState("");
 
     const audioRef = useRef(null);
 
@@ -49,6 +50,8 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
     }, []);
 
     const loadQuiz = useCallback((quizData) => {
+        setExerciseType(quizData.type);
+        console.log(quizData.type)
         // Store the original pairs for checking answers
         const pairs = quizData.audio.map((audio, index) => ({
             audio: audio.src.split("_")[0].toLowerCase(),
@@ -123,7 +126,11 @@ const MatchUp = ({ quiz, timer, onAnswer, onQuit, setTimeIsUp }) => {
 
         // Start the new audio if it's not already playing
         if (isPlaying !== index) {
-            const audioSrc = `${import.meta.env.BASE_URL}media/exercise/mp3/${src}.mp3`;
+            console.log(exerciseType)
+            const audioSrc =
+                exerciseType === "comprehension" || exerciseType === "sentence"
+                    ? `${import.meta.env.BASE_URL}media/exercise/mp3/sentence/${src}.mp3`
+                    : `${import.meta.env.BASE_URL}media/word/mp3/${src}.mp3`;
             audioRef.current.src = audioSrc; // Set the new audio source
 
             // Set loading state for this specific button

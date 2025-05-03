@@ -80,7 +80,9 @@ const Reordering = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
         setButtonsDisabled(false);
 
         setCurrentAudioSrc(
-            `${import.meta.env.BASE_URL}media/exercise/mp3/${shuffledPairs[0].audio}.mp3`
+            splitType === "sentence"
+                ? `${import.meta.env.BASE_URL}media/exercise/mp3/sentence/${shuffledPairs[0].audio}.mp3`
+                : `${import.meta.env.BASE_URL}media/word/mp3/${shuffledPairs[0].audio}.mp3`
         );
         setCorrectAnswer(correctAnswer);
     }, []);

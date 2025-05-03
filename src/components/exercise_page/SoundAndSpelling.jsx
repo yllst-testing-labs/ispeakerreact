@@ -42,7 +42,7 @@ const SoundAndSpelling = ({ quiz, onAnswer, onQuit, timer, setTimeIsUp }) => {
         // Set the question text and audio source
         setCurrentQuestionText(quizData.question[0].text);
         setCurrentAudioSrc(
-            `${import.meta.env.BASE_URL}media/exercise/mp3/${quizData.audio.src}.mp3`
+            `${import.meta.env.BASE_URL}media/word/mp3/${quizData.audio.src}.mp3`
         );
 
         setButtonsDisabled(false);

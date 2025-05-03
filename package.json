@@ -22,16 +22,11 @@
     },
     "dependencies": {
         "cors": "^2.8.5",
-        "dexie": "^4.0.11",
         "electron-log": "^5.4.0",
         "electron-squirrel-startup": "^1.0.1",
         "express": "^5.1.0",
         "express-rate-limit": "^7.5.0",
-        "i18next": "^25.0.2",
-        "i18next-browser-languagedetector": "^8.1.0",
-        "i18next-http-backend": "^3.0.2",
         "js7z-tools": "^2.4.1",
-        "lodash": "^4.17.21",
         "masonry-layout": "^4.2.2",
         "mime": "^4.0.7"
     },
@@ -85,7 +80,12 @@
         "vite": "^6.3.4",
         "vite-plugin-pwa": "^1.0.0",
         "wait-on": "^8.0.3",
-        "wavesurfer.js": "^7.9.4"
+        "wavesurfer.js": "^7.9.4",
+        "dexie": "^4.0.11",
+        "i18next": "^25.0.2",
+        "i18next-browser-languagedetector": "^8.1.0",
+        "i18next-http-backend": "^3.0.2",
+        "lodash": "^4.17.21"
     },
     "optionalDependencies": {
         "appdmg": "latest"

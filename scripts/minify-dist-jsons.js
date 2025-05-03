@@ -6,6 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 function minifyJsonFiles(dir) {
+    if (!fs.existsSync(dir)) return;
     fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory()) {
@@ -23,4 +24,9 @@ function minifyJsonFiles(dir) {
     });
 }
 
+// Minify dist/json
 minifyJsonFiles(path.join(__dirname, "../dist/json"));
+// Minify dist/locales
+minifyJsonFiles(path.join(__dirname, "../dist/locales"));
+// Minify data/
+minifyJsonFiles(path.join(__dirname, "../data"));

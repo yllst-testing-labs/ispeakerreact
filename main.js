@@ -442,7 +442,7 @@ ipcMain.handle("play-recording", async (event, key) => {
     try {
         const data = await fs.promises.readFile(filePath);
         return data.buffer; // Return the ArrayBuffer to the renderer process
-    } catch (e) {
+    } catch {
         console.error("File not found:", filePath);
         throw new Error("Recording file not found");
     }

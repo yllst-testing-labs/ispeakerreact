@@ -250,16 +250,16 @@ function createWindow() {
 
     // Show the main window only when it's ready
     mainWindow.once("ready-to-show", () => {
-        setTimeout(() => {
-            splashWindow.close();
-            mainWindow.maximize();
-            mainWindow.show();
+        //setTimeout(() => {
+        splashWindow.close();
+        mainWindow.maximize();
+        mainWindow.show();
 
-            // Start Express server in the background after main window is shown
-            startExpressServer().then((srv) => {
-                server = srv;
-            });
-        }, 2000);
+        // Start Express server in the background after main window is shown
+        startExpressServer().then((srv) => {
+            server = srv;
+        });
+        //}, 2000);
     });
 
     mainWindow.on("closed", () => {

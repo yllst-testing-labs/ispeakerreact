@@ -443,7 +443,7 @@ ipcMain.handle("check-downloads", () => {
 });
 
 ipcMain.handle("get-video-file-data", async () => {
-    const jsonPath = path.join(__dirname, "data", "videoFilesInfo.json"); // Adjust to your actual file path
+    const jsonPath = path.join(__dirname, "dist", "json", "videoFilesInfo.json");
     try {
         const jsonData = fs.readFileSync(jsonPath, "utf-8"); // Synchronously read the JSON file
         return JSON.parse(jsonData); // Parse the JSON string and return it

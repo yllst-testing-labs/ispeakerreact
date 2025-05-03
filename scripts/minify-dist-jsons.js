@@ -29,4 +29,4 @@ minifyJsonFiles(path.join(__dirname, "../dist/json"));
 // Minify dist/locales
 minifyJsonFiles(path.join(__dirname, "../dist/locales"));
 // Minify data/
-minifyJsonFiles(path.join(__dirname, "../data"));
+//minifyJsonFiles(path.join(__dirname, "../data"));

@@ -171,7 +171,7 @@ const ExercisePage = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         // Save the selected accent to localStorage

@@ -57,7 +57,8 @@
         "loadingError": "Error while loading the data. Please try refreshing the page.",
         "reviewUpdated": "Review updated successfully",
         "noRecording": "Please record first before reviewing",
-        "appCrashCopySuccess": "Error log copied to clipboard"
+        "appCrashCopySuccess": "Error log copied to clipboard",
+        "dataLoadFailed": "Error while loading the data for this section. Please check your Internet connection."
     },
     "buttonConversationExam": {
         "watchBtn": "Watch",

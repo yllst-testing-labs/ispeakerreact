@@ -11,11 +11,14 @@ import { Buffer } from "node:buffer";
 import process from "node:process";
 import path from "path";
 import { fileURLToPath } from "url";
-import version from "./package.json" with { type: "json" };
+import pkg from "./package.json" with { type: "json" };
+const { version } = pkg;
 const isDev = process.env.NODE_ENV === "development";
 const DEFAULT_PORT = 8998;
 const MIN_PORT = 1024; // Minimum valid port number
 const MAX_PORT = 65535; // Maximum valid port number
+
+let server; // Declare server at the top so it's in scope for all uses
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -251,6 +254,11 @@ function createWindow() {
             splashWindow.close();
             mainWindow.maximize();
             mainWindow.show();
+
+            // Start Express server in the background after main window is shown
+            startExpressServer().then((srv) => {
+                server = srv;
+            });
         }, 2000);
     });
 
@@ -478,12 +486,6 @@ ipcMain.handle("get-video-save-folder", () => {
     shell.openPath(videoFolder); // Open the folder
 
     return videoFolder; // Send the path back to the renderer
-});
-
-// Start the Express server and store the server instance
-let server;
-startExpressServer().then((srv) => {
-    server = srv;
 });
 
 // Handle the IPC event to get the current server port
@@ -777,11 +779,6 @@ app.whenReady()
 
         // 2. Start heavy work in parallel after splash is shown
         setImmediate(() => {
-            // Start Express server in background
-            startExpressServer().then((srv) => {
-                server = srv;
-            });
-
             // Create main window (can be shown after splash)
             createWindow();
 

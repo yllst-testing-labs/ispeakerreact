@@ -5,6 +5,7 @@ import { app, BrowserWindow, ipcMain, Menu, shell } from "electron";
 import applog from "electron-log";
 import express from "express";
 import fs from "fs";
+import * as fsPromises from "node:fs/promises";
 import JS7z from "js7z-tools";
 import net from "net";
 import { Buffer } from "node:buffer";
@@ -82,30 +83,34 @@ async function startExpressServer() {
     });
 }
 
-const getSaveFolder = () => {
+const getSaveFolder = async () => {
     const documentsPath = app.getPath("documents");
     const saveFolder = path.join(documentsPath, "iSpeakerReact");
 
     // Ensure the directory exists
-    if (!fs.existsSync(saveFolder)) {
-        fs.mkdirSync(saveFolder, { recursive: true });
+    try {
+        await fsPromises.access(saveFolder);
+    } catch {
+        await fsPromises.mkdir(saveFolder, { recursive: true });
     }
 
     return saveFolder;
 };
 
-const getLogFolder = () => {
-    const saveFolder = path.join(getSaveFolder(), "logs");
+const getLogFolder = async () => {
+    const saveFolder = path.join(await getSaveFolder(), "logs");
 
     // Ensure the directory exists
-    if (!fs.existsSync(saveFolder)) {
-        fs.mkdirSync(saveFolder, { recursive: true });
+    try {
+        await fsPromises.access(saveFolder);
+    } catch {
+        await fsPromises.mkdir(saveFolder, { recursive: true });
     }
 
     return saveFolder;
 };
 
-const logDirectory = getLogFolder();
+const logDirectory = await getLogFolder();
 
 // Function to generate the log file name with date-time appended
 const generateLogFileName = () => {
@@ -120,10 +125,12 @@ const generateLogFileName = () => {
 };
 
 ipcMain.handle("get-log-folder", async () => {
-    const logFolderPath = path.join(getSaveFolder(), "logs");
+    const logFolderPath = path.join(await getSaveFolder(), "logs");
     try {
-        if (!fs.existsSync(logFolderPath)) {
-            fs.mkdirSync(logFolderPath);
+        try {
+            await fsPromises.access(logFolderPath);
+        } catch {
+            await fsPromises.mkdir(logFolderPath);
         }
         return logFolderPath;
     } catch (error) {
@@ -165,37 +172,50 @@ async function manageLogFiles() {
         applog.info("Log settings:", currentLogSettings);
 
         // Get all log files
-        const logFiles = fs.readdirSync(logDirectory).map((file) => {
+        const logFiles = (await fsPromises.readdir(logDirectory)).map(async (file) => {
             const filePath = path.join(logDirectory, file);
-            const stats = fs.statSync(filePath);
+            const stats = await fsPromises.stat(filePath);
             return {
                 path: filePath,
                 birthtime: stats.birthtime, // Creation time of the log file
             };
         });
+        const logFilesResolved = await Promise.all(logFiles);
 
         // Sort log files by creation time (oldest first)
-        logFiles.sort((a, b) => a.birthtime - b.birthtime);
+        logFilesResolved.sort((a, b) => a.birthtime - b.birthtime);
 
         // Remove logs if they exceed the specified limit (excluding 0 for unlimited)
-        if (numOfLogs > 0 && logFiles.length > numOfLogs) {
-            const filesToDelete = logFiles.slice(0, logFiles.length - numOfLogs);
-            filesToDelete.forEach((file) => {
-                fs.unlinkSync(file.path);
-                applog.info(`Deleted log file: ${file.path}`);
-            });
+        if (numOfLogs > 0 && logFilesResolved.length > numOfLogs) {
+            const filesToDelete = logFilesResolved.slice(0, logFilesResolved.length - numOfLogs);
+            for (const file of filesToDelete) {
+                try {
+                    await fsPromises.unlink(file.path);
+                    applog.info(`Deleted log file: ${file.path}`);
+                } catch (err) {
+                    if (err.code !== "ENOENT") {
+                        applog.error(`Error deleting log file: ${file.path}`, err);
+                    }
+                }
+            }
         }
 
         // Remove logs older than the specified days (excluding 0 for never)
         if (keepForDays > 0) {
             const now = new Date();
-            logFiles.forEach((file) => {
+            for (const file of logFilesResolved) {
                 const ageInDays = (now - new Date(file.birthtime)) / (1000 * 60 * 60 * 24);
                 if (ageInDays > keepForDays) {
-                    fs.unlinkSync(file.path);
-                    applog.info(`Deleted old log file: ${file.path}`);
+                    try {
+                        await fsPromises.unlink(file.path);
+                        applog.info(`Deleted old log file: ${file.path}`);
+                    } catch (err) {
+                        if (err.code !== "ENOENT") {
+                            applog.error(`Error deleting old log file: ${file.path}`, err);
+                        }
+                    }
                 }
-            });
+            }
         }
     } catch (error) {
         applog.error("Error managing log files:", error);
@@ -250,16 +270,16 @@ function createWindow() {
 
     // Show the main window only when it's ready
     mainWindow.once("ready-to-show", () => {
-        //setTimeout(() => {
-        splashWindow.close();
-        mainWindow.maximize();
-        mainWindow.show();
+        setTimeout(() => {
+            splashWindow.close();
+            mainWindow.maximize();
+            mainWindow.show();
 
-        // Start Express server in the background after main window is shown
-        startExpressServer().then((srv) => {
-            server = srv;
-        });
-        //}, 2000);
+            // Start Express server in the background after main window is shown
+            startExpressServer().then((srv) => {
+                server = srv;
+            });
+        }, 500);
     });
 
     mainWindow.on("closed", () => {
@@ -342,9 +362,9 @@ function createWindow() {
 });*/
 
 // Set up the express server to serve video files
-expressApp.get("/video/:folderName/:fileName", (req, res) => {
+expressApp.get("/video/:folderName/:fileName", async (req, res) => {
     const { folderName, fileName } = req.params;
-    const documentsPath = getSaveFolder();
+    const documentsPath = await getSaveFolder();
     const videoFolder = path.resolve(documentsPath, "video_files", folderName);
     const videoFilePath = path.resolve(videoFolder, fileName);
 
@@ -353,8 +373,9 @@ expressApp.get("/video/:folderName/:fileName", (req, res) => {
         return;
     }
 
-    if (fs.existsSync(videoFilePath)) {
-        const stat = fs.statSync(videoFilePath);
+    try {
+        await fsPromises.access(videoFilePath);
+        const stat = await fsPromises.stat(videoFilePath);
         const fileSize = stat.size;
         const range = req.headers.range;
 
@@ -382,8 +403,9 @@ expressApp.get("/video/:folderName/:fileName", (req, res) => {
             res.writeHead(200, head);
             fs.createReadStream(videoFilePath).pipe(res);
         }
-    } else {
+    } catch {
         res.status(404).send("Video file not found.");
+        return;
     }
 });
 
@@ -393,54 +415,50 @@ ipcMain.handle("open-external-link", async (event, url) => {
 });
 
 // Handle saving a recording
-ipcMain.handle("save-recording", (event, key, arrayBuffer) => {
-    const saveFolder = getSaveFolder();
+ipcMain.handle("save-recording", async (event, key, arrayBuffer) => {
+    const saveFolder = await getSaveFolder();
     const recordingFolder = path.join(saveFolder, "saved_recordings");
     const filePath = path.join(recordingFolder, `${key}.wav`);
 
     // Ensure the directory exists
-    if (!fs.existsSync(recordingFolder)) {
-        fs.mkdirSync(recordingFolder, { recursive: true });
+    try {
+        await fsPromises.access(recordingFolder);
+    } catch {
+        await fsPromises.mkdir(recordingFolder, { recursive: true });
     }
 
-    return new Promise((resolve, reject) => {
-        try {
-            // Convert ArrayBuffer to Node.js Buffer
-            const buffer = Buffer.from(arrayBuffer);
-
-            // Save the buffer to the file system
-            fs.writeFile(filePath, buffer, (err) => {
-                if (err) {
-                    console.error("Error saving the recording to disk:", err);
-                    reject(err);
-                } else {
-                    console.log("Recording saved to:", filePath);
-                    applog.log("Recording saved to:", filePath);
-                    resolve("Success");
-                }
-            });
-        } catch (error) {
-            console.error("Error processing the array buffer:", error);
-            reject(error);
-        }
-    });
+    try {
+        const buffer = Buffer.from(arrayBuffer);
+        await fsPromises.writeFile(filePath, buffer);
+        console.log("Recording saved to:", filePath);
+        applog.log("Recording saved to:", filePath);
+        return "Success";
+    } catch (error) {
+        console.error("Error saving the recording to disk:", error);
+        throw error;
+    }
 });
 
 // Handle checking if a recording exists
-ipcMain.handle("check-recording-exists", (event, key) => {
-    const saveFolder = getSaveFolder();
+ipcMain.handle("check-recording-exists", async (event, key) => {
+    const saveFolder = await getSaveFolder();
     const filePath = path.join(saveFolder, "saved_recordings", `${key}.wav`);
 
-    return fs.existsSync(filePath);
+    try {
+        await fsPromises.access(filePath);
+        return true;
+    } catch {
+        return false;
+    }
 });
 
 // Handle playing a recording (this can be improved for streaming)
 ipcMain.handle("play-recording", async (event, key) => {
-    const filePath = path.join(getSaveFolder(), "saved_recordings", `${key}.wav`);
+    const filePath = path.join(await getSaveFolder(), "saved_recordings", `${key}.wav`);
 
     // Check if the file exists
     try {
-        const data = await fs.promises.readFile(filePath);
+        const data = await fsPromises.readFile(filePath);
         return data.buffer; // Return the ArrayBuffer to the renderer process
     } catch {
         console.error("File not found:", filePath);
@@ -448,23 +466,26 @@ ipcMain.handle("play-recording", async (event, key) => {
     }
 });
 
-ipcMain.handle("check-downloads", () => {
-    const saveFolder = getSaveFolder();
+ipcMain.handle("check-downloads", async () => {
+    const saveFolder = await getSaveFolder();
     const videoFolder = path.join(saveFolder, "video_files");
     // Ensure the directory exists
-    if (!fs.existsSync(videoFolder)) {
-        fs.mkdirSync(videoFolder, { recursive: true });
+    try {
+        await fsPromises.access(videoFolder);
+    } catch {
+        await fsPromises.mkdir(videoFolder, { recursive: true });
     }
 
-    const files = fs.readdirSync(videoFolder);
+    const files = await fsPromises.readdir(videoFolder);
     // Return the list of zip files in the download folder
-    return files.filter((file) => file.endsWith(".7z"));
+    const zipFiles = files.filter((file) => file.endsWith(".7z"));
+    return zipFiles.length === 0 ? "no zip files downloaded" : zipFiles;
 });
 
 ipcMain.handle("get-video-file-data", async () => {
     const jsonPath = path.join(__dirname, "dist", "json", "videoFilesInfo.json");
     try {
-        const jsonData = fs.readFileSync(jsonPath, "utf-8"); // Synchronously read the JSON file
+        const jsonData = await fsPromises.readFile(jsonPath, "utf-8"); // Asynchronously read the JSON file
         return JSON.parse(jsonData); // Parse the JSON string and return it
     } catch (error) {
         console.error("Error reading JSON file:", error);
@@ -473,13 +494,15 @@ ipcMain.handle("get-video-file-data", async () => {
 });
 
 // Handle the IPC event to get and open the folder
-ipcMain.handle("get-video-save-folder", () => {
-    const saveFolder = getSaveFolder();
+ipcMain.handle("get-video-save-folder", async () => {
+    const saveFolder = await getSaveFolder();
     const videoFolder = path.join(saveFolder, "video_files");
 
     // Ensure the directory exists
-    if (!fs.existsSync(videoFolder)) {
-        fs.mkdirSync(videoFolder, { recursive: true });
+    try {
+        await fsPromises.access(videoFolder);
+    } catch {
+        await fsPromises.mkdir(videoFolder, { recursive: true });
     }
 
     // Open the folder in the file manager
@@ -512,23 +535,26 @@ const calculateFileHash = (filePath) => {
 };
 
 // Check video extracted folder
-ipcMain.handle("check-extracted-folder", (folderName, zipContents) => {
-    const saveFolder = getSaveFolder();
+ipcMain.handle("check-extracted-folder", async (event, folderName, zipContents) => {
+    const saveFolder = await getSaveFolder();
     const extractedFolder = path.join(saveFolder, "video_files", folderName);
 
     // Check if extracted folder exists
-    if (fs.existsSync(extractedFolder)) {
-        const extractedFiles = fs.readdirSync(extractedFolder);
+    try {
+        await fsPromises.access(extractedFolder);
+        const extractedFiles = await fsPromises.readdir(extractedFolder);
 
         // Check if all expected files are present in the extracted folder
         const allFilesExtracted = zipContents[0].extractedFiles.every((file) => {
             return extractedFiles.includes(file.name);
         });
 
-        return allFilesExtracted; // Return true if all files are extracted, else false
-    }
+        event.sender.send("progress-update", 0);
 
-    return false; // Return false if the folder doesn't exist
+        return allFilesExtracted; // Return true if all files are extracted, else false
+    } catch {
+        return false; // Return false if the folder doesn't exist
+    }
 });
 
 async function fileVerification(event, zipContents, extractedFolder) {
@@ -539,7 +565,9 @@ async function fileVerification(event, zipContents, extractedFolder) {
 
     for (const file of zipContents[0].extractedFiles) {
         const extractedFilePath = path.join(extractedFolder, file.name);
-        if (!fs.existsSync(extractedFilePath)) {
+        try {
+            await fsPromises.access(extractedFilePath);
+        } catch {
             console.log(`File missing: ${file.name}`);
             applog.log(`File missing: ${file.name}`);
             fileErrors.push({
@@ -591,24 +619,24 @@ async function fileVerification(event, zipContents, extractedFolder) {
 // Handle verify and extract process using JS7z
 ipcMain.on("verify-and-extract", async (event, zipFileData) => {
     const { zipFile, zipHash, zipContents } = zipFileData;
-    const saveFolder = getSaveFolder();
+    const saveFolder = await getSaveFolder();
     const videoFolder = path.join(saveFolder, "video_files");
     const zipFilePath = path.join(videoFolder, zipFile);
     const extractedFolder = path.join(videoFolder, zipFile.replace(".7z", ""));
 
-    // Step 0: Check if extracted folder already exists
-    if (fs.existsSync(extractedFolder)) {
-        console.log(`Extracted folder already exists: ${extractedFolder}`);
-        applog.log(`Extracted folder already exists: ${extractedFolder}`);
-        event.sender.send("progress-text", "settingPage.videoDownloadSettings.verifyinProgressMsg");
-        await fileVerification(event, zipContents, extractedFolder);
+    // Step 0: Check if ZIP file exists first
+    let zipExists = false;
+    try {
+        await fsPromises.access(zipFilePath);
+        zipExists = true;
+    } catch {
+        zipExists = false;
     }
 
-    // If there are missing or corrupted files, proceed with verifying the ZIP file
-    if (fs.existsSync(zipFilePath)) {
+    if (zipExists) {
+        // ZIP exists: proceed with hash verification and extraction
         console.log(`Starting verification for ${zipFile}`);
         applog.log(`Starting verification for ${zipFile}`);
-
         try {
             const js7z = await JS7z({
                 print: (text) => {
@@ -703,7 +731,7 @@ ipcMain.on("verify-and-extract", async (event, zipFileData) => {
 
                 // Clean up the ZIP file after successful extraction and verification
                 try {
-                    fs.unlinkSync(zipFilePath);
+                    await fsPromises.unlink(zipFilePath);
                     console.log(`Deleted ZIP file: ${zipFilePath}`);
                     applog.log(`Extraction successful for ${zipFile}`);
                 } catch (err) {
@@ -727,7 +755,30 @@ ipcMain.on("verify-and-extract", async (event, zipFileData) => {
             });
         }
     } else {
-        //event.sender.send("verification-error", `ZIP file does not exist: ${zipFilePath}`);
+        // ZIP does not exist: check for extracted folder and verify its contents
+        console.log(
+            `ZIP file does not exist: ${zipFilePath}. It could be extracted before. Proceeding with extracted folder verification...`
+        );
+        applog.log(
+            `ZIP file does not exist: ${zipFilePath}. It could be extracted before. Proceeding with extracted folder verification...`
+        );
+        try {
+            await fsPromises.access(extractedFolder);
+            console.log(`Extracted folder already exists: ${extractedFolder}`);
+            applog.log(`Extracted folder already exists: ${extractedFolder}`);
+            event.sender.send(
+                "progress-text",
+                "settingPage.videoDownloadSettings.verifyinProgressMsg"
+            );
+            await fileVerification(event, zipContents, extractedFolder);
+        } catch {
+            console.log(`Extracted folder does not exist: ${extractedFolder}`);
+            applog.log(`Extracted folder does not exist: ${extractedFolder}`);
+            event.sender.send("verification-error", {
+                messageKey: "settingPage.videoDownloadSettings.verifyFailedMessage",
+                param: extractedFolder,
+            });
+        }
     }
 });
 

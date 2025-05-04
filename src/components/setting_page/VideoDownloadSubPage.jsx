@@ -11,7 +11,8 @@ const VideoDownloadSubPage = ({ onGoBack }) => {
 
     const [, setFolderPath] = useState(null);
     const [zipFileData, setZipFileData] = useState([]);
-    const [isDownloaded, setIsDownloaded] = useState({});
+    const [isDownloaded, setIsDownloaded] = useState([]);
+    const [tableLoading, setTableLoading] = useState(true);
 
     const handleOpenFolder = async () => {
         // Send an IPC message to open the folder and get the folder path
@@ -84,7 +85,10 @@ const VideoDownloadSubPage = ({ onGoBack }) => {
     }, [zipFileData]);
 
     useEffect(() => {
-        checkDownloadedFiles();
+        if (zipFileData.length > 0) {
+            setTableLoading(true);
+            checkDownloadedFiles().finally(() => setTableLoading(false));
+        }
     }, [zipFileData, checkDownloadedFiles]);
 
     const localizedInstructionStep = t("settingPage.videoDownloadSettings.steps", {
@@ -154,12 +158,18 @@ const VideoDownloadSubPage = ({ onGoBack }) => {
                 </button>
             </div>
 
-            <VideoDownloadTable
-                data={zipFileData}
-                isDownloaded={isDownloaded}
-                t={t}
-                onStatusChange={checkDownloadedFiles}
-            />
+            {tableLoading ? (
+                <div className="my-12 flex justify-center">
+                    <div className="loading loading-spinner loading-lg"></div>
+                </div>
+            ) : (
+                <VideoDownloadTable
+                    data={zipFileData}
+                    isDownloaded={isDownloaded}
+                    t={t}
+                    onStatusChange={checkDownloadedFiles}
+                />
+            )}
         </div>
     );
 };

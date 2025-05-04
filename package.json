@@ -56,7 +56,7 @@
         "concurrently": "^9.1.2",
         "cross-env": "^7.0.3",
         "daisyui": "^5.0.35",
-        "electron": "^35.2.2",
+        "electron": "^36.1.0",
         "eslint": "^9.26.0",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^6.0.0-rc.1",

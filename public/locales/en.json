@@ -40,7 +40,8 @@
         "appNewVersionErrorDialogTitle": "Failed to check for updates",
         "appNewVersionErrorReason": "Reason:",
         "appNewVersionDialogBody": "A new version (v{{version}}) is available. Please refresh to update.",
-        "appNewVersionDialogRefreshBtn": "Refresh now"
+        "appNewVersionDialogRefreshBtn": "Refresh now",
+        "rateLimitExceeded": "GitHub API rate limit exceeded. Please try again after {{resetTime}}"
     },
     "appCrash": {
         "appCrashedTitle": "App crashed!",

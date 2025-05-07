@@ -53,7 +53,7 @@ const AppContent = () => {
             : "light";
 
     useEffect(() => {
-        if (isProdWeb) {
+        if (!isProdWeb) {
             setShowUpdateDialog(true);
         } else {
             console.warn("Dev mode or Electron version detected. Version check skipped.");

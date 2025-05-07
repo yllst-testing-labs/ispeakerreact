@@ -41,6 +41,7 @@
         "appNewVersionErrorReason": "Reason:",
         "appNewVersionDialogBody": "A new version (v{{version}}) is available. Please refresh to update.",
         "appNewVersionDialogRefreshBtn": "Refresh now",
+        "appNewVersionDialogChecking": "Updating app… Do not close this window.",
         "rateLimitExceeded": "GitHub API rate limit exceeded. Please try again after {{resetTime}}"
     },
     "appCrash": {

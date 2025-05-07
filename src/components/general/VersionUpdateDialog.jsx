@@ -142,17 +142,25 @@ const VersionUpdateDialog = ({ open, onRefresh }) => {
                         </>
                     ) : (
                         <>
-                            {latestVersion && (
-                                <span>
-                                    {t("alert.appNewVersionDialogBody", { version: latestVersion })}
-                                </span>
-                            )}
-                            {latestVersion === currentVersion && !checking && (
-                                <span>{t("alert.appVersionLatest")}</span>
+                            {!checking && latestVersion && (
+                                <>
+                                    {latestVersion !== currentVersion ? (
+                                        <span>
+                                            {t("alert.appNewVersionDialogBody", {
+                                                version: latestVersion,
+                                            })}
+                                        </span>
+                                    ) : (
+                                        <span>{t("alert.appVersionLatest")}</span>
+                                    )}
+                                </>
                             )}
                             {isRefreshing && (
                                 <div className="mt-4">
                                     <progress className="progress w-full"></progress>
+                                    <p className="mt-2 text-base">
+                                        {t("alert.appNewVersionDialogChecking")}
+                                    </p>
                                 </div>
                             )}
                         </>

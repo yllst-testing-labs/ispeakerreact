@@ -142,26 +142,28 @@ const VersionUpdateDialog = ({ open, onRefresh }) => {
                         </>
                     ) : (
                         <>
-                            {!checking && latestVersion && (
+                            {isRefreshing ? (
                                 <>
-                                    {latestVersion !== currentVersion ? (
-                                        <span>
-                                            {t("alert.appNewVersionDialogBody", {
-                                                version: latestVersion,
-                                            })}
-                                        </span>
-                                    ) : (
-                                        <span>{t("alert.appVersionLatest")}</span>
-                                    )}
+                                    <p>{t("alert.appNewVersionDialogChecking")}</p>
+                                    <div className="mt-4">
+                                        <progress className="progress w-full"></progress>
+                                    </div>
                                 </>
-                            )}
-                            {isRefreshing && (
-                                <div className="mt-4">
-                                    <progress className="progress w-full"></progress>
-                                    <p className="mt-2 text-base">
-                                        {t("alert.appNewVersionDialogChecking")}
-                                    </p>
-                                </div>
+                            ) : (
+                                !checking &&
+                                latestVersion && (
+                                    <>
+                                        {latestVersion !== currentVersion ? (
+                                            <p>
+                                                {t("alert.appNewVersionDialogBody", {
+                                                    version: latestVersion,
+                                                })}
+                                            </p>
+                                        ) : (
+                                            <p>{t("alert.appVersionLatest")}</p>
+                                        )}
+                                    </>
+                                )
                             )}
                         </>
                     )}

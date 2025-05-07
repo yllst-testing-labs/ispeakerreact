@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const RATE_LIMIT_KEY = "github_ratelimit_timestamp";
-const RATE_LIMIT_THRESHOLD = 10;
+const RATE_LIMIT_THRESHOLD = 45;
 
 const currentVersion = __APP_VERSION__;
 

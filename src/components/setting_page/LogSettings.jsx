@@ -134,7 +134,7 @@ const LogSettings = () => {
 
     return (
         <>
-            <div className="flex flex-row flex-wrap gap-x-8 gap-y-6 md:flex-nowrap">
+            <div className="flex flex-row flex-wrap gap-x-8 gap-y-6 xl:flex-nowrap">
                 <div className="space-y-1">
                     <p className="text-base font-semibold">
                         {t("settingPage.logSettings.logSettingsHeading")}
@@ -143,7 +143,7 @@ const LogSettings = () => {
                         {t("settingPage.logSettings.logSettingsDescription")}
                     </p>
                 </div>
-                <div className="flex grow basis-1/2 justify-end">
+                <div className="flex grow basis-1/2 justify-center md:justify-end">
                     <div>
                         <p className="mb-2 text-base">
                             {t("settingPage.logSettings.numOfLogsOption")}

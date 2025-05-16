@@ -195,15 +195,23 @@ async function manageLogFiles() {
         applog.info("Log settings:", currentLogSettings);
 
         // Get all log files
-        const logFiles = (await fsPromises.readdir(currentLogFolder)).map(async (file) => {
+        const logFiles = await fsPromises.readdir(currentLogFolder);
+        const logFilesResolved = [];
+        for (const file of logFiles) {
             const filePath = path.join(currentLogFolder, file);
-            const stats = await fsPromises.stat(filePath);
-            return {
-                path: filePath,
-                birthtime: stats.birthtime, // Creation time of the log file
-            };
-        });
-        const logFilesResolved = await Promise.all(logFiles);
+            try {
+                const stats = await fsPromises.stat(filePath);
+                logFilesResolved.push({
+                    path: filePath,
+                    birthtime: stats.birthtime,
+                });
+            } catch (err) {
+                if (err.code !== "ENOENT") {
+                    applog.error(`Error stating log file: ${filePath}`, err);
+                }
+                // If ENOENT, just skip this file
+            }
+        }
 
         // Sort log files by creation time (oldest first)
         logFilesResolved.sort((a, b) => a.birthtime - b.birthtime);

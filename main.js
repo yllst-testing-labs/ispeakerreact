@@ -938,6 +938,8 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
         delete userSettings.customSaveFolder;
         await writeUserSettings(userSettings);
         newSaveFolder = path.join(app.getPath("documents"), "iSpeakerReact");
+        console.log("Reset to default save folder:", newSaveFolder);
+        applog.info("Reset to default save folder:", newSaveFolder);
     } else {
         try {
             await fsPromises.access(folderPath);
@@ -1008,6 +1010,8 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
         applog.transports.file.fileName = generateLogFileName();
         applog.transports.file.resolvePathFn = () =>
             path.join(currentLogFolder, applog.transports.file.fileName);
+        applog.info("New log directory:", currentLogFolder);
+        console.log("New log directory:", currentLogFolder);
         return { success: true, newPath: newSaveFolder };
     } catch (moveErr) {
         console.log("Failed to move folder contents:", moveErr);

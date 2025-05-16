@@ -943,9 +943,13 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
             await fsPromises.access(folderPath);
             const stat = await fsPromises.stat(folderPath);
             if (!stat.isDirectory()) {
+                console.log("Folder is not a directory:", folderPath);
+                applog.error("Folder is not a directory:", folderPath);
                 return { success: false, error: "folderChangeError", reason: "toast.folderNotDir" };
             }
             if (process.platform === "win32" && isDeniedSystemFolder(folderPath)) {
+                console.log("Folder is restricted:", folderPath);
+                applog.error("Folder is restricted:", folderPath);
                 return {
                     success: false,
                     error: "folderChangeError",
@@ -957,6 +961,8 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
                 await fsPromises.writeFile(testFile, "test");
                 await fsPromises.unlink(testFile);
             } catch {
+                console.log("Folder is not writable:", folderPath);
+                applog.error("Folder is not writable:", folderPath);
                 return {
                     success: false,
                     error: "folderChangeError",
@@ -968,7 +974,11 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
             userSettings.customSaveFolder = folderPath;
             await writeUserSettings(userSettings);
             newSaveFolder = folderPath;
+            console.log("New save folder:", newSaveFolder);
+            applog.info("New save folder:", newSaveFolder);
         } catch (err) {
+            console.log("Error setting custom save folder:", err);
+            applog.error("Error setting custom save folder:", err);
             return {
                 success: false,
                 error: "folderChangeError",
@@ -992,6 +1002,7 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
         try {
             await fsPromises.mkdir(currentLogFolder, { recursive: true });
         } catch (e) {
+            console.log("Failed to create new log directory:", e);
             applog.warn("Failed to create new log directory:", e);
         }
         applog.transports.file.fileName = generateLogFileName();
@@ -999,6 +1010,8 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
             path.join(currentLogFolder, applog.transports.file.fileName);
         return { success: true, newPath: newSaveFolder };
     } catch (moveErr) {
+        console.log("Failed to move folder contents:", moveErr);
+        applog.error("Failed to move folder contents:", moveErr);
         return {
             success: false,
             error: "folderMoveError",

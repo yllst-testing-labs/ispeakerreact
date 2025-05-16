@@ -1,14 +1,14 @@
 /* global setImmediate */ // for eslint because setImmediate is node global
 import cors from "cors";
 import crypto from "crypto";
-import { app, BrowserWindow, ipcMain, Menu, shell } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from "electron";
 import applog from "electron-log";
 import express from "express";
 import fs from "fs";
-import * as fsPromises from "node:fs/promises";
 import JS7z from "js7z-tools";
 import net from "net";
 import { Buffer } from "node:buffer";
+import * as fsPromises from "node:fs/promises";
 import process from "node:process";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -83,17 +83,44 @@ async function startExpressServer() {
     });
 }
 
-const getSaveFolder = async () => {
-    const documentsPath = app.getPath("documents");
-    const saveFolder = path.join(documentsPath, "iSpeakerReact");
+// Helper to get the path for storing user settings (cross-platform, persistent)
+const getUserSettingsPath = () => {
+    return path.join(app.getPath("userData"), "ispeakerreact_user_settings.json");
+};
 
+// Read user settings JSON (returns {} if not found or error)
+const readUserSettings = async () => {
+    const settingsPath = getUserSettingsPath();
+    try {
+        const data = await fsPromises.readFile(settingsPath, "utf-8");
+        return JSON.parse(data);
+    } catch {
+        return {};
+    }
+};
+
+// Write user settings JSON
+const writeUserSettings = async (settings) => {
+    const settingsPath = getUserSettingsPath();
+    await fsPromises.writeFile(settingsPath, JSON.stringify(settings, null, 2));
+};
+
+const getSaveFolder = async () => {
+    // Try to get custom folder from user settings
+    const userSettings = await readUserSettings();
+    let saveFolder;
+    if (userSettings.customSaveFolder) {
+        saveFolder = userSettings.customSaveFolder;
+    } else {
+        const documentsPath = app.getPath("documents");
+        saveFolder = path.join(documentsPath, "iSpeakerReact");
+    }
     // Ensure the directory exists
     try {
         await fsPromises.access(saveFolder);
     } catch {
         await fsPromises.mkdir(saveFolder, { recursive: true });
     }
-
     return saveFolder;
 };
 
@@ -849,3 +876,76 @@ app.whenReady()
         // Catch any errors thrown in the app.whenReady() promise itself
         applog.error("Error in app.whenReady():", error);
     });
+
+// IPC: Get current save folder (resolved)
+ipcMain.handle("get-save-folder", async () => {
+    return await getSaveFolder();
+});
+
+// IPC: Get current custom save folder (raw, may be undefined)
+ipcMain.handle("get-custom-save-folder", async () => {
+    const userSettings = await readUserSettings();
+    return userSettings.customSaveFolder || null;
+});
+
+// Helper: Windows system folder deny-list
+const isDeniedSystemFolder = (folderPath) => {
+    const denyList = [
+        process.env.SystemDrive + "\\", // e.g., C:\
+        process.env.SystemRoot, // e.g., C:\Windows
+        path.join(process.env.SystemDrive, "Program Files"),
+        path.join(process.env.SystemDrive, "Program Files (x86)"),
+        path.join(process.env.SystemDrive, "Users"),
+        app.getPath("userData"),
+        app.getPath("exe"),
+        app.getPath("appData"),
+    ].filter(Boolean);
+    const normalized = path.resolve(folderPath).toLowerCase();
+    return denyList.some((sysPath) => sysPath && normalized === path.resolve(sysPath).toLowerCase());
+};
+
+// IPC: Set custom save folder with validation
+ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
+    if (!folderPath) {
+        // Reset to default
+        const userSettings = await readUserSettings();
+        delete userSettings.customSaveFolder;
+        await writeUserSettings(userSettings);
+        return { success: true };
+    }
+    try {
+        // 1. Check existence
+        await fsPromises.access(folderPath);
+        // 2. Check is directory
+        const stat = await fsPromises.stat(folderPath);
+        if (!stat.isDirectory()) {
+            return { success: false, error: "Selected path is not a directory." };
+        }
+        // 3. Deny-list system folders (Windows)
+        if (process.platform === "win32" && isDeniedSystemFolder(folderPath)) {
+            return { success: false, error: "Cannot use a system or restricted folder." };
+        }
+        // 4. Write permission: try to create/delete a temp file
+        const testFile = path.join(folderPath, `.__ispeakerreact_test_${Date.now()}`);
+        try {
+            await fsPromises.writeFile(testFile, "test");
+            await fsPromises.unlink(testFile);
+        } catch {
+            return { success: false, error: "No write permission for this folder." };
+        }
+        // 5. All good, save
+        const userSettings = await readUserSettings();
+        userSettings.customSaveFolder = folderPath;
+        await writeUserSettings(userSettings);
+        return { success: true };
+    } catch (err) {
+        return { success: false, error: err.message || "Unknown error." };
+    }
+});
+
+// IPC: Show open dialog for folder selection
+ipcMain.handle("show-open-dialog", async (event, options) => {
+    const win = BrowserWindow.getFocusedWindow();
+    const result = await dialog.showOpenDialog(win, options);
+    return result.filePaths;
+});

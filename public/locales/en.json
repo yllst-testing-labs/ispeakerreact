@@ -1293,6 +1293,14 @@
             "deleteRecordingDataModalMessage": "Are you sure you want to delete saved texts and recordings? This action cannot be undone.",
             "resetModalHeading": "Confirm…",
             "resetConfirmBtn": "Confirm"
+        },
+        "saveFolderSettings": {
+            "saveFolderHeading": "Data location",
+            "saveFolderDescription": "The folder where the app stores its data. The data includes the downloaded video files, log files, and user recordings.",
+            "saveFolderOption": "Change folder",
+            "saveFolderResetBtn": "Reset to default",
+            "saveFolderChooseBtn": "Choose folder",
+            "saveFolderCurrentFolder": "Current folder:"
         }
     },
     "downloadPage": {

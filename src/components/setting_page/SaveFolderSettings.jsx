@@ -65,8 +65,8 @@ const SaveFolderSettings = () => {
     if (!isElectron()) return null;
 
     return (
-        <div className="flex flex-wrap gap-x-8 gap-y-6 md:flex-nowrap">
-            <div className="basis-1/2 space-y-1">
+        <div className="flex flex-row flex-wrap gap-x-8 gap-y-6 xl:flex-nowrap">
+            <div className="space-y-1">
                 <p className="text-base font-semibold">
                     {t("settingPage.saveFolderSettings.saveFolderHeading")}
                 </p>
@@ -83,10 +83,10 @@ const SaveFolderSettings = () => {
                     </span>
                 </p>
             </div>
-            <div className="flex basis-1/2 flex-col justify-end gap-y-2">
+            <div className="flex grow basis-1/2 flex-row justify-center gap-2 md:flex-wrap md:justify-end">
                 <button
                     type="button"
-                    className="btn"
+                    className="btn btn-block"
                     onClick={handleChooseFolder}
                     disabled={loading}
                 >
@@ -99,7 +99,7 @@ const SaveFolderSettings = () => {
                 {customFolder && (
                     <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="btn btn-secondary btn-block"
                         onClick={handleResetDefault}
                         disabled={loading}
                     >

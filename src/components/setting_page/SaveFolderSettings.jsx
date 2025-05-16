@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isElectron } from "../../utils/isElectron";
-import { sonnerSuccessToast } from "../../utils/sonnerCustomToast";
+import { sonnerSuccessToast, sonnerErrorToast } from "../../utils/sonnerCustomToast";
 
 const SaveFolderSettings = () => {
     const { t } = useTranslation();
@@ -27,10 +27,17 @@ const SaveFolderSettings = () => {
             });
             if (folderPaths && folderPaths.length > 0) {
                 const selected = folderPaths[0];
-                await window.electron.ipcRenderer.invoke("set-custom-save-folder", selected);
-                setCustomFolder(selected);
-                setCurrentFolder(selected);
-                sonnerSuccessToast(t("settingPage.saveFolderSettings.folderChanged"));
+                const result = await window.electron.ipcRenderer.invoke(
+                    "set-custom-save-folder",
+                    selected
+                );
+                if (result.success) {
+                    setCustomFolder(selected);
+                    setCurrentFolder(selected);
+                    sonnerSuccessToast(t("toast.folderChanged"));
+                } else {
+                    sonnerErrorToast(t(result.error));
+                }
             }
         } finally {
             setLoading(false);
@@ -45,7 +52,7 @@ const SaveFolderSettings = () => {
             const folder = await window.electron.ipcRenderer.invoke("get-save-folder");
             setCustomFolder(null);
             setCurrentFolder(folder);
-            sonnerSuccessToast(t("settingPage.saveFolderSettings.folderReset"));
+            sonnerSuccessToast(t("toast.folderReset"));
         } finally {
             setLoading(false);
         }

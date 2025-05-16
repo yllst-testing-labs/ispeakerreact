@@ -65,7 +65,13 @@
         "reviewUpdated": "Review updated successfully",
         "noRecording": "Please record first before reviewing",
         "appCrashCopySuccess": "Error log copied to clipboard",
-        "dataLoadFailed": "Error while loading the data for this section. Please check your Internet connection."
+        "dataLoadFailed": "Error while loading the data for this section. Please check your Internet connection.",
+        "folderChangeError": "Error changing the data folder. Reason:",
+        "folderRestricted": "Cannot use a system or restricted folder",
+        "folderNoWrite": "No write permission for this folder",
+        "folderNotDir": "Selected path is not a directory",
+        "folderChanged": "Data folder changed successfully",
+        "folderChangeUnknownError": "Unknown error"
     },
     "buttonConversationExam": {
         "watchBtn": "Watch",

@@ -901,7 +901,9 @@ const isDeniedSystemFolder = (folderPath) => {
         app.getPath("appData"),
     ].filter(Boolean);
     const normalized = path.resolve(folderPath).toLowerCase();
-    return denyList.some((sysPath) => sysPath && normalized === path.resolve(sysPath).toLowerCase());
+    return denyList.some(
+        (sysPath) => sysPath && normalized === path.resolve(sysPath).toLowerCase()
+    );
 };
 
 // IPC: Set custom save folder with validation
@@ -919,11 +921,11 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
         // 2. Check is directory
         const stat = await fsPromises.stat(folderPath);
         if (!stat.isDirectory()) {
-            return { success: false, error: "Selected path is not a directory." };
+            return { success: false, error: "toast.folderNotDir" };
         }
         // 3. Deny-list system folders (Windows)
         if (process.platform === "win32" && isDeniedSystemFolder(folderPath)) {
-            return { success: false, error: "Cannot use a system or restricted folder." };
+            return { success: false, error: "toast.folderRestricted" };
         }
         // 4. Write permission: try to create/delete a temp file
         const testFile = path.join(folderPath, `.__ispeakerreact_test_${Date.now()}`);
@@ -931,7 +933,7 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
             await fsPromises.writeFile(testFile, "test");
             await fsPromises.unlink(testFile);
         } catch {
-            return { success: false, error: "No write permission for this folder." };
+            return { success: false, error: "toast.folderNoWrite" };
         }
         // 5. All good, save
         const userSettings = await readUserSettings();
@@ -939,7 +941,10 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
         await writeUserSettings(userSettings);
         return { success: true };
     } catch (err) {
-        return { success: false, error: err.message || "Unknown error." };
+        return {
+            success: false,
+            error: err.message || "toast.folderChangeUnknownError",
+        };
     }
 });
 

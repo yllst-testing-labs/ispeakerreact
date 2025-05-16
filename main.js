@@ -906,13 +906,14 @@ const isDeniedSystemFolder = (folderPath) => {
     );
 };
 
-// Helper: Move all contents from one folder to another (not copy)
+// Helper: Move all contents from one folder to another (copy then delete, robust for cross-device)
 async function moveFolderContents(src, dest) {
     const entries = await fsPromises.readdir(src, { withFileTypes: true });
     for (const entry of entries) {
         const srcPath = path.join(src, entry.name);
         const destPath = path.join(dest, entry.name);
-        await fsPromises.rename(srcPath, destPath);
+        await fsPromises.cp(srcPath, destPath, { recursive: true });
+        await fsPromises.rm(srcPath, { recursive: true, force: true });
     }
 }
 

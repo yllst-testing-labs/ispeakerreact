@@ -83,7 +83,7 @@ const SaveFolderSettings = () => {
                     </span>
                 </p>
             </div>
-            <div className="flex basis-1/2 justify-end">
+            <div className="flex basis-1/2 flex-col justify-end gap-y-2">
                 <button
                     type="button"
                     className="btn"

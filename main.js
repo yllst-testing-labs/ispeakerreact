@@ -29,8 +29,17 @@ try {
     electronSquirrelStartup = (await import("electron-squirrel-startup")).default;
 } catch (e) {
     console.log(e);
+    applog.error("Error importing electron-squirrel-startup:", e);
 }
 if (electronSquirrelStartup) app.quit();
+
+let currentLogSettings = {
+    numOfLogs: 10,
+    keepForDays: 0,
+    logLevel: "info",
+    logFormat: "{h}:{i}:{s} {text}",
+    maxLogSize: 5 * 1024 * 1024,
+};
 
 // Create Express server
 const expressApp = express();
@@ -137,8 +146,6 @@ const getLogFolder = async () => {
     return saveFolder;
 };
 
-const logDirectory = await getLogFolder();
-
 // Function to generate the log file name with date-time appended
 const generateLogFileName = () => {
     const date = new Date();
@@ -151,35 +158,13 @@ const generateLogFileName = () => {
     return `ispeakerreact-log_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.log`;
 };
 
-ipcMain.handle("get-log-folder", async () => {
-    const logFolderPath = path.join(await getSaveFolder(), "logs");
-    try {
-        try {
-            await fsPromises.access(logFolderPath);
-        } catch {
-            await fsPromises.mkdir(logFolderPath);
-        }
-        return logFolderPath;
-    } catch (error) {
-        console.error("Error getting log folder path:", error);
-        applog.error("Error getting log folder path:", error);
-        return null;
-    }
-});
-
-// Default values
-let currentLogSettings = {
-    numOfLogs: 10,
-    keepForDays: 0,
-    logLevel: "info", // Default log level
-    logFormat: "{h}:{i}:{s} {text}", // Default log format
-    maxLogSize: 5 * 1024 * 1024, // Default max log size (5 MB)
-};
+// Global variable to hold the current log folder path
+let currentLogFolder = await getLogFolder();
 
 // Configure electron-log to use the log directory
 applog.transports.file.fileName = generateLogFileName();
 applog.transports.file.resolvePathFn = () =>
-    path.join(logDirectory, applog.transports.file.fileName);
+    path.join(currentLogFolder, applog.transports.file.fileName);
 applog.transports.file.maxSize = currentLogSettings.maxLogSize;
 applog.transports.console.level = currentLogSettings.logLevel;
 
@@ -199,8 +184,8 @@ async function manageLogFiles() {
         applog.info("Log settings:", currentLogSettings);
 
         // Get all log files
-        const logFiles = (await fsPromises.readdir(logDirectory)).map(async (file) => {
-            const filePath = path.join(logDirectory, file);
+        const logFiles = (await fsPromises.readdir(currentLogFolder)).map(async (file) => {
+            const filePath = path.join(currentLogFolder, file);
             const stats = await fsPromises.stat(filePath);
             return {
                 path: filePath,
@@ -545,11 +530,10 @@ ipcMain.handle("get-port", () => {
     return server?.address()?.port || DEFAULT_PORT;
 });
 
-ipcMain.handle("open-log-folder", () => {
+ipcMain.handle("open-log-folder", async () => {
     // Open the folder in the file manager
-    shell.openPath(logDirectory); // Open the folder
-
-    return logDirectory; // Send the path back to the renderer
+    shell.openPath(currentLogFolder); // Open the folder
+    return currentLogFolder; // Send the path back to the renderer
 });
 
 // Function to calculate the SHA-256 hash of a file
@@ -909,10 +893,15 @@ const isDeniedSystemFolder = (folderPath) => {
 // Helper: Move all contents from one folder to another (copy then delete, robust for cross-device)
 async function moveFolderContents(src, dest) {
     const entries = await fsPromises.readdir(src, { withFileTypes: true });
+    // 1. Copy all
     for (const entry of entries) {
         const srcPath = path.join(src, entry.name);
         const destPath = path.join(dest, entry.name);
         await fsPromises.cp(srcPath, destPath, { recursive: true });
+    }
+    // 2. Delete all originals
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
         await fsPromises.rm(srcPath, { recursive: true, force: true });
     }
 }
@@ -976,7 +965,17 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
         ) {
             await moveFolderContents(oldSaveFolder, newSaveFolder);
         }
-        return { success: true };
+        // Update log directory and file name to new save folder
+        currentLogFolder = path.join(newSaveFolder, "logs");
+        try {
+            await fsPromises.mkdir(currentLogFolder, { recursive: true });
+        } catch (e) {
+            applog.warn("Failed to create new log directory:", e);
+        }
+        applog.transports.file.fileName = generateLogFileName();
+        applog.transports.file.resolvePathFn = () =>
+            path.join(currentLogFolder, applog.transports.file.fileName);
+        return { success: true, newPath: newSaveFolder };
     } catch (moveErr) {
         return {
             success: false,

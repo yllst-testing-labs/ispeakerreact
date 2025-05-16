@@ -33,7 +33,7 @@ const SaveFolderSettings = () => {
                 );
                 if (result.success) {
                     setCustomFolder(selected);
-                    setCurrentFolder(selected);
+                    setCurrentFolder(result.newPath || selected);
                     sonnerSuccessToast(t("toast.folderChanged"));
                 } else {
                     let msg = t(`toast.${result.error}`);
@@ -51,11 +51,9 @@ const SaveFolderSettings = () => {
     const handleResetDefault = async () => {
         setLoading(true);
         try {
-            await window.electron.ipcRenderer.invoke("set-custom-save-folder", null);
-            // Get the default folder again
-            const folder = await window.electron.ipcRenderer.invoke("get-save-folder");
+            const result = await window.electron.ipcRenderer.invoke("set-custom-save-folder", null);
             setCustomFolder(null);
-            setCurrentFolder(folder);
+            setCurrentFolder(result.newPath || "");
             sonnerSuccessToast(t("toast.folderChanged"));
         } finally {
             setLoading(false);

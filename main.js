@@ -28,7 +28,7 @@ let electronSquirrelStartup = false;
 try {
     electronSquirrelStartup = (await import("electron-squirrel-startup")).default;
 } catch (e) {
-    console.log(e);
+    console.log("Error importing electron-squirrel-startup:", e);
     applog.error("Error importing electron-squirrel-startup:", e);
 }
 if (electronSquirrelStartup) app.quit();
@@ -173,6 +173,9 @@ applog.transports.file.resolvePathFn = () =>
     path.join(currentLogFolder, applog.transports.file.fileName);
 applog.transports.file.maxSize = currentLogSettings.maxLogSize;
 applog.transports.console.level = currentLogSettings.logLevel;
+
+// Clean up logs on startup according to current settings
+manageLogFiles();
 
 // Handle updated log settings from the renderer
 ipcMain.on("update-log-settings", async (event, newSettings) => {

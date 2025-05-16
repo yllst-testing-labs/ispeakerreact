@@ -906,44 +906,81 @@ const isDeniedSystemFolder = (folderPath) => {
     );
 };
 
-// IPC: Set custom save folder with validation
+// Helper: Move all contents from one folder to another (not copy)
+async function moveFolderContents(src, dest) {
+    const entries = await fsPromises.readdir(src, { withFileTypes: true });
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        await fsPromises.rename(srcPath, destPath);
+    }
+}
+
+// IPC: Set custom save folder with validation and move contents
 ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
+    const oldSaveFolder = await getSaveFolder();
+    let newSaveFolder;
     if (!folderPath) {
         // Reset to default
         const userSettings = await readUserSettings();
         delete userSettings.customSaveFolder;
         await writeUserSettings(userSettings);
-        return { success: true };
-    }
-    try {
-        // 1. Check existence
-        await fsPromises.access(folderPath);
-        // 2. Check is directory
-        const stat = await fsPromises.stat(folderPath);
-        if (!stat.isDirectory()) {
-            return { success: false, error: "toast.folderNotDir" };
-        }
-        // 3. Deny-list system folders (Windows)
-        if (process.platform === "win32" && isDeniedSystemFolder(folderPath)) {
-            return { success: false, error: "toast.folderRestricted" };
-        }
-        // 4. Write permission: try to create/delete a temp file
-        const testFile = path.join(folderPath, `.__ispeakerreact_test_${Date.now()}`);
+        newSaveFolder = path.join(app.getPath("documents"), "iSpeakerReact");
+    } else {
         try {
-            await fsPromises.writeFile(testFile, "test");
-            await fsPromises.unlink(testFile);
-        } catch {
-            return { success: false, error: "toast.folderNoWrite" };
+            await fsPromises.access(folderPath);
+            const stat = await fsPromises.stat(folderPath);
+            if (!stat.isDirectory()) {
+                return { success: false, error: "folderChangeError", reason: "toast.folderNotDir" };
+            }
+            if (process.platform === "win32" && isDeniedSystemFolder(folderPath)) {
+                return {
+                    success: false,
+                    error: "folderChangeError",
+                    reason: "toast.folderRestricted",
+                };
+            }
+            const testFile = path.join(folderPath, `.__ispeakerreact_test_${Date.now()}`);
+            try {
+                await fsPromises.writeFile(testFile, "test");
+                await fsPromises.unlink(testFile);
+            } catch {
+                return {
+                    success: false,
+                    error: "folderChangeError",
+                    reason: "toast.folderNoWrite",
+                };
+            }
+            // All good, save
+            const userSettings = await readUserSettings();
+            userSettings.customSaveFolder = folderPath;
+            await writeUserSettings(userSettings);
+            newSaveFolder = folderPath;
+        } catch (err) {
+            return {
+                success: false,
+                error: "folderChangeError",
+                reason: err.message || "Unknown error",
+            };
         }
-        // 5. All good, save
-        const userSettings = await readUserSettings();
-        userSettings.customSaveFolder = folderPath;
-        await writeUserSettings(userSettings);
+    }
+    // Move contents if needed
+    try {
+        if (
+            oldSaveFolder !== newSaveFolder &&
+            fs.existsSync(oldSaveFolder) &&
+            fs.existsSync(newSaveFolder) &&
+            !oldSaveFolder.startsWith(newSaveFolder) &&
+            !newSaveFolder.startsWith(oldSaveFolder)
+        ) {
+            await moveFolderContents(oldSaveFolder, newSaveFolder);
+        }
         return { success: true };
-    } catch (err) {
+    } catch (moveErr) {
         return {
             success: false,
-            error: err.message || "toast.folderChangeUnknownError",
+            error: "folderMoveError",
+            reason: moveErr.message || "Unknown move error",
         };
     }
 });

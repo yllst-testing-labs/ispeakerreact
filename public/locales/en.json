@@ -71,7 +71,8 @@
         "folderNoWrite": "No write permission for this folder",
         "folderNotDir": "Selected path is not a directory",
         "folderChanged": "Data folder changed successfully",
-        "folderChangeUnknownError": "Unknown error"
+        "folderChangeUnknownError": "Unknown error",
+        "folderMoveError": "Error moving the data folder. Reason:"
     },
     "buttonConversationExam": {
         "watchBtn": "Watch",

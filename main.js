@@ -912,20 +912,79 @@ const isDeniedSystemFolder = (folderPath) => {
     );
 };
 
+// Helper: Recursively collect all files in a directory
+async function getAllFiles(dir, base = dir) {
+    let files = [];
+    const entries = await fsPromises.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            files = files.concat(await getAllFiles(fullPath, base));
+        } else {
+            files.push({
+                abs: fullPath,
+                rel: path.relative(base, fullPath),
+            });
+        }
+    }
+    return files;
+}
+
+// Helper: Recursively remove empty directories
+async function removeEmptyDirs(dir) {
+    let isEmpty = true;
+    const entries = await fsPromises.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            const childEmpty = await removeEmptyDirs(fullPath);
+            if (childEmpty) {
+                await fsPromises.rmdir(fullPath).catch(() => {});
+            } else {
+                isEmpty = false;
+            }
+        } else {
+            isEmpty = false;
+        }
+    }
+    return isEmpty;
+}
+
 // Helper: Move all contents from one folder to another (copy then delete, robust for cross-device)
-async function moveFolderContents(src, dest) {
-    const entries = await fsPromises.readdir(src, { withFileTypes: true });
-    // 1. Copy all
-    for (const entry of entries) {
-        const srcPath = path.join(src, entry.name);
-        const destPath = path.join(dest, entry.name);
-        await fsPromises.cp(srcPath, destPath, { recursive: true });
+async function moveFolderContents(src, dest, event) {
+    // Recursively collect all files for accurate progress
+    const files = await getAllFiles(src);
+    const total = files.length;
+    let moved = 0;
+    // 1. Copy all files
+    for (const file of files) {
+        const srcPath = file.abs;
+        const destPath = path.join(dest, file.rel);
+        await fsPromises.mkdir(path.dirname(destPath), { recursive: true });
+        await fsPromises.copyFile(srcPath, destPath);
+        moved++;
+        if (event)
+            event.sender.send("move-folder-progress", {
+                moved,
+                total,
+                phase: "copy",
+                name: file.rel,
+            });
     }
-    // 2. Delete all originals
-    for (const entry of entries) {
-        const srcPath = path.join(src, entry.name);
-        await fsPromises.rm(srcPath, { recursive: true, force: true });
+    // 2. Delete all originals (files only)
+    for (const file of files) {
+        const srcPath = file.abs;
+        await fsPromises.rm(srcPath, { force: true });
+        if (event)
+            event.sender.send("move-folder-progress", {
+                moved,
+                total,
+                phase: "delete",
+                name: file.rel,
+            });
     }
+    // 3. Remove empty directories in src
+    await removeEmptyDirs(src);
 }
 
 // IPC: Set custom save folder with validation and move contents
@@ -997,7 +1056,7 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
             !oldSaveFolder.startsWith(newSaveFolder) &&
             !newSaveFolder.startsWith(oldSaveFolder)
         ) {
-            await moveFolderContents(oldSaveFolder, newSaveFolder);
+            await moveFolderContents(oldSaveFolder, newSaveFolder, event);
         }
         // Update log directory and file name to new save folder
         currentLogFolder = path.join(newSaveFolder, "logs");

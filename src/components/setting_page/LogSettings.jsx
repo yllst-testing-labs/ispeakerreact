@@ -200,6 +200,7 @@ const LogSettings = () => {
                                             className={`justify-start ${deleteLogsOlderThan === option.value ? "menu-active" : ""}`}
                                             onClick={() => {
                                                 setDeleteLogsOlderThan(option.value);
+                                                handleApplySettings(maxLogWritten, option.value);
                                             }}
                                         >
                                             {option.label}

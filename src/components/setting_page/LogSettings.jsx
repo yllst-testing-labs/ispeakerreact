@@ -172,7 +172,10 @@ const LogSettings = () => {
                                             key={option.value}
                                             onClick={() => {
                                                 setMaxLogWritten(option.value);
-                                                handleApplySettings(option.value, deleteLogsOlderThan);
+                                                handleApplySettings(
+                                                    option.value,
+                                                    deleteLogsOlderThan
+                                                );
                                             }}
                                         >
                                             {option.label}

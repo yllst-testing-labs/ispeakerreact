@@ -33,6 +33,22 @@ try {
 }
 if (electronSquirrelStartup) app.quit();
 
+// Helper to get the path for storing user settings (cross-platform, persistent)
+const getUserSettingsPath = () => {
+    return path.join(app.getPath("userData"), "ispeakerreact_user_settings.json");
+};
+
+// Read user settings JSON (returns {} if not found or error)
+const readUserSettings = async () => {
+    const settingsPath = getUserSettingsPath();
+    try {
+        const data = await fsPromises.readFile(settingsPath, "utf-8");
+        return JSON.parse(data);
+    } catch {
+        return {};
+    }
+};
+
 let currentLogSettings = {
     numOfLogs: 10,
     keepForDays: 0,
@@ -40,6 +56,12 @@ let currentLogSettings = {
     logFormat: "{h}:{i}:{s} {text}",
     maxLogSize: 5 * 1024 * 1024,
 };
+
+// After defining currentLogSettings, load from user settings if present
+const userSettings = await readUserSettings();
+if (userSettings.logSettings) {
+    currentLogSettings = { ...currentLogSettings, ...userSettings.logSettings };
+}
 
 // Create Express server
 const expressApp = express();
@@ -91,22 +113,6 @@ async function startExpressServer() {
         applog.info(`Express server is running on http://localhost:${port}`);
     });
 }
-
-// Helper to get the path for storing user settings (cross-platform, persistent)
-const getUserSettingsPath = () => {
-    return path.join(app.getPath("userData"), "ispeakerreact_user_settings.json");
-};
-
-// Read user settings JSON (returns {} if not found or error)
-const readUserSettings = async () => {
-    const settingsPath = getUserSettingsPath();
-    try {
-        const data = await fsPromises.readFile(settingsPath, "utf-8");
-        return JSON.parse(data);
-    } catch {
-        return {};
-    }
-};
 
 // Write user settings JSON
 const writeUserSettings = async (settings) => {
@@ -169,9 +175,14 @@ applog.transports.file.maxSize = currentLogSettings.maxLogSize;
 applog.transports.console.level = currentLogSettings.logLevel;
 
 // Handle updated log settings from the renderer
-ipcMain.on("update-log-settings", (event, newSettings) => {
+ipcMain.on("update-log-settings", async (event, newSettings) => {
     currentLogSettings = newSettings;
     applog.info("Log settings updated:", currentLogSettings);
+
+    // Save to user settings file
+    const userSettings = await readUserSettings();
+    userSettings.logSettings = currentLogSettings;
+    await writeUserSettings(userSettings);
 
     manageLogFiles();
 });
@@ -990,4 +1001,8 @@ ipcMain.handle("show-open-dialog", async (event, options) => {
     const win = BrowserWindow.getFocusedWindow();
     const result = await dialog.showOpenDialog(win, options);
     return result.filePaths;
+});
+
+ipcMain.handle("get-log-settings", async () => {
+    return currentLogSettings;
 });

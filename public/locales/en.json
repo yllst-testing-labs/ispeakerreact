@@ -1307,7 +1307,12 @@
             "saveFolderOption": "Change folder",
             "saveFolderResetBtn": "Reset to default",
             "saveFolderChooseBtn": "Choose folder",
-            "saveFolderCurrentFolder": "Current folder:"
+            "saveFolderMovingTitle": "Moving files…",
+            "saveFolderCurrentFolder": "Current folder:",
+            "saveFolderMovingPhase": "{{phase, capitalize}}",
+            "saveFolderMovingFiles": "files moved",
+            "saveFolderMovingBtn": "Please wait…",
+            "saveFolderMovingWarning": "Do not close the app while the files are being moved."
         }
     },
     "downloadPage": {

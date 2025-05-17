@@ -9,23 +9,23 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-import { createSplashWindow, createWindow } from "./electron/createWindow.js";
-import { expressApp } from "./electron/expressServer.js";
-import { getSaveFolder, readUserSettings, getLogFolder } from "./electron/filePath.js";
+import { createSplashWindow, createWindow } from "./electron-main/createWindow.js";
+import { expressApp } from "./electron-main/expressServer.js";
+import { getSaveFolder, readUserSettings, getLogFolder } from "./electron-main/filePath.js";
 import {
     getCustomSaveFolderIPC,
     getSaveFolderIPC,
     getVideoFileDataIPC,
     getVideoSaveFolderIPC,
-} from "./electron/getFileAndFolder.js";
+} from "./electron-main/getFileAndFolder.js";
 import {
     getCurrentLogSettings,
     manageLogFiles,
     setCurrentLogSettings,
-} from "./electron/logOperations.js";
-import { verifyAndExtractIPC } from "./electron/zipOperation.js";
-import { checkDownloads, checkExtractedFolder } from "./electron/videoFileOperations.js";
-import { setCustomSaveFolderIPC } from "./electron/customFolderLocationOperation.js";
+} from "./electron-main/logOperations.js";
+import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
+import { checkDownloads, checkExtractedFolder } from "./electron-main/videoFileOperations.js";
+import { setCustomSaveFolderIPC } from "./electron-main/customFolderLocationOperation.js";
 
 const DEFAULT_PORT = 8998;
 

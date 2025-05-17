@@ -26,6 +26,7 @@ import {
 import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
 import { checkDownloads, checkExtractedFolder } from "./electron-main/videoFileOperations.js";
 import { setCustomSaveFolderIPC } from "./electron-main/customFolderLocationOperation.js";
+import { checkPythonInstalled } from "./electron-main/pronunciationOperations.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -307,3 +308,18 @@ console.log = function (...args) {
     }
     origConsoleLog.apply(console, args);
 };
+
+ipcMain.handle("check-python-installed", async () => {
+    try {
+        const result = await checkPythonInstalled();
+        if (result.found) {
+            applog.info("Python found:", result.version);
+        } else {
+            applog.error("Python not found. Stderr:", result.stderr);
+        }
+        return result;
+    } catch (err) {
+        applog.error("Error checking Python installation:", err);
+        return { found: false, version: null, stderr: String(err) };
+    }
+});

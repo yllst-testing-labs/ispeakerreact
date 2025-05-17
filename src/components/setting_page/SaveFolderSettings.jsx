@@ -147,12 +147,15 @@ const SaveFolderSettings = () => {
                                         <>
                                             <div className="mb-2">
                                                 {t(
-                                                    "settingPage.saveFolderSettings.saveFolderMovingPhase",
-                                                    {
-                                                        phase: moveProgress.phase,
-                                                    }
+                                                    `settingPage.saveFolderSettings.${
+                                                        moveProgress.phase === "copy"
+                                                            ? "saveFolderCopyPhase"
+                                                            : moveProgress.phase === "delete"
+                                                              ? "saveFolderDeletePhase"
+                                                              : "saveFolderMovingPhase"
+                                                    }`
                                                 )}
-                                                {": "}
+                                                {" "}
                                                 <span lang="en" className="font-mono! break-all">
                                                     {moveProgress.name}
                                                 </span>
@@ -176,7 +179,7 @@ const SaveFolderSettings = () => {
                             ) : (
                                 <span className="loading loading-spinner loading-md"></span>
                             )}
-                            <div role="alert" className="alert alert-warning my-3">
+                            <div role="alert" className="alert alert-warning mt-6">
                                 <IoWarningOutline className="h-6 w-6" />
                                 <div>
                                     {t("settingPage.saveFolderSettings.saveFolderMovingWarning")}

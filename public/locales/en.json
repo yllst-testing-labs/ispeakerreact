@@ -1310,6 +1310,8 @@
             "saveFolderMovingTitle": "Moving files…",
             "saveFolderCurrentFolder": "Current folder:",
             "saveFolderMovingPhase": "{{phase, capitalize}}",
+            "saveFolderCopyPhase": "Copying files:",
+            "saveFolderDeletePhase": "Deleting files:",
             "saveFolderMovingFiles": "files moved",
             "saveFolderMovingBtn": "Please wait…",
             "saveFolderMovingWarning": "Do not close the app while the files are being moved."

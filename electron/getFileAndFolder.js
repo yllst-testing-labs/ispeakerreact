@@ -46,10 +46,8 @@ const getSaveFolderIPC = (getSaveFolder) => {
 const getCustomSaveFolderIPC = () => {
     ipcMain.handle("get-custom-save-folder", async () => {
         const userSettings = await readUserSettings();
-        console.log(userSettings.customSaveFolder);
         return userSettings.customSaveFolder || null;
     });
 };
 
 export { getCustomSaveFolderIPC, getSaveFolderIPC, getVideoFileDataIPC, getVideoSaveFolderIPC };
-

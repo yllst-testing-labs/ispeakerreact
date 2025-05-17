@@ -60,7 +60,6 @@ const SaveFolderSettings = () => {
                 if (result.success) {
                     setCustomFolder(selected);
                     setCurrentFolder(result.newPath || selected);
-                    sonnerSuccessToast(t("toast.folderChanged"));
                 } else {
                     let msg = t(`toast.${result.error}`);
                     if (result.reason) {
@@ -86,7 +85,6 @@ const SaveFolderSettings = () => {
             setMoveProgress(null);
             setCustomFolder(null);
             setCurrentFolder(result.newPath || "");
-            sonnerSuccessToast(t("toast.folderChanged"));
         } finally {
             setLoading(false);
         }

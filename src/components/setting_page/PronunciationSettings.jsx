@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { IoWarningOutline } from "react-icons/io5";
 import PronunciationCheckerDialogContent from "./PronunciationCheckerDialogContent";
-import { checkPythonInstalled } from "./PronunciationUtils";
 import PronunciationCheckerInfo from "./PronunciationCheckerInfo";
+import { checkPythonInstalled } from "./PronunciationUtils";
 
 const PronunciationSettings = () => {
     const { t } = useTranslation();
@@ -81,6 +82,21 @@ const PronunciationSettings = () => {
             {/* Checker dialog */}
             <dialog ref={checkerDialogRef} className="modal">
                 <div className="modal-box">
+                    <h3 className="text-lg font-bold">
+                        {t(
+                            "settingPage.pronunciationSettings.pronunciationModalInstallationProcess"
+                        )}
+                    </h3>
+                    <div className="py-4">
+                        <div role="alert" className="alert alert-warning text-base">
+                            <IoWarningOutline className="h-6 w-6" />
+                            <span>
+                                {t(
+                                    "settingPage.pronunciationSettings.pronunciationModalInstallationProcessWarning"
+                                )}
+                            </span>
+                        </div>
+                    </div>
                     <PronunciationCheckerInfo
                         t={t}
                         checking={checking}
@@ -90,7 +106,12 @@ const PronunciationSettings = () => {
                         setCollapseOpen={setCollapseOpen}
                     />
                     <div className="modal-action">
-                        <button type="button" className="btn" onClick={closeCheckerDialog} disabled={checking}>
+                        <button
+                            type="button"
+                            className="btn"
+                            onClick={closeCheckerDialog}
+                            disabled={checking}
+                        >
                             {t("sound_page.closeBtn")}
                         </button>
                     </div>

@@ -40,7 +40,7 @@ const SaveFolderSettings = () => {
             // Open folder dialog via Electron
             const folderPaths = await window.electron.ipcRenderer.invoke("show-open-dialog", {
                 properties: ["openDirectory"],
-                title: t("settingPage.saveFolderSettings.chooseFolderTitle"),
+                title: t("settingPage.saveFolderSettings.saveFolderChooseBtn"),
             });
             if (folderPaths && folderPaths.length > 0) {
                 setMoveDialogOpen(true);

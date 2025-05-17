@@ -25,7 +25,8 @@ import {
     setCurrentLogSettings,
     writeUserSettings,
 } from "./electron/logOperations.js";
-import { fileVerification, verifyAndExtractIPC } from "./electron/zipOperation.js";
+import { verifyAndExtractIPC } from "./electron/zipOperation.js";
+import { checkDownloads, checkExtractedFolder } from "./electron/videoFileOperations.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -105,7 +106,7 @@ expressApp.get("/video/:folderName/:fileName", async (req, res) => {
     }
 });
 
-// Handle the IPC event from the renderer
+// IPC event from the renderer
 ipcMain.handle("open-external-link", async (event, url) => {
     await shell.openExternal(url); // Open the external link
 });
@@ -166,29 +167,23 @@ ipcMain.handle("play-recording", async (event, key) => {
     }
 });
 
-ipcMain.handle("check-downloads", async () => {
-    const saveFolder = await getSaveFolder(readUserSettings);
-    const videoFolder = path.join(saveFolder, "video_files");
-    // Ensure the directory exists
-    try {
-        await fsPromises.access(videoFolder);
-    } catch {
-        await fsPromises.mkdir(videoFolder, { recursive: true });
-    }
-
-    const files = await fsPromises.readdir(videoFolder);
-    // Return the list of zip files in the download folder
-    const zipFiles = files.filter((file) => file.endsWith(".7z"));
-    return zipFiles.length === 0 ? "no zip files downloaded" : zipFiles;
-});
+/* Video file operations */
 
 // Get video file data
 getVideoFileDataIPC(__dirname);
 
-// Handle the IPC event to get and open the folder
-getVideoSaveFolderIPC(() => getSaveFolder(readUserSettings));
+// IPC event to get and open the video folder
+getVideoSaveFolderIPC();
 
-// Handle the IPC event to get the current server port
+// Check video file downloads
+checkDownloads();
+
+// Check video file extracted folder
+checkExtractedFolder();
+
+/* End video file operations */
+
+// IPC event to get the current server port
 ipcMain.handle("get-port", () => {
     return server?.address()?.port || DEFAULT_PORT;
 });
@@ -200,30 +195,8 @@ ipcMain.handle("open-log-folder", async () => {
     return logFolder; // Send the path back to the renderer
 });
 
-// Check video extracted folder
-ipcMain.handle("check-extracted-folder", async (event, folderName, zipContents) => {
-    const saveFolder = await getSaveFolder(readUserSettings);
-    const extractedFolder = path.join(saveFolder, "video_files", folderName);
-
-    // Check if extracted folder exists
-    try {
-        await fsPromises.access(extractedFolder);
-        const extractedFiles = await fsPromises.readdir(extractedFolder);
-
-        // Check if all expected files are present in the extracted folder
-        const allFilesExtracted = zipContents[0].extractedFiles.every((file) => {
-            return extractedFiles.includes(file.name);
-        });
-
-        event.sender.send("progress-update", 0);
-
-        return allFilesExtracted; // Return true if all files are extracted, else false
-    } catch {
-        return false; // Return false if the folder doesn't exist
-    }
-});
-
-verifyAndExtractIPC(() => getSaveFolder(readUserSettings), fileVerification);
+// IPC event to verify and extract a zip file
+verifyAndExtractIPC();
 
 // Listen for logging messages from the renderer process
 ipcMain.on("renderer-log", (event, logMessage) => {
@@ -295,11 +268,15 @@ app.whenReady()
         applog.error("Error in app.whenReady():", error);
     });
 
+/* Custom save folder operations */
+
 // IPC: Get current save folder (resolved)
-getSaveFolderIPC(() => getSaveFolder(readUserSettings));
+getSaveFolderIPC();
 
 // IPC: Get current custom save folder (raw, may be undefined)
 getCustomSaveFolderIPC();
+
+/* End custom save folder operations */
 
 // Helper: Windows system folder deny-list
 const isDeniedSystemFolder = (folderPath) => {

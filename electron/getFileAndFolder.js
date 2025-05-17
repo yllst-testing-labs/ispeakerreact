@@ -1,7 +1,7 @@
 import { ipcMain, shell } from "electron";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
-import { readUserSettings } from "./filePath.js";
+import { getSaveFolder, readUserSettings } from "./filePath.js";
 
 const getVideoFileDataIPC = (rootDir) => {
     ipcMain.handle("get-video-file-data", async () => {
@@ -16,7 +16,7 @@ const getVideoFileDataIPC = (rootDir) => {
     });
 };
 
-const getVideoSaveFolderIPC = (getSaveFolder) => {
+const getVideoSaveFolderIPC = () => {
     ipcMain.handle("get-video-save-folder", async () => {
         const saveFolder = await getSaveFolder(readUserSettings);
         const videoFolder = path.join(saveFolder, "video_files");
@@ -36,7 +36,7 @@ const getVideoSaveFolderIPC = (getSaveFolder) => {
 };
 
 // IPC: Get current save folder (resolved)
-const getSaveFolderIPC = (getSaveFolder) => {
+const getSaveFolderIPC = () => {
     ipcMain.handle("get-save-folder", async () => {
         return await getSaveFolder(readUserSettings);
     });

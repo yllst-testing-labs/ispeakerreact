@@ -5,7 +5,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import * as fsPromises from "node:fs/promises";
 import path from "node:path";
-import { readUserSettings } from "./filePath.js";
+import { getSaveFolder, readUserSettings } from "./filePath.js";
 
 // Function to calculate the SHA-256 hash of a file
 const calculateFileHash = (filePath) => {
@@ -78,7 +78,7 @@ const fileVerification = async (event, zipContents, extractedFolder) => {
 };
 
 // Handle verify and extract process using JS7z
-const verifyAndExtractIPC = (getSaveFolder, fileVerification) => {
+const verifyAndExtractIPC = () => {
     ipcMain.on("verify-and-extract", async (event, zipFileData) => {
         const { zipFile, zipHash, zipContents } = zipFileData;
         const saveFolder = await getSaveFolder(readUserSettings);

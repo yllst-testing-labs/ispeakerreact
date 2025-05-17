@@ -26,7 +26,7 @@ import {
 import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
 import { checkDownloads, checkExtractedFolder } from "./electron-main/videoFileOperations.js";
 import { setCustomSaveFolderIPC } from "./electron-main/customFolderLocationOperation.js";
-import { checkPythonInstalled } from "./electron-main/pronunciationOperations.js";
+import { checkPythonInstalled, installDependencies } from "./electron-main/pronunciationOperations.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -309,6 +309,8 @@ console.log = function (...args) {
     origConsoleLog.apply(console, args);
 };
 
+/* Pronunciation checker operations */
+
 ipcMain.handle("check-python-installed", async () => {
     try {
         const result = await checkPythonInstalled();
@@ -323,3 +325,5 @@ ipcMain.handle("check-python-installed", async () => {
         return { found: false, version: null, stderr: String(err) };
     }
 });
+
+installDependencies();

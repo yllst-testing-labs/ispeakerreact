@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { IoWarningOutline } from "react-icons/io5";
 import PronunciationCheckerDialogContent from "./PronunciationCheckerDialogContent";
@@ -30,6 +30,52 @@ const PronunciationSettings = () => {
         checkerDialogRef.current?.close();
     };
 
+    // Listen for dependency installation progress
+    useEffect(() => {
+        const handleDepProgress = (_event, depStatus) => {
+            setPythonCheckResult((prev) => {
+                // Update deps array
+                let deps = Array.isArray(prev?.deps) ? [...prev.deps] : [];
+                const idx = deps.findIndex((d) => d.name === depStatus.name);
+                if (idx !== -1) deps[idx] = depStatus;
+                else deps.push(depStatus);
+                return {
+                    ...prev,
+                    deps,
+                    log: depStatus.log || prev?.log || "",
+                };
+            });
+        };
+        if (window.electron?.ipcRenderer) {
+            window.electron.ipcRenderer.on("pronunciation-dep-progress", handleDepProgress);
+        }
+        return () => {
+            if (window.electron?.ipcRenderer) {
+                window.electron.ipcRenderer.removeAllListeners(
+                    "pronunciation-dep-progress",
+                    handleDepProgress
+                );
+            }
+        };
+    }, []);
+
+    // Function to trigger dependency installation
+    const installDependencies = async () => {
+        if (window.electron?.ipcRenderer) {
+            setChecking(true);
+            try {
+                const result = await window.electron.ipcRenderer.invoke(
+                    "pronunciation-install-deps"
+                );
+                setPythonCheckResult((prev) => ({ ...prev, ...result }));
+            } catch (err) {
+                setError(err.message || String(err));
+            } finally {
+                setChecking(false);
+            }
+        }
+    };
+
     // Decoupled logic for checking Python installation
     const checkPython = async () => {
         setChecking(true);
@@ -39,6 +85,9 @@ const PronunciationSettings = () => {
         try {
             const result = await checkPythonInstalled();
             setPythonCheckResult(result);
+            if (result.found) {
+                installDependencies();
+            }
         } catch (err) {
             setError(err.message || String(err));
         } finally {

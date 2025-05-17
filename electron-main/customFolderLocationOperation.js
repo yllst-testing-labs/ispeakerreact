@@ -109,6 +109,7 @@ const setCustomSaveFolderIPC = () => {
                         reason: "toast.folderNotDir",
                     };
                 }
+
                 if (isDeniedSystemFolder(folderPath)) {
                     console.log("Folder is restricted:", folderPath);
                     applog.error("Folder is restricted:", folderPath);
@@ -118,10 +119,12 @@ const setCustomSaveFolderIPC = () => {
                         reason: "toast.folderRestricted",
                     };
                 }
+
                 const testFile = path.join(
                     folderPath,
                     `.__ispeakerreact_test_${process.pid}_${Date.now()}`
                 );
+
                 try {
                     await fsPromises.writeFile(testFile, "test");
                     await fsPromises.unlink(testFile);

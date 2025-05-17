@@ -1319,6 +1319,14 @@
         "savedRecordingLocationSettings": {
             "savedRecordingLocationHeading": "Saved recording location",
             "savedRecordingLocationBtn": "Open recording folder"
+        },
+        "pronunciationSettings": {
+            "pronunciationHeading": "Pronunciation checker installation",
+            "pronunciationBtn": "Begin installation",
+            "pronunciationModalHeading": "Start pronunciation checker installation?",
+            "pronunciationModalBodyPython": "If you haven’t installed Python yet, download it from the <0>official Python website here</0> and follow the installation instructions. If it’s already installed, you can proceed to the next step.",
+            "pronunciationModalBody": "This will check and install required dependencies for pronunciation checker. This might take a while. Continue?",
+            "pronunciationModalBtn": "Proceed"
         }
     },
     "downloadPage": {

@@ -18,6 +18,12 @@ import {
     readUserSettings,
 } from "./electron/filePath.js";
 import { fileVerification, verifyAndExtractIPC } from "./electron/zipOperation.js";
+import {
+    getCustomSaveFolderIPC,
+    getSaveFolderIPC,
+    getVideoFileDataIPC,
+    getVideoSaveFolderIPC,
+} from "./electron/getFileAndFolder.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -295,34 +301,11 @@ ipcMain.handle("check-downloads", async () => {
     return zipFiles.length === 0 ? "no zip files downloaded" : zipFiles;
 });
 
-ipcMain.handle("get-video-file-data", async () => {
-    const jsonPath = path.join(__dirname, "dist", "json", "videoFilesInfo.json");
-    try {
-        const jsonData = await fsPromises.readFile(jsonPath, "utf-8"); // Asynchronously read the JSON file
-        return JSON.parse(jsonData); // Parse the JSON string and return it
-    } catch (error) {
-        console.error("Error reading JSON file:", error);
-        throw error; // Ensure that any error is propagated back to the renderer process
-    }
-});
+// Get video file data
+getVideoFileDataIPC(__dirname);
 
 // Handle the IPC event to get and open the folder
-ipcMain.handle("get-video-save-folder", async () => {
-    const saveFolder = await getSaveFolder(readUserSettings);
-    const videoFolder = path.join(saveFolder, "video_files");
-
-    // Ensure the directory exists
-    try {
-        await fsPromises.access(videoFolder);
-    } catch {
-        await fsPromises.mkdir(videoFolder, { recursive: true });
-    }
-
-    // Open the folder in the file manager
-    shell.openPath(videoFolder); // Open the folder
-
-    return videoFolder; // Send the path back to the renderer
-});
+getVideoSaveFolderIPC(() => getSaveFolder(readUserSettings));
 
 // Handle the IPC event to get the current server port
 ipcMain.handle("get-port", () => {
@@ -431,15 +414,10 @@ app.whenReady()
     });
 
 // IPC: Get current save folder (resolved)
-ipcMain.handle("get-save-folder", async () => {
-    return await getSaveFolder(readUserSettings);
-});
+getSaveFolderIPC(() => getSaveFolder(readUserSettings));
 
 // IPC: Get current custom save folder (raw, may be undefined)
-ipcMain.handle("get-custom-save-folder", async () => {
-    const userSettings = await readUserSettings();
-    return userSettings.customSaveFolder || null;
-});
+getCustomSaveFolderIPC();
 
 // Helper: Windows system folder deny-list
 const isDeniedSystemFolder = (folderPath) => {

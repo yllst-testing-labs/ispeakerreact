@@ -3,21 +3,19 @@ import cors from "cors";
 import crypto from "crypto";
 import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from "electron";
 import applog from "electron-log";
-import express from "express";
 import fs from "fs";
 import JS7z from "js7z-tools";
-import net from "net";
 import { Buffer } from "node:buffer";
 import * as fsPromises from "node:fs/promises";
 import process from "node:process";
 import path from "path";
 import { fileURLToPath } from "url";
+import { expressApp, startExpressServer } from "./electron/expressServer.js";
 import pkg from "./package.json" with { type: "json" };
+
 const { version } = pkg;
 const isDev = process.env.NODE_ENV === "development";
 const DEFAULT_PORT = 8998;
-const MIN_PORT = 1024; // Minimum valid port number
-const MAX_PORT = 65535; // Maximum valid port number
 
 let server; // Declare server at the top so it's in scope for all uses
 
@@ -61,57 +59,6 @@ let currentLogSettings = {
 const userSettings = await readUserSettings();
 if (userSettings.logSettings) {
     currentLogSettings = { ...currentLogSettings, ...userSettings.logSettings };
-}
-
-// Create Express server
-const expressApp = express();
-
-// Function to generate a random port number within the range
-function getRandomPort() {
-    return Math.floor(Math.random() * (MAX_PORT - MIN_PORT + 1)) + MIN_PORT;
-}
-
-// Function to check if a port is available
-function checkPortAvailability(port) {
-    return new Promise((resolve, reject) => {
-        const server = net.createServer();
-
-        server.once("error", (err) => {
-            if (err.code === "EADDRINUSE" || err.code === "ECONNREFUSED") {
-                resolve(false); // Port is in use
-                applog.log("Port is in use. Error:", err.code);
-            } else {
-                reject(err); // Some other error occurred
-                applog.log("Another error related to the Express server. Error:", err.code);
-            }
-        });
-
-        server.once("listening", () => {
-            server.close(() => {
-                resolve(true); // Port is available
-            });
-        });
-
-        server.listen(port);
-    });
-}
-
-// Function to start the Express server with the default port first, then randomize if necessary
-async function startExpressServer() {
-    let port = DEFAULT_PORT;
-    let isPortAvailable = await checkPortAvailability(port);
-
-    if (!isPortAvailable) {
-        applog.warn(`Default port ${DEFAULT_PORT} is in use. Trying a random port...`);
-        do {
-            port = getRandomPort();
-            isPortAvailable = await checkPortAvailability(port);
-        } while (!isPortAvailable);
-    }
-
-    return expressApp.listen(port, () => {
-        applog.info(`Express server is running on http://localhost:${port}`);
-    });
 }
 
 // Write user settings JSON

@@ -143,24 +143,35 @@ const SaveFolderSettings = () => {
                         <div className="py-4">
                             {moveProgress ? (
                                 <>
-                                    <div className="mb-2">
-                                        {t("settingPage.saveFolderSettings.saveFolderMovingPhase", {
-                                            phase: moveProgress.phase,
-                                        })}
-                                        {": "}
-                                        <span lang="en" className="font-mono! break-all">
-                                            {moveProgress.name}
-                                        </span>
-                                    </div>
-                                    <progress
-                                        className="progress progress-primary w-full"
-                                        value={moveProgress.moved}
-                                        max={moveProgress.total}
-                                    ></progress>
-                                    <div className="mt-2 text-xs text-zinc-500">
-                                        {moveProgress.moved} / {moveProgress.total}{" "}
-                                        {t("settingPage.saveFolderSettings.saveFolderMovingFiles")}
-                                    </div>
+                                    {moveProgress.name ? (
+                                        <>
+                                            <div className="mb-2">
+                                                {t(
+                                                    "settingPage.saveFolderSettings.saveFolderMovingPhase",
+                                                    {
+                                                        phase: moveProgress.phase,
+                                                    }
+                                                )}
+                                                {": "}
+                                                <span lang="en" className="font-mono! break-all">
+                                                    {moveProgress.name}
+                                                </span>
+                                            </div>
+                                            <progress
+                                                className="progress progress-primary w-full"
+                                                value={moveProgress.moved}
+                                                max={moveProgress.total}
+                                            ></progress>
+                                            <div className="mt-2 text-xs text-zinc-500">
+                                                {moveProgress.moved} / {moveProgress.total}{" "}
+                                                {t(
+                                                    "settingPage.saveFolderSettings.saveFolderMovingFiles"
+                                                )}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <span className="loading loading-spinner loading-md"></span>
+                                    )}
                                 </>
                             ) : (
                                 <span className="loading loading-spinner loading-md"></span>

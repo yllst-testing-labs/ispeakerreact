@@ -12,6 +12,12 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { createSplashWindow, createWindow } from "./electron/createWindow.js";
 import { expressApp } from "./electron/expressServer.js";
+import {
+    getLogFolder,
+    getSaveFolder,
+    getUserSettingsPath,
+    readUserSettings,
+} from "./electron/filePath.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -28,22 +34,6 @@ try {
     applog.error("Error importing electron-squirrel-startup:", e);
 }
 if (electronSquirrelStartup) app.quit();
-
-// Helper to get the path for storing user settings (cross-platform, persistent)
-const getUserSettingsPath = () => {
-    return path.join(app.getPath("userData"), "ispeakerreact_user_settings.json");
-};
-
-// Read user settings JSON (returns {} if not found or error)
-const readUserSettings = async () => {
-    const settingsPath = getUserSettingsPath();
-    try {
-        const data = await fsPromises.readFile(settingsPath, "utf-8");
-        return JSON.parse(data);
-    } catch {
-        return {};
-    }
-};
 
 let currentLogSettings = {
     numOfLogs: 10,
@@ -65,38 +55,6 @@ const writeUserSettings = async (settings) => {
     await fsPromises.writeFile(settingsPath, JSON.stringify(settings, null, 2));
 };
 
-const getSaveFolder = async () => {
-    // Try to get custom folder from user settings
-    const userSettings = await readUserSettings();
-    let saveFolder;
-    if (userSettings.customSaveFolder) {
-        saveFolder = userSettings.customSaveFolder;
-    } else {
-        const documentsPath = app.getPath("documents");
-        saveFolder = path.join(documentsPath, "iSpeakerReact");
-    }
-    // Ensure the directory exists
-    try {
-        await fsPromises.access(saveFolder);
-    } catch {
-        await fsPromises.mkdir(saveFolder, { recursive: true });
-    }
-    return saveFolder;
-};
-
-const getLogFolder = async () => {
-    const saveFolder = path.join(await getSaveFolder(), "logs");
-
-    // Ensure the directory exists
-    try {
-        await fsPromises.access(saveFolder);
-    } catch {
-        await fsPromises.mkdir(saveFolder, { recursive: true });
-    }
-
-    return saveFolder;
-};
-
 // Function to generate the log file name with date-time appended
 const generateLogFileName = () => {
     const date = new Date();
@@ -110,7 +68,7 @@ const generateLogFileName = () => {
 };
 
 // Global variable to hold the current log folder path
-let currentLogFolder = await getLogFolder();
+let currentLogFolder = await getLogFolder(readUserSettings);
 
 // Configure electron-log to use the log directory
 applog.transports.file.fileName = generateLogFileName();
@@ -215,7 +173,7 @@ expressApp.use(cors({ origin: "http://localhost:5173" }));
 // Set up the express server to serve video files
 expressApp.get("/video/:folderName/:fileName", async (req, res) => {
     const { folderName, fileName } = req.params;
-    const documentsPath = await getSaveFolder();
+    const documentsPath = await getSaveFolder(readUserSettings);
     const videoFolder = path.resolve(documentsPath, "video_files", folderName);
     const videoFilePath = path.resolve(videoFolder, fileName);
 
@@ -267,7 +225,7 @@ ipcMain.handle("open-external-link", async (event, url) => {
 
 // Handle saving a recording
 ipcMain.handle("save-recording", async (event, key, arrayBuffer) => {
-    const saveFolder = await getSaveFolder();
+    const saveFolder = await getSaveFolder(readUserSettings);
     const recordingFolder = path.join(saveFolder, "saved_recordings");
     const filePath = path.join(recordingFolder, `${key}.wav`);
 
@@ -292,7 +250,7 @@ ipcMain.handle("save-recording", async (event, key, arrayBuffer) => {
 
 // Handle checking if a recording exists
 ipcMain.handle("check-recording-exists", async (event, key) => {
-    const saveFolder = await getSaveFolder();
+    const saveFolder = await getSaveFolder(readUserSettings);
     const filePath = path.join(saveFolder, "saved_recordings", `${key}.wav`);
 
     try {
@@ -305,7 +263,7 @@ ipcMain.handle("check-recording-exists", async (event, key) => {
 
 // Handle playing a recording (this can be improved for streaming)
 ipcMain.handle("play-recording", async (event, key) => {
-    const filePath = path.join(await getSaveFolder(), "saved_recordings", `${key}.wav`);
+    const filePath = path.join(await getSaveFolder(readUserSettings), "saved_recordings", `${key}.wav`);
 
     // Check if the file exists
     try {
@@ -318,7 +276,7 @@ ipcMain.handle("play-recording", async (event, key) => {
 });
 
 ipcMain.handle("check-downloads", async () => {
-    const saveFolder = await getSaveFolder();
+    const saveFolder = await getSaveFolder(readUserSettings);
     const videoFolder = path.join(saveFolder, "video_files");
     // Ensure the directory exists
     try {
@@ -346,7 +304,7 @@ ipcMain.handle("get-video-file-data", async () => {
 
 // Handle the IPC event to get and open the folder
 ipcMain.handle("get-video-save-folder", async () => {
-    const saveFolder = await getSaveFolder();
+    const saveFolder = await getSaveFolder(readUserSettings);
     const videoFolder = path.join(saveFolder, "video_files");
 
     // Ensure the directory exists
@@ -386,7 +344,7 @@ const calculateFileHash = (filePath) => {
 
 // Check video extracted folder
 ipcMain.handle("check-extracted-folder", async (event, folderName, zipContents) => {
-    const saveFolder = await getSaveFolder();
+    const saveFolder = await getSaveFolder(readUserSettings);
     const extractedFolder = path.join(saveFolder, "video_files", folderName);
 
     // Check if extracted folder exists
@@ -469,7 +427,7 @@ async function fileVerification(event, zipContents, extractedFolder) {
 // Handle verify and extract process using JS7z
 ipcMain.on("verify-and-extract", async (event, zipFileData) => {
     const { zipFile, zipHash, zipContents } = zipFileData;
-    const saveFolder = await getSaveFolder();
+    const saveFolder = await getSaveFolder(readUserSettings);
     const videoFolder = path.join(saveFolder, "video_files");
     const zipFilePath = path.join(videoFolder, zipFile);
     const extractedFolder = path.join(videoFolder, zipFile.replace(".7z", ""));
@@ -704,7 +662,7 @@ app.whenReady()
 
 // IPC: Get current save folder (resolved)
 ipcMain.handle("get-save-folder", async () => {
-    return await getSaveFolder();
+    return await getSaveFolder(readUserSettings);
 });
 
 // IPC: Get current custom save folder (raw, may be undefined)
@@ -808,7 +766,7 @@ async function moveFolderContents(src, dest, event) {
 
 // IPC: Set custom save folder with validation and move contents
 ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
-    const oldSaveFolder = await getSaveFolder();
+    const oldSaveFolder = await getSaveFolder(readUserSettings);
     let newSaveFolder;
     if (!folderPath) {
         // Reset to default

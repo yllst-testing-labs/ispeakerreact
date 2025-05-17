@@ -1,20 +1,18 @@
 /* global setImmediate */ // for eslint because setImmediate is node global
 import cors from "cors";
-import crypto from "crypto";
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
 import applog from "electron-log";
-import fs from "fs";
 import JS7z from "js7z-tools";
 import { Buffer } from "node:buffer";
+import crypto from "node:crypto";
+import fs from "node:fs";
 import * as fsPromises from "node:fs/promises";
+import path from "node:path";
 import process from "node:process";
-import path from "path";
-import { fileURLToPath } from "url";
-import { expressApp, startExpressServer } from "./electron/expressServer.js";
-import pkg from "./package.json" with { type: "json" };
+import { fileURLToPath } from "node:url";
+import { createSplashWindow, createWindow } from "./electron/createWindow.js";
+import { expressApp } from "./electron/expressServer.js";
 
-const { version } = pkg;
-const isDev = process.env.NODE_ENV === "development";
 const DEFAULT_PORT = 8998;
 
 let server; // Declare server at the top so it's in scope for all uses
@@ -204,139 +202,9 @@ async function manageLogFiles() {
 }
 
 let mainWindow;
-let splashWindow;
 
 // Allow requests from localhost:5173 (Vite's default development server)
 expressApp.use(cors({ origin: "http://localhost:5173" }));
-
-function createSplashWindow() {
-    splashWindow = new BrowserWindow({
-        width: 854,
-        height: 413,
-        frame: false, // Remove window controls
-        transparent: true, // Make the window background transparent
-        alwaysOnTop: true,
-        icon: path.join(__dirname, "dist", "appicon.png"),
-    });
-
-    // Load the splash screen HTML
-    splashWindow.loadFile(path.join(__dirname, "data", "splash.html"));
-
-    splashWindow.setTitle("Starting up...");
-
-    // Splash window should close when the main window is ready
-    splashWindow.on("closed", () => {
-        splashWindow = null;
-    });
-}
-
-function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: 1280,
-        height: 720,
-        show: false,
-        webPreferences: {
-            preload: path.join(__dirname, "preload.cjs"), // Point to your preload.js file
-            nodeIntegration: false,
-            contextIsolation: true,
-            enableRemoteModule: false,
-            devTools: isDev ? true : false,
-        },
-        icon: path.join(__dirname, "dist", "appicon.png"),
-    });
-
-    if (isDev) {
-        mainWindow.loadURL("http://localhost:5173"); // Point to Vite dev server
-    } else {
-        mainWindow.loadFile(path.join(__dirname, "./dist/index.html")); // Load the built HTML file
-    }
-
-    // Show the main window only when it's ready
-    mainWindow.once("ready-to-show", () => {
-        setTimeout(() => {
-            splashWindow.close();
-            mainWindow.maximize();
-            mainWindow.show();
-
-            // Start Express server in the background after main window is shown
-            startExpressServer().then((srv) => {
-                server = srv;
-            });
-        }, 500);
-    });
-
-    mainWindow.on("closed", () => {
-        mainWindow = null;
-    });
-
-    mainWindow.on("enter-full-screen", () => {
-        mainWindow.setMenuBarVisibility(false);
-    });
-
-    mainWindow.on("leave-full-screen", () => {
-        mainWindow.setMenuBarVisibility(true);
-    });
-
-    const menu = Menu.buildFromTemplate([
-        {
-            label: "File",
-            submenu: [{ role: "quit" }],
-        },
-        {
-            label: "Edit",
-            submenu: [
-                { role: "undo" },
-                { role: "redo" },
-                { type: "separator" },
-                { role: "cut" },
-                { role: "copy" },
-                { role: "paste" },
-            ],
-        },
-        {
-            label: "View",
-            submenu: [
-                { role: "reload" },
-                { role: "forceReload" },
-                { type: "separator" },
-                { role: "resetZoom" },
-                { role: "zoomIn" },
-                { role: "zoomOut" },
-                { type: "separator" },
-                { role: "togglefullscreen" },
-                isDev ? { role: "toggleDevTools" } : null,
-            ].filter(Boolean),
-        },
-        {
-            label: "Window",
-            submenu: [{ role: "minimize" }, { role: "zoom" }],
-        },
-        {
-            label: "About",
-            submenu: [
-                {
-                    label: "Project's GitHub page",
-                    click: () => {
-                        shell.openExternal("https://github.com/learnercraft/ispeakerreact");
-                    },
-                },
-            ],
-        },
-    ]);
-
-    Menu.setApplicationMenu(menu);
-
-    app.on("second-instance", () => {
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) {
-                mainWindow.restore();
-            }
-            mainWindow.focus();
-        }
-    });
-
-    applog.info(`App started. Version ${version}`);
-}
 
 // Set up rate limiter: maximum of 2000 requests per 15 minutes
 /*const limiter = RateLimit({
@@ -801,19 +669,23 @@ app.on("window-all-closed", () => {
 // Recreate the window on macOS when the dock icon is clicked.
 app.on("activate", () => {
     if (mainWindow === null) {
-        createWindow();
+        createWindow(__dirname, (srv) => {
+            server = srv;
+        });
     }
 });
 
 app.whenReady()
     .then(() => {
         // 1. Show splash window immediately
-        createSplashWindow();
+        createSplashWindow(__dirname);
 
         // 2. Start heavy work in parallel after splash is shown
         setImmediate(() => {
             // Create main window (can be shown after splash)
-            createWindow();
+            createWindow(__dirname, (srv) => {
+                server = srv;
+            });
 
             // Wait for log settings and manage logs in background
             ipcMain.once("update-log-settings", (event, settings) => {

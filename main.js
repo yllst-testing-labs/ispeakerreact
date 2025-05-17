@@ -11,19 +11,21 @@ import { fileURLToPath } from "node:url";
 
 import { createSplashWindow, createWindow } from "./electron/createWindow.js";
 import { expressApp } from "./electron/expressServer.js";
-import {
-    getLogFolder,
-    getSaveFolder,
-    getUserSettingsPath,
-    readUserSettings,
-} from "./electron/filePath.js";
-import { fileVerification, verifyAndExtractIPC } from "./electron/zipOperation.js";
+import { getSaveFolder, readUserSettings, getLogFolder } from "./electron/filePath.js";
 import {
     getCustomSaveFolderIPC,
     getSaveFolderIPC,
     getVideoFileDataIPC,
     getVideoSaveFolderIPC,
 } from "./electron/getFileAndFolder.js";
+import {
+    generateLogFileName,
+    getCurrentLogSettings,
+    manageLogFiles,
+    setCurrentLogSettings,
+    writeUserSettings,
+} from "./electron/logOperations.js";
+import { fileVerification, verifyAndExtractIPC } from "./electron/zipOperation.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -41,129 +43,8 @@ try {
 }
 if (electronSquirrelStartup) app.quit();
 
-let currentLogSettings = {
-    numOfLogs: 10,
-    keepForDays: 0,
-    logLevel: "info",
-    logFormat: "{h}:{i}:{s} {text}",
-    maxLogSize: 5 * 1024 * 1024,
-};
-
-// After defining currentLogSettings, load from user settings if present
-const userSettings = await readUserSettings();
-if (userSettings.logSettings) {
-    currentLogSettings = { ...currentLogSettings, ...userSettings.logSettings };
-}
-
-// Write user settings JSON
-const writeUserSettings = async (settings) => {
-    const settingsPath = getUserSettingsPath();
-    await fsPromises.writeFile(settingsPath, JSON.stringify(settings, null, 2));
-};
-
-// Function to generate the log file name with date-time appended
-const generateLogFileName = () => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    return `ispeakerreact-log_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.log`;
-};
-
-// Global variable to hold the current log folder path
-let currentLogFolder = await getLogFolder(readUserSettings);
-
-// Configure electron-log to use the log directory
-applog.transports.file.fileName = generateLogFileName();
-applog.transports.file.resolvePathFn = () =>
-    path.join(currentLogFolder, applog.transports.file.fileName);
-applog.transports.file.maxSize = currentLogSettings.maxLogSize;
-applog.transports.console.level = currentLogSettings.logLevel;
-
-// Clean up logs on startup according to current settings
+// Log operations
 manageLogFiles();
-
-// Handle updated log settings from the renderer
-ipcMain.on("update-log-settings", async (event, newSettings) => {
-    currentLogSettings = newSettings;
-    applog.info("Log settings updated:", currentLogSettings);
-
-    // Save to user settings file
-    const userSettings = await readUserSettings();
-    userSettings.logSettings = currentLogSettings;
-    await writeUserSettings(userSettings);
-
-    manageLogFiles();
-});
-
-// Function to check and manage log files based on the currentLogSettings
-async function manageLogFiles() {
-    try {
-        const { numOfLogs, keepForDays } = currentLogSettings;
-
-        applog.info("Log settings:", currentLogSettings);
-
-        // Get all log files
-        const logFiles = await fsPromises.readdir(currentLogFolder);
-        const logFilesResolved = [];
-        for (const file of logFiles) {
-            const filePath = path.join(currentLogFolder, file);
-            try {
-                const stats = await fsPromises.stat(filePath);
-                logFilesResolved.push({
-                    path: filePath,
-                    birthtime: stats.birthtime,
-                });
-            } catch (err) {
-                if (err.code !== "ENOENT") {
-                    applog.error(`Error stating log file: ${filePath}`, err);
-                }
-                // If ENOENT, just skip this file
-            }
-        }
-
-        // Sort log files by creation time (oldest first)
-        logFilesResolved.sort((a, b) => a.birthtime - b.birthtime);
-
-        // Remove logs if they exceed the specified limit (excluding 0 for unlimited)
-        if (numOfLogs > 0 && logFilesResolved.length > numOfLogs) {
-            const filesToDelete = logFilesResolved.slice(0, logFilesResolved.length - numOfLogs);
-            for (const file of filesToDelete) {
-                try {
-                    await fsPromises.unlink(file.path);
-                    applog.info(`Deleted log file: ${file.path}`);
-                } catch (err) {
-                    if (err.code !== "ENOENT") {
-                        applog.error(`Error deleting log file: ${file.path}`, err);
-                    }
-                }
-            }
-        }
-
-        // Remove logs older than the specified days (excluding 0 for never)
-        if (keepForDays > 0) {
-            const now = new Date();
-            for (const file of logFilesResolved) {
-                const ageInDays = (now - new Date(file.birthtime)) / (1000 * 60 * 60 * 24);
-                if (ageInDays > keepForDays) {
-                    try {
-                        await fsPromises.unlink(file.path);
-                        applog.info(`Deleted old log file: ${file.path}`);
-                    } catch (err) {
-                        if (err.code !== "ENOENT") {
-                            applog.error(`Error deleting old log file: ${file.path}`, err);
-                        }
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        applog.error("Error managing log files:", error);
-    }
-}
 
 let mainWindow;
 
@@ -314,8 +195,9 @@ ipcMain.handle("get-port", () => {
 
 ipcMain.handle("open-log-folder", async () => {
     // Open the folder in the file manager
-    shell.openPath(currentLogFolder); // Open the folder
-    return currentLogFolder; // Send the path back to the renderer
+    const logFolder = await getLogFolder(readUserSettings);
+    await shell.openPath(logFolder); // Open the folder
+    return logFolder; // Send the path back to the renderer
 });
 
 // Check video extracted folder
@@ -400,7 +282,7 @@ app.whenReady()
 
             // Wait for log settings and manage logs in background
             ipcMain.once("update-log-settings", (event, settings) => {
-                currentLogSettings = settings;
+                setCurrentLogSettings(settings);
                 applog.info("Log settings received from renderer:", settings);
                 manageLogFiles().then(() => {
                     applog.info("Log files managed successfully.");
@@ -584,7 +466,7 @@ ipcMain.handle("set-custom-save-folder", async (event, folderPath) => {
             await moveFolderContents(oldSaveFolder, newSaveFolder, event);
         }
         // Update log directory and file name to new save folder
-        currentLogFolder = path.join(newSaveFolder, "logs");
+        const currentLogFolder = path.join(newSaveFolder, "logs");
         try {
             await fsPromises.mkdir(currentLogFolder, { recursive: true });
         } catch (e) {
@@ -616,7 +498,7 @@ ipcMain.handle("show-open-dialog", async (event, options) => {
 });
 
 ipcMain.handle("get-log-settings", async () => {
-    return currentLogSettings;
+    return getCurrentLogSettings();
 });
 
 // DEBUG: Trace undefined logs

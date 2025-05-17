@@ -618,3 +618,13 @@ ipcMain.handle("show-open-dialog", async (event, options) => {
 ipcMain.handle("get-log-settings", async () => {
     return currentLogSettings;
 });
+
+// DEBUG: Trace undefined logs
+const origConsoleLog = console.log;
+console.log = function (...args) {
+    if (args.length === 1 && args[0] === undefined) {
+        origConsoleLog.call(console, "console.log(undefined) called! Stack trace:");
+        origConsoleLog.call(console, new Error().stack);
+    }
+    origConsoleLog.apply(console, args);
+};

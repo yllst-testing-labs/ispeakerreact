@@ -179,8 +179,26 @@ const isDeniedSystemFolder = (folderPath) => {
 
     if (!isCaseSensitive) absoluteInput = absoluteInput.toLowerCase();
 
+    // Always allow the current user's home directory (with or without trailing slash)
+    const userHome = app.getPath("home");
+    let userHomeFormatted = userHome;
+    if (!userHomeFormatted.endsWith(path.sep) && userHomeFormatted !== path.sep) {
+        userHomeFormatted += path.sep;
+    }
+    let absoluteInputWithSep = absoluteInput;
+    if (!absoluteInputWithSep.endsWith(path.sep) && absoluteInputWithSep !== path.sep) {
+        absoluteInputWithSep += path.sep;
+    }
+    if (absoluteInput === userHome || absoluteInputWithSep === userHomeFormatted) {
+        return false;
+    }
+
     // Check if the path is a protected system folder or a subfolder of one
     return formattedDenyList.some((protectedPath) => {
+        // Special case: only block root if it's exactly root
+        if (protectedPath === path.sep) {
+            return absoluteInput === protectedPath;
+        }
         const isMatch = absoluteInput === protectedPath || absoluteInput.startsWith(protectedPath);
         if (isMatch) {
             console.log(`Match found: ${absoluteInput} matches ${protectedPath}`);

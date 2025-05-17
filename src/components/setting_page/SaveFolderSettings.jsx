@@ -40,7 +40,7 @@ const SaveFolderSettings = () => {
             // Open folder dialog via Electron
             const folderPaths = await window.electron.ipcRenderer.invoke("show-open-dialog", {
                 properties: ["openDirectory"],
-                title: t("settingPage.saveFolderSettings.chooseFolderTitle"),
+                title: t("settingPage.saveFolderSettings.saveFolderChooseBtn"),
             });
             if (folderPaths && folderPaths.length > 0) {
                 setMoveDialogOpen(true);
@@ -143,29 +143,43 @@ const SaveFolderSettings = () => {
                         <div className="py-4">
                             {moveProgress ? (
                                 <>
-                                    <div className="mb-2">
-                                        {t("settingPage.saveFolderSettings.saveFolderMovingPhase", {
-                                            phase: moveProgress.phase,
-                                        })}
-                                        {": "}
-                                        <span lang="en" className="font-mono! break-all">
-                                            {moveProgress.name}
-                                        </span>
-                                    </div>
-                                    <progress
-                                        className="progress progress-primary w-full"
-                                        value={moveProgress.moved}
-                                        max={moveProgress.total}
-                                    ></progress>
-                                    <div className="mt-2 text-xs text-zinc-500">
-                                        {moveProgress.moved} / {moveProgress.total}{" "}
-                                        {t("settingPage.saveFolderSettings.saveFolderMovingFiles")}
-                                    </div>
+                                    {moveProgress.name ? (
+                                        <>
+                                            <div className="mb-2">
+                                                {t(
+                                                    `settingPage.saveFolderSettings.${
+                                                        moveProgress.phase === "copy"
+                                                            ? "saveFolderCopyPhase"
+                                                            : moveProgress.phase === "delete"
+                                                              ? "saveFolderDeletePhase"
+                                                              : "saveFolderMovingPhase"
+                                                    }`
+                                                )}
+                                                {" "}
+                                                <span lang="en" className="font-mono! break-all">
+                                                    {moveProgress.name}
+                                                </span>
+                                            </div>
+                                            <progress
+                                                className="progress progress-primary w-full"
+                                                value={moveProgress.moved}
+                                                max={moveProgress.total}
+                                            ></progress>
+                                            <div className="mt-2 text-xs text-zinc-500">
+                                                {moveProgress.moved} / {moveProgress.total}{" "}
+                                                {t(
+                                                    "settingPage.saveFolderSettings.saveFolderMovingFiles"
+                                                )}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <span className="loading loading-spinner loading-md"></span>
+                                    )}
                                 </>
                             ) : (
                                 <span className="loading loading-spinner loading-md"></span>
                             )}
-                            <div role="alert" className="alert alert-warning my-3">
+                            <div role="alert" className="alert alert-warning mt-6">
                                 <IoWarningOutline className="h-6 w-6" />
                                 <div>
                                     {t("settingPage.saveFolderSettings.saveFolderMovingWarning")}

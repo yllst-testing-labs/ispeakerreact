@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Trans } from "react-i18next";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import openExternal from "../../utils/openExternal";
@@ -60,6 +61,14 @@ const PronunciationCheckerDialogContent = ({
             </div>
         </div>
     );
+};
+
+PronunciationCheckerDialogContent.propTypes = {
+    t: PropTypes.func.isRequired,
+    checking: PropTypes.bool.isRequired,
+    closeConfirmDialog: PropTypes.func.isRequired,
+    handleProceed: PropTypes.func.isRequired,
+    hasPreviousInstall: PropTypes.bool.isRequired,
 };
 
 export default PronunciationCheckerDialogContent;

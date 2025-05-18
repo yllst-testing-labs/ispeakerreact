@@ -305,15 +305,66 @@ const killCurrentPythonProcess = async () => {
     }
 };
 
-// IPC handlers for getting/setting install status
+// The install status is now structured as:
+// {
+//   python: { found, version },
+//   dependencies: [ { name, status, log }, ... ],
+//   model: { status, message, log },
+//   stderr: <string>,
+//   log: <string>,
+//   timestamp: <number>
+// }
 const setupPronunciationInstallStatusIPC = () => {
     ipcMain.handle("get-pronunciation-install-status", async () => {
         return installConf.get("status", null);
     });
     ipcMain.handle("set-pronunciation-install-status", async (_event, status) => {
-        installConf.set("status", status);
+        // If the status is already in the new structure, save as is
+        if (
+            status &&
+            status.python &&
+            status.dependencies &&
+            status.model &&
+            "stderr" in status &&
+            "log" in status
+        ) {
+            installConf.set("status", { ...status, timestamp: Date.now() });
+        } else {
+            // If the status is in the old format, attempt to migrate
+            const migrated = migrateOldStatusToStructured(status);
+            installConf.set("status", migrated);
+        }
         return true;
     });
+};
+
+// Helper to migrate old flat status to new structured format
+const migrateOldStatusToStructured = (status) => {
+    if (!status) return null;
+    // Try to extract python info
+    const python = {
+        found: status.found,
+        version: status.version,
+    };
+    // Dependencies: if array, use as is; if single dep, wrap in array
+    let dependencies = status.deps;
+    if (!Array.isArray(dependencies)) {
+        dependencies = dependencies ? [dependencies] : [];
+    }
+    // Model info
+    const model = {
+        status: status.modelStatus || status.status,
+        message: status.modelMessage || status.message,
+        log: status.modelLog || "",
+    };
+    return {
+        python,
+        dependencies,
+        model,
+        stderr: status.stderr || "",
+        log: status.log || "",
+        timestamp: Date.now(),
+    };
 };
 
 export {

@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
 import { IoCheckmark, IoCloseOutline } from "react-icons/io5";
+import { getPronunciationStepStatuses } from "./pronunciationStepUtils";
 
 const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => {
     // Helper to get status icon
@@ -14,47 +15,7 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
         return null;
     };
 
-    // Step 1: Checking Python installation
-    let step1Status = checking
-        ? "pending"
-        : error
-          ? "error"
-          : pythonCheckResult && pythonCheckResult.found
-            ? "success"
-            : pythonCheckResult && pythonCheckResult.found === false
-              ? "error"
-              : "pending";
-
-    // Step 2: Installing dependencies
-    let step2Status = "pending";
-    let deps = pythonCheckResult && pythonCheckResult.deps;
-    if (deps && Array.isArray(deps)) {
-        if (deps.some((dep) => dep.status === "error")) step2Status = "error";
-        else if (deps.every((dep) => dep.status === "success")) step2Status = "success";
-        else if (deps.some((dep) => dep.status === "pending")) step2Status = "pending";
-    } else if (step1Status === "success") {
-        step2Status = checking ? "pending" : "success"; // fallback
-    }
-
-    // Step 3: Downloading phoneme model (not implemented yet)
-    let step3Status = "pending";
-    if (pythonCheckResult && pythonCheckResult.modelStatus) {
-        if (pythonCheckResult.modelStatus === "found") {
-            step3Status = "success";
-        } else if (pythonCheckResult.modelStatus === "downloading") {
-            step3Status = "pending";
-        } else if (pythonCheckResult.modelStatus === "error") {
-            step3Status = "error";
-        }
-    }
-
-    // Step 4: Testing installation
-    let step4Status =
-        pythonCheckResult && typeof pythonCheckResult.tested === "boolean"
-            ? pythonCheckResult.tested
-                ? "success"
-                : "error"
-            : "pending";
+    const { step1Status, step2Status, step3Status, deps } = getPronunciationStepStatuses(pythonCheckResult, checking, error);
 
     const steps = [
         {

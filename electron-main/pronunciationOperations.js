@@ -105,10 +105,13 @@ else:
     const saveFolder = await getSaveFolder(readUserSettings);
     const tempPyPath = path.join(saveFolder, "download_model_temp.py");
     await fsPromises.writeFile(tempPyPath, pyCode, "utf-8");
+    // Emit 'downloading' status before launching Python process
+    if (onProgress) onProgress({ status: "downloading", message: "Preparing to download model..." });
     return new Promise((resolve) => {
         const py = exec(`python -u "${tempPyPath}"`);
         currentPythonProcess = py;
         let lastStatus = null;
+        let hadError = false;
         py.stdout.on("data", (data) => {
             const str = data.toString();
             // Always forward raw output to renderer for logging
@@ -119,7 +122,12 @@ else:
                     try {
                         const msg = JSON.parse(line);
                         lastStatus = msg;
-                        if (onProgress) onProgress(msg);
+                        if (msg.status === "error") {
+                            hadError = true;
+                            if (onProgress) onProgress(msg);
+                        } else {
+                            if (onProgress) onProgress(msg);
+                        }
                     } catch {
                         // Ignore parse errors for non-JSON lines
                     }
@@ -127,14 +135,21 @@ else:
             });
         });
         py.stderr.on("data", (data) => {
-            if (onProgress) onProgress({ status: "error", message: data.toString() });
+            // Only log stderr, do not send error status unless process exits with error
+            if (onProgress) onProgress({ status: "log", message: data.toString() });
         });
-        py.on("exit", () => {
+        py.on("exit", (code) => {
             currentPythonProcess = null;
             fsPromises.unlink(tempPyPath).catch(() => {
                 console.log("Failed to delete temp file");
             });
-            resolve(lastStatus);
+            // If process exited with error and no JSON error was sent, send a generic error
+            if (code !== 0 && !hadError) {
+                if (onProgress) onProgress({ status: "error", message: `Model download process exited with code ${code}` });
+                resolve({ status: "error", message: `Model download process exited with code ${code}` });
+            } else {
+                resolve(lastStatus);
+            }
         });
     });
 };

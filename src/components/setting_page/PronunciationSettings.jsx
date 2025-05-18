@@ -8,6 +8,7 @@ import {
     installDependenciesIPC,
     downloadModelStepIPC,
 } from "./PronunciationUtils";
+import { getPronunciationStepStatuses } from "./pronunciationStepUtils";
 
 const PronunciationSettings = () => {
     const { t } = useTranslation();
@@ -38,6 +39,7 @@ const PronunciationSettings = () => {
     // Listen for dependency installation progress
     useEffect(() => {
         const handleDepProgress = (_event, depStatus) => {
+            console.log("[Pronunciation] Dependency Progress:", depStatus);
             setPythonCheckResult((prev) => {
                 // Update deps array
                 let deps = Array.isArray(prev?.deps) ? [...prev.deps] : [];
@@ -52,6 +54,7 @@ const PronunciationSettings = () => {
             });
         };
         const handleCancelled = () => {
+            console.log("[Pronunciation] Cancelled");
             setIsCancelling(false);
             setChecking(false);
             setPythonCheckResult(null);
@@ -79,6 +82,7 @@ const PronunciationSettings = () => {
     // Listen for model download progress (live console output)
     useEffect(() => {
         const handleModelProgress = (_event, msg) => {
+            console.log("[Pronunciation] Model Download Progress:", msg);
             setPythonCheckResult((prev) => ({
                 ...prev,
                 log: (prev?.log ? prev.log + "\n" : "") + (msg.message || ""),
@@ -101,17 +105,21 @@ const PronunciationSettings = () => {
 
     // Decoupled logic for checking Python installation
     const checkPython = async () => {
+        console.log("[Pronunciation] Checking Python...");
         setChecking(true);
         setError(null);
         setCollapseOpen(true);
+        // Reset pythonCheckResult to clear previous modelStatus/errors
         setPythonCheckResult(null);
         try {
             const result = await checkPythonInstalled();
+            console.log("[Pronunciation] Python check result:", result);
             setPythonCheckResult(result);
             if (result.found) {
                 installDependencies();
             }
         } catch (err) {
+            console.error("[Pronunciation] Python check error:", err);
             setError(err.message || String(err));
         } finally {
             setChecking(false);
@@ -120,15 +128,18 @@ const PronunciationSettings = () => {
 
     // Function to trigger dependency installation
     const installDependencies = async () => {
+        console.log("[Pronunciation] Installing dependencies...");
         if (window.electron?.ipcRenderer) {
             setChecking(true);
             try {
                 const result = await installDependenciesIPC();
+                console.log("[Pronunciation] Dependencies installed:", result);
                 setPythonCheckResult((prev) => ({ ...prev, ...result }));
                 if (result.deps && result.deps.every((dep) => dep.status === "success")) {
                     downloadModelStep();
                 }
             } catch (err) {
+                console.error("[Pronunciation] Dependency install error:", err);
                 setError(err.message || String(err));
             } finally {
                 setChecking(false);
@@ -137,13 +148,26 @@ const PronunciationSettings = () => {
     };
 
     const downloadModelStep = async () => {
+        console.log("[Pronunciation] Downloading model...");
         if (window.electron?.ipcRenderer) {
             setChecking(true);
+            // Set modelStatus to 'downloading' immediately so UI shows spinner
+            setPythonCheckResult((prev) => ({
+                ...prev,
+                modelStatus: "downloading",
+                log: (prev?.log ? prev.log + "\n" : "") + "Starting model download...\n",
+            }));
             try {
                 const result = await downloadModelStepIPC();
+                console.log("[Pronunciation] Model download result:", result);
                 setPythonCheckResult((prev) => ({ ...prev, ...result }));
             } catch (err) {
-                setError(err.message || String(err));
+                console.error("[Pronunciation] Model download error:", err);
+                setPythonCheckResult((prev) => ({
+                    ...prev,
+                    modelStatus: "error",
+                    log: (prev?.log ? prev.log + "\n" : "") + (err.message || String(err)),
+                }));
             } finally {
                 setChecking(false);
             }
@@ -156,38 +180,8 @@ const PronunciationSettings = () => {
         checkPython();
     };
 
-    // Determine step statuses (replicate logic from PronunciationCheckerInfo)
-    let step1Status = checking
-        ? "pending"
-        : error
-          ? "error"
-          : pythonCheckResult && pythonCheckResult.found
-            ? "success"
-            : pythonCheckResult && pythonCheckResult.found === false
-              ? "error"
-              : "pending";
-
-    let step2Status = "pending";
-    let deps = pythonCheckResult && pythonCheckResult.deps;
-    if (deps && Array.isArray(deps)) {
-        if (deps.some((dep) => dep.status === "error")) step2Status = "error";
-        else if (deps.every((dep) => dep.status === "success")) step2Status = "success";
-        else if (deps.some((dep) => dep.status === "pending")) step2Status = "pending";
-    } else if (step1Status === "success") {
-        step2Status = checking ? "pending" : "success";
-    }
-
-    let step3Status = "pending";
-    if (pythonCheckResult && pythonCheckResult.modelStatus) {
-        if (pythonCheckResult.modelStatus === "found") {
-            step3Status = "success";
-        } else if (pythonCheckResult.modelStatus === "downloading") {
-            step3Status = "pending";
-        } else if (pythonCheckResult.modelStatus === "error") {
-            step3Status = "error";
-        }
-    }
-
+    // Use shared utility for step statuses
+    const { step1Status, step2Status, step3Status } = getPronunciationStepStatuses(pythonCheckResult, checking, error);
     // Consider all steps done if none are pending
     const allStepsDone = [step1Status, step2Status, step3Status].every(
         (status) => status === "success" || status === "error"

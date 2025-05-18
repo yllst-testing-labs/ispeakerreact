@@ -130,7 +130,7 @@ const PronunciationSettings = () => {
 
             {/* Checker dialog */}
             <dialog ref={checkerDialogRef} className="modal">
-                <div className="modal-box">
+                <div className="modal-box w-3/4 max-w-2xl">
                     <h3 className="text-lg font-bold">
                         {t(
                             "settingPage.pronunciationSettings.pronunciationModalInstallationProcess"

@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IoInformationCircleOutline, IoWarningOutline } from "react-icons/io5";
+import {
+    IoCheckmarkCircleOutline,
+    IoInformationCircleOutline,
+    IoWarningOutline,
+} from "react-icons/io5";
 import PronunciationCheckerDialogContent from "./PronunciationCheckerDialogContent";
 import PronunciationCheckerInfo from "./PronunciationCheckerInfo";
 import {
@@ -225,8 +229,9 @@ const PronunciationSettings = () => {
                     <h3 className="text-lg font-bold">
                         {t("settingPage.pronunciationSettings.installationProcess")}
                     </h3>
-                    <div className="py-4">
-                        {!allStepsDone && (
+
+                    {!allStepsDone ? (
+                        <div className="py-4">
                             <div role="alert" className="alert alert-warning text-base">
                                 <IoWarningOutline className="h-6 w-6" />
                                 <span>
@@ -235,17 +240,31 @@ const PronunciationSettings = () => {
                                     )}
                                 </span>
                             </div>
-                        )}
+                        </div>
+                    ) : (
+                        <div className="py-4">
+                            <div role="alert" className="alert alert-success text-base">
+                                <IoCheckmarkCircleOutline className="h-6 w-6" />
+                                <span>
+                                    {t(
+                                        "settingPage.pronunciationSettings.installationProcessSuccess"
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+                    )}
 
-                        {isCancelling && (
-                            <div role="alert" className="alert alert-info my-4">
+                    {isCancelling && (
+                        <div className="py-4">
+                            <div role="alert" className="alert alert-info text-base">
                                 <IoInformationCircleOutline className="h-6 w-6" />
                                 {t(
                                     "settingPage.pronunciationSettings.installationProcessCancelling"
                                 )}
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
+
                     <PronunciationCheckerInfo
                         t={t}
                         checking={checking || isCancelling}

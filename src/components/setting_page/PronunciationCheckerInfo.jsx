@@ -78,19 +78,15 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
                     </li>
                 ))}
             </ol>
-            <div className="bg-base-100 border-base-300 collapse border dark:border-slate-600">
+            <div className="bg-base-100 border-base-300 collapse-arrow collapse border dark:border-slate-600">
                 <input type="checkbox" />
                 <div className="collapse-title font-semibold">
-                    {t(
-                        "settingPage.pronunciationSettings.showTechnicalInfo",
-                        "Expand technical information"
-                    )}
+                    {t("settingPage.pronunciationSettings.showDetailsCollapse")}
                 </div>
                 <div className="collapse-content text-sm">
                     {checking && (
                         <div className="mb-2">
-                            <span className="loading loading-spinner loading-sm"></span>{" "}
-                            {t("settingPage.pronunciationSettings.checking", "Checking...")}
+                            <span className="loading loading-spinner loading-sm"></span>
                         </div>
                     )}
                     {error && <div className="text-error mb-2">{error}</div>}

@@ -60,20 +60,6 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
                         <div className="flex gap-x-2 pt-1">{getStatusIcon(step.status)}</div>
                         <div className="flex min-w-0 flex-auto flex-col gap-x-4">
                             <div className="min-w-0 flex-auto">{step.label}</div>
-                            {/* For step 2, show each dependency */}
-                            {step.key === "step2" && Array.isArray(step.deps) && (
-                                <ul className="mt-1 ml-2 space-y-1">
-                                    {step.deps.map((dep) => (
-                                        <li
-                                            key={dep.name}
-                                            className="flex items-center gap-x-2 text-sm"
-                                        >
-                                            {getStatusIcon(dep.status)}
-                                            <span>{dep.name}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
                         </div>
                     </li>
                 ))}

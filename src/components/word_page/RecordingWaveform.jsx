@@ -260,7 +260,7 @@ const RecordingWaveform = ({
                 ></div>
             </div>
 
-            <div className="flex w-full place-items-center justify-center space-x-4">
+            <div className="flex w-full flex-wrap place-items-center justify-center gap-4 md:gap-2">
                 <button
                     type="button"
                     id="record"
@@ -299,17 +299,12 @@ const RecordingWaveform = ({
                         </>
                     )}
                 </button>
-
-                <button
-                    type="button"
-                    id="download"
-                    className="btn btn-primary"
-                    onClick={() => PronunciationChecker()}
-                    disabled={!recordedUrl || disableControls || isAudioLoading}
-                >
-                    <BsClipboard2Check className="h-5 w-5" />
-                </button>
             </div>
+
+            <PronunciationChecker
+                disabled={!recordedUrl || disableControls || isAudioLoading}
+                icon={<BsClipboard2Check className="h-5 w-5" />}
+            />
 
             {/*recordedUrl && (
                 <a

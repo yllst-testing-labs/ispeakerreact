@@ -1,6 +1,12 @@
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BsPauseFill, BsPlayFill, BsRecordFill, BsStopFill } from "react-icons/bs";
+import {
+    BsPauseCircle,
+    BsPlayCircle,
+    BsRecordCircle,
+    BsStopCircle,
+    BsClipboard2Check,
+} from "react-icons/bs";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record";
 import {
@@ -12,6 +18,7 @@ import {
 import { isElectron } from "../../utils/isElectron";
 import { sonnerErrorToast, sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 import useWaveformTheme from "./useWaveformTheme";
+import PronunciationChecker from "./PronunciationChecker";
 
 const getSupportedMimeType = () => {
     const mimeTypes = ["audio/webm", "audio/ogg", "audio/wav", "audio/mpeg", "audio/mp4"];
@@ -257,39 +264,50 @@ const RecordingWaveform = ({
                 <button
                     type="button"
                     id="record"
-                    title={
-                        recording
-                            ? t("buttonConversationExam.stopRecordBtn")
-                            : t("buttonConversationExam.recordBtn")
-                    }
-                    className="btn btn-circle btn-accent"
+                    className="btn btn-accent"
                     onClick={handleRecordClick}
                     disabled={disableControls || isPlaying || isAudioLoading}
                 >
                     {recording ? (
-                        <BsStopFill className="h-6 w-6" />
+                        <>
+                            <BsStopCircle className="h-5 w-5" />{" "}
+                            {t("buttonConversationExam.stopRecordBtn")}
+                        </>
                     ) : (
-                        <BsRecordFill className="h-6 w-6" />
+                        <>
+                            <BsRecordCircle className="h-5 w-5" />{" "}
+                            {t("buttonConversationExam.recordBtn")}
+                        </>
                     )}
                 </button>
 
                 <button
                     type="button"
                     id="play"
-                    className="btn btn-circle btn-primary"
+                    className="btn btn-primary"
                     onClick={handlePlayPause}
                     disabled={!recordedUrl || disableControls || isAudioLoading}
-                    title={
-                        wavesurfer?.isPlaying()
-                            ? t("wordPage.pauseRecordingBtn")
-                            : t("buttonConversationExam.playBtn")
-                    }
                 >
                     {wavesurfer?.isPlaying() ? (
-                        <BsPauseFill className="h-6 w-6" />
+                        <>
+                            <BsPauseCircle className="h-5 w-5" /> {t("wordPage.pauseRecordingBtn")}
+                        </>
                     ) : (
-                        <BsPlayFill className="h-6 w-6" />
+                        <>
+                            <BsPlayCircle className="h-5 w-5" />{" "}
+                            {t("buttonConversationExam.playBtn")}
+                        </>
                     )}
+                </button>
+
+                <button
+                    type="button"
+                    id="download"
+                    className="btn btn-primary"
+                    onClick={() => PronunciationChecker()}
+                    disabled={!recordedUrl || disableControls || isAudioLoading}
+                >
+                    <BsClipboard2Check className="h-5 w-5" />
                 </button>
             </div>
 

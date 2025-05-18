@@ -1335,6 +1335,7 @@
             "installationProcessStep3": "Downloading phoneme model…",
             "installationProcessCancelling": "Cancelling…",
             "installationProcessSuccess": "Installation complete. You can now close this dialog.",
+            "installationProcessFailed": "Installation failed. Expand the details to see the error.",
             "stepDone": "done",
             "stepFailed": "failed"
         }

@@ -14,7 +14,9 @@ export function getPronunciationStepStatuses(pythonCheckResult, checking, error)
     // Step 2: Installing dependencies
     let step2Status = "pending";
     let deps = pythonCheckResult && pythonCheckResult.deps;
-    if (deps && Array.isArray(deps)) {
+    if (step1Status === "error") {
+        step2Status = "error";
+    } else if (deps && Array.isArray(deps)) {
         if (deps.some((dep) => dep.status === "error")) step2Status = "error";
         else if (deps.every((dep) => dep.status === "success")) step2Status = "success";
         else if (deps.some((dep) => dep.status === "pending")) step2Status = "pending";
@@ -24,7 +26,9 @@ export function getPronunciationStepStatuses(pythonCheckResult, checking, error)
 
     // Step 3: Downloading phoneme model
     let step3Status = "pending";
-    if (pythonCheckResult && pythonCheckResult.modelStatus) {
+    if (step1Status === "error" || step2Status === "error") {
+        step3Status = "error";
+    } else if (pythonCheckResult && pythonCheckResult.modelStatus) {
         if (
             pythonCheckResult.modelStatus === "found" ||
             pythonCheckResult.modelStatus === "success"

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     IoCheckmarkCircleOutline,
+    IoCloseCircleOutline,
     IoInformationCircleOutline,
     IoWarningOutline,
 } from "react-icons/io5";
@@ -195,6 +196,10 @@ const PronunciationSettings = () => {
     const allStepsDone = [step1Status, step2Status, step3Status].every(
         (status) => status === "success" || status === "error"
     );
+    // Consider installation failed if all steps are done and at least one is error
+    const installationFailed =
+        allStepsDone &&
+        [step1Status, step2Status, step3Status].some((status) => status === "error");
 
     return (
         <>
@@ -237,6 +242,17 @@ const PronunciationSettings = () => {
                                 <span>
                                     {t(
                                         "settingPage.pronunciationSettings.installationProcessWarning"
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+                    ) : installationFailed ? (
+                        <div className="py-4">
+                            <div role="alert" className="alert alert-error text-base">
+                                <IoCloseCircleOutline className="h-6 w-6" />
+                                <span>
+                                    {t(
+                                        "settingPage.pronunciationSettings.installationProcessFailed"
                                     )}
                                 </span>
                             </div>

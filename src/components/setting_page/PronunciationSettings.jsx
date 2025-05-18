@@ -174,14 +174,21 @@ const PronunciationSettings = () => {
         }
     };
 
-    const handleProceed = () => {
+    const handleProceed = async () => {
         closeConfirmDialog();
         openCheckerDialog();
+        if (window.electron?.ipcRenderer) {
+            await window.electron.ipcRenderer.invoke("pronunciation-reset-cancel-flag");
+        }
         checkPython();
     };
 
     // Use shared utility for step statuses
-    const { step1Status, step2Status, step3Status } = getPronunciationStepStatuses(pythonCheckResult, checking, error);
+    const { step1Status, step2Status, step3Status } = getPronunciationStepStatuses(
+        pythonCheckResult,
+        checking,
+        error
+    );
     // Consider all steps done if none are pending
     const allStepsDone = [step1Status, step2Status, step3Status].every(
         (status) => status === "success" || status === "error"
@@ -263,9 +270,21 @@ const PronunciationSettings = () => {
                             }
                             disabled={isCancelling}
                         >
-                            {!allStepsDone
-                                ? t("settingPage.exerciseSettings.cancelBtn", "Cancel")
-                                : t("sound_page.closeBtn", "Close")}
+                            {!allStepsDone ? (
+                                isCancelling ? (
+                                    <>
+                                        <span
+                                            className="spinner-border spinner-border-sm mr-2"
+                                            role="status"
+                                        />
+                                        {t("settingPage.exerciseSettings.cancelBtn", "Cancel")}
+                                    </>
+                                ) : (
+                                    t("settingPage.exerciseSettings.cancelBtn", "Cancel")
+                                )
+                            ) : (
+                                t("sound_page.closeBtn", "Close")
+                            )}
                         </button>
                     </div>
                 </div>

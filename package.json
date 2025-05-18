@@ -27,6 +27,7 @@
         "electron-squirrel-startup": "^1.0.1",
         "express": "^5.1.0",
         "express-rate-limit": "^7.5.0",
+        "fkill": "^9.0.0",
         "js7z-tools": "^2.4.1",
         "masonry-layout": "^4.2.2",
         "mime": "^4.0.7"

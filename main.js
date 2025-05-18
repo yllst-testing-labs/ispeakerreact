@@ -29,6 +29,8 @@ import {
     downloadModel,
     installDependencies,
     cancelProcess,
+    killCurrentPythonProcess,
+    resetGlobalCancel,
 } from "./electron-main/pronunciationOperations.js";
 import { checkDownloads, checkExtractedFolder } from "./electron-main/videoFileOperations.js";
 import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
@@ -338,3 +340,13 @@ downloadModel();
 cancelProcess();
 
 /* End pronunciation checker operations */
+
+// Add this before or after other app event handlers
+app.on("before-quit", async () => {
+    await killCurrentPythonProcess();
+});
+
+// Before starting a new workflow, reset the global cancel flag
+ipcMain.handle("pronunciation-reset-cancel-flag", async () => {
+    resetGlobalCancel();
+});

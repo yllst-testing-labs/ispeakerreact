@@ -59,7 +59,19 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
                     <li key={step.key} className="flex items-start gap-x-2">
                         <div className="flex gap-x-2 pt-1">{getStatusIcon(step.status)}</div>
                         <div className="flex min-w-0 flex-auto flex-col gap-x-4">
-                            <div className="min-w-0 flex-auto">{step.label}</div>
+                            <div className="flex min-w-0 flex-auto items-center gap-x-2">
+                                {step.label}
+                                {step.status === "success" && (
+                                    <span className="text-success font-semibold">
+                                        {t("settingPage.pronunciationSettings.stepDone")}
+                                    </span>
+                                )}
+                                {step.status === "error" && (
+                                    <span className="text-error font-semibold">
+                                        {t("settingPage.pronunciationSettings.stepFailed")}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </li>
                 ))}

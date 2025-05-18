@@ -1334,7 +1334,9 @@
             "installationProcessStep2": "Installing required dependencies…",
             "installationProcessStep3": "Downloading phoneme model…",
             "installationProcessCancelling": "Cancelling…",
-            "installationProcessSuccess": "Installation complete. You can now close this dialog."
+            "installationProcessSuccess": "Installation complete. You can now close this dialog.",
+            "stepDone": "done",
+            "stepFailed": "failed"
         }
     },
     "downloadPage": {

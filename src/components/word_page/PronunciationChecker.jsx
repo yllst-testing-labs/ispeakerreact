@@ -4,6 +4,7 @@ import { isElectron } from "../../utils/isElectron";
 
 const PronunciationChecker = ({ icon, disabled }) => {
     const [result, setResult] = useState(null);
+    const [showResult, setShowResult] = useState(false);
     const dialogRef = useRef();
     const webDialogRef = useRef();
 
@@ -25,6 +26,7 @@ const PronunciationChecker = ({ icon, disabled }) => {
         } else {
             // Run checker logic here, for now just simulate result
             setResult("Your pronunciation is great!");
+            setShowResult(true);
         }
     };
 
@@ -41,8 +43,10 @@ const PronunciationChecker = ({ icon, disabled }) => {
                 </button>
             </div>
 
-            {result && (
-                <div className="flex justify-center gap-2 pt-4">
+            <div
+                className={`flex justify-center gap-2 overflow-hidden pt-4 transition-all duration-500 ease-in-out ${showResult ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+            >
+                {result && (
                     <div className="card card-border card-lg w-full shadow-sm md:w-2xl dark:border-slate-600">
                         <div className="card-body">
                             <h2 className="card-title">Pronunciation result</h2>
@@ -50,8 +54,8 @@ const PronunciationChecker = ({ icon, disabled }) => {
                             <p>{result}</p>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
             <dialog ref={dialogRef} className="modal">
                 <div className="modal-box">

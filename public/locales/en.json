@@ -1327,11 +1327,12 @@
             "pronunciationModalBodyPython": "If you haven’t installed Python yet, download it from the <0>official Python website here</0> and follow the installation instructions. If it’s already installed, you can proceed to the next step.",
             "pronunciationModalBody": "This will check and install required dependencies for pronunciation checker. This might take a while. Continue?",
             "pronunciationModalBtn": "Proceed",
-            "pronunciationModalInstallationProcess": "Starting installation…",
-            "pronunciationModalInstallationProcessWarning": "Please do not close the app while the installation is in progress.",
-            "pronunciationModalInstallationProcessStep1": "Checking Python installation…",
-            "pronunciationModalInstallationProcessStep2": "Installing required dependencies…",
-            "pronunciationModalInstallationProcessStep3": "Downloading phoneme model…"
+            "installationProcess": "Starting installation…",
+            "installationProcessWarning": "Please do not close the app while the installation is in progress.",
+            "installationProcessStep1": "Checking Python installation…",
+            "installationProcessStep2": "Installing required dependencies…",
+            "installationProcessStep3": "Downloading phoneme model…",
+            "installationProcessCancelling": "Cancelling…"
         }
     },
     "downloadPage": {

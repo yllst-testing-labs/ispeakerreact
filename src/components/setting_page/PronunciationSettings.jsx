@@ -1,12 +1,12 @@
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IoWarningOutline } from "react-icons/io5";
+import { IoInformationCircleOutline, IoWarningOutline } from "react-icons/io5";
 import PronunciationCheckerDialogContent from "./PronunciationCheckerDialogContent";
 import PronunciationCheckerInfo from "./PronunciationCheckerInfo";
 import {
     checkPythonInstalled,
-    installDependenciesIPC,
     downloadModelStepIPC,
+    installDependenciesIPC,
 } from "./PronunciationUtils";
 import { getPronunciationStepStatuses } from "./pronunciationStepUtils";
 
@@ -15,7 +15,6 @@ const PronunciationSettings = () => {
     const confirmDialogRef = useRef(null);
     const checkerDialogRef = useRef(null);
     const [pythonCheckResult, setPythonCheckResult] = useState(null);
-    const [collapseOpen, setCollapseOpen] = useState(false);
     const [checking, setChecking] = useState(false);
     const [error, setError] = useState(null);
     const [isCancelling, setIsCancelling] = useState(false);
@@ -108,7 +107,6 @@ const PronunciationSettings = () => {
         console.log("[Pronunciation] Checking Python...");
         setChecking(true);
         setError(null);
-        setCollapseOpen(true);
         // Reset pythonCheckResult to clear previous modelStatus/errors
         setPythonCheckResult(null);
         try {
@@ -225,22 +223,26 @@ const PronunciationSettings = () => {
             <dialog ref={checkerDialogRef} className="modal">
                 <div className="modal-box w-3/4 max-w-2xl">
                     <h3 className="text-lg font-bold">
-                        {t(
-                            "settingPage.pronunciationSettings.pronunciationModalInstallationProcess"
-                        )}
+                        {t("settingPage.pronunciationSettings.installationProcess")}
                     </h3>
                     <div className="py-4">
-                        <div role="alert" className="alert alert-warning text-base">
-                            <IoWarningOutline className="h-6 w-6" />
-                            <span>
-                                {t(
-                                    "settingPage.pronunciationSettings.pronunciationModalInstallationProcessWarning"
-                                )}
-                            </span>
-                        </div>
+                        {!allStepsDone && (
+                            <div role="alert" className="alert alert-warning text-base">
+                                <IoWarningOutline className="h-6 w-6" />
+                                <span>
+                                    {t(
+                                        "settingPage.pronunciationSettings.installationProcessWarning"
+                                    )}
+                                </span>
+                            </div>
+                        )}
+
                         {isCancelling && (
-                            <div className="mt-4 text-center text-lg font-semibold text-orange-500">
-                                {t("settingPage.pronunciationSettings.cancelling", "Cancelling…")}
+                            <div role="alert" className="alert alert-info my-4">
+                                <IoInformationCircleOutline className="h-6 w-6" />
+                                {t(
+                                    "settingPage.pronunciationSettings.installationProcessCancelling"
+                                )}
                             </div>
                         )}
                     </div>
@@ -249,8 +251,6 @@ const PronunciationSettings = () => {
                         checking={checking || isCancelling}
                         error={error}
                         pythonCheckResult={pythonCheckResult}
-                        collapseOpen={collapseOpen}
-                        setCollapseOpen={setCollapseOpen}
                     />
                     <div className="modal-action">
                         <button
@@ -277,10 +277,10 @@ const PronunciationSettings = () => {
                                             className="spinner-border spinner-border-sm mr-2"
                                             role="status"
                                         />
-                                        {t("settingPage.exerciseSettings.cancelBtn", "Cancel")}
+                                        {t("settingPage.exerciseSettings.cancelBtn")}
                                     </>
                                 ) : (
-                                    t("settingPage.exerciseSettings.cancelBtn", "Cancel")
+                                    t("settingPage.exerciseSettings.cancelBtn")
                                 )
                             ) : (
                                 t("sound_page.closeBtn", "Close")

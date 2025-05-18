@@ -15,29 +15,27 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
         return null;
     };
 
-    const { step1Status, step2Status, step3Status, deps } = getPronunciationStepStatuses(pythonCheckResult, checking, error);
+    const { step1Status, step2Status, step3Status, deps } = getPronunciationStepStatuses(
+        pythonCheckResult,
+        checking,
+        error
+    );
 
     const steps = [
         {
             key: "step1",
-            label: t(
-                "settingPage.pronunciationSettings.pronunciationModalInstallationProcessStep1"
-            ),
+            label: t("settingPage.pronunciationSettings.installationProcessStep1"),
             status: step1Status,
         },
         {
             key: "step2",
-            label: t(
-                "settingPage.pronunciationSettings.pronunciationModalInstallationProcessStep2"
-            ),
+            label: t("settingPage.pronunciationSettings.installationProcessStep2"),
             status: step2Status,
             deps,
         },
         {
             key: "step3",
-            label: t(
-                "settingPage.pronunciationSettings.pronunciationModalInstallationProcessStep3"
-            ),
+            label: t("settingPage.pronunciationSettings.installationProcessStep3"),
             status: step3Status,
         },
     ];
@@ -85,7 +83,7 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
                 <div className="collapse-title font-semibold">
                     {t(
                         "settingPage.pronunciationSettings.showTechnicalInfo",
-                        "Technical information"
+                        "Expand technical information"
                     )}
                 </div>
                 <div className="collapse-content text-sm">

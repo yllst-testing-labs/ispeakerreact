@@ -5,11 +5,14 @@ import { isElectron } from "../../utils/isElectron";
 const PronunciationChecker = ({ icon, disabled }) => {
     const [result, setResult] = useState(null);
     const dialogRef = useRef();
+    const webDialogRef = useRef();
 
     const checkPronunciation = async () => {
         if (!isElectron()) {
-            // Show toast or dialog for web
-            alert("Feature not available in web");
+            // Show dialog for web
+            if (webDialogRef.current) {
+                webDialogRef.current.showModal();
+            }
             return;
         }
         // IPC call to get status
@@ -51,15 +54,35 @@ const PronunciationChecker = ({ icon, disabled }) => {
             )}
 
             <dialog ref={dialogRef} className="modal">
-                <form method="dialog" className="modal-box">
+                <div className="modal-box">
                     <h3 className="text-lg font-bold">Pronunciation Checker Not Installed</h3>
                     <p className="py-4">
                         Please go to settings and install the Pronunciation Checker files.
                     </p>
-                    <button className="btn btn-primary" onClick={() => dialogRef.current.close()}>
-                        OK
-                    </button>
-                </form>
+                    <div className="modal-action">
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => dialogRef.current.close()}
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </dialog>
+
+            <dialog ref={webDialogRef} className="modal">
+                <div className="modal-box">
+                    <h3 className="text-lg font-bold">Feature Not Available</h3>
+                    <p className="py-4">This feature is not available in the web version.</p>
+                    <div className="modal-action">
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => webDialogRef.current.close()}
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
             </dialog>
         </>
     );

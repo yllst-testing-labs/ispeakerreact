@@ -3,16 +3,55 @@ import { useTranslation } from "react-i18next";
 import { IoWarningOutline } from "react-icons/io5";
 import PronunciationCheckerDialogContent from "./PronunciationCheckerDialogContent";
 import PronunciationCheckerInfo from "./PronunciationCheckerInfo";
-import { checkPythonInstalled } from "./PronunciationUtils";
+import {
+    checkPythonInstalled,
+    installDependenciesIPC,
+    downloadModelStepIPC,
+} from "./PronunciationUtils";
+import PropTypes from "prop-types";
+
+// Simple cancelation confirmation dialog
+const CancelationDialog = ({ openRef, onCancel, onConfirm, t }) => (
+    <dialog ref={openRef} className="modal">
+        <div className="modal-box">
+            <h3 className="text-lg font-bold">
+                {t("settingPage.pronunciationSettings.cancelTitle", "Cancel installation?")}
+            </h3>
+            <p className="py-4">
+                {t(
+                    "settingPage.pronunciationSettings.cancelBody",
+                    "Are you sure you want to cancel the installation? Progress will be lost."
+                )}
+            </p>
+            <div className="modal-action">
+                <button className="btn btn-error" onClick={onConfirm}>
+                    {t("settingPage.pronunciationSettings.cancelConfirmBtn", "Yes, cancel")}
+                </button>
+                <button className="btn" onClick={onCancel}>
+                    {t("settingPage.pronunciationSettings.cancelDismissBtn", "No, go back")}
+                </button>
+            </div>
+        </div>
+    </dialog>
+);
+
+CancelationDialog.propTypes = {
+    openRef: PropTypes.object.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired,
+};
 
 const PronunciationSettings = () => {
     const { t } = useTranslation();
     const confirmDialogRef = useRef(null);
     const checkerDialogRef = useRef(null);
+    const cancelDialogRef = useRef(null);
     const [pythonCheckResult, setPythonCheckResult] = useState(null);
     const [collapseOpen, setCollapseOpen] = useState(false);
     const [checking, setChecking] = useState(false);
     const [error, setError] = useState(null);
+    const [isCancelling, setIsCancelling] = useState(false);
 
     const openConfirmDialog = () => {
         confirmDialogRef.current?.showModal();
@@ -27,7 +66,11 @@ const PronunciationSettings = () => {
     };
 
     const closeCheckerDialog = () => {
-        checkerDialogRef.current?.close();
+        if (checking || isCancelling) {
+            cancelDialogRef.current?.showModal();
+        } else {
+            checkerDialogRef.current?.close();
+        }
     };
 
     // Listen for dependency installation progress
@@ -46,8 +89,17 @@ const PronunciationSettings = () => {
                 };
             });
         };
+        const handleCancelled = () => {
+            setIsCancelling(false);
+            setChecking(false);
+            setPythonCheckResult(null);
+            setError(null);
+            cancelDialogRef.current?.close();
+            checkerDialogRef.current?.close();
+        };
         if (window.electron?.ipcRenderer) {
             window.electron.ipcRenderer.on("pronunciation-dep-progress", handleDepProgress);
+            window.electron.ipcRenderer.on("pronunciation-cancelled", handleCancelled);
         }
         return () => {
             if (window.electron?.ipcRenderer) {
@@ -55,26 +107,36 @@ const PronunciationSettings = () => {
                     "pronunciation-dep-progress",
                     handleDepProgress
                 );
+                window.electron.ipcRenderer.removeAllListeners(
+                    "pronunciation-cancelled",
+                    handleCancelled
+                );
             }
         };
     }, []);
 
-    // Function to trigger dependency installation
-    const installDependencies = async () => {
+    // Listen for model download progress (live console output)
+    useEffect(() => {
+        const handleModelProgress = (_event, msg) => {
+            setPythonCheckResult((prev) => ({
+                ...prev,
+                log: (prev?.log ? prev.log + "\n" : "") + (msg.message || ""),
+                modelStatus: msg.status,
+                modelMessage: msg.message,
+            }));
+        };
         if (window.electron?.ipcRenderer) {
-            setChecking(true);
-            try {
-                const result = await window.electron.ipcRenderer.invoke(
-                    "pronunciation-install-deps"
-                );
-                setPythonCheckResult((prev) => ({ ...prev, ...result }));
-            } catch (err) {
-                setError(err.message || String(err));
-            } finally {
-                setChecking(false);
-            }
+            window.electron.ipcRenderer.on("pronunciation-model-progress", handleModelProgress);
         }
-    };
+        return () => {
+            if (window.electron?.ipcRenderer) {
+                window.electron.ipcRenderer.removeAllListeners(
+                    "pronunciation-model-progress",
+                    handleModelProgress
+                );
+            }
+        };
+    }, []);
 
     // Decoupled logic for checking Python installation
     const checkPython = async () => {
@@ -95,10 +157,54 @@ const PronunciationSettings = () => {
         }
     };
 
+    // Function to trigger dependency installation
+    const installDependencies = async () => {
+        if (window.electron?.ipcRenderer) {
+            setChecking(true);
+            try {
+                const result = await installDependenciesIPC();
+                setPythonCheckResult((prev) => ({ ...prev, ...result }));
+                if (result.deps && result.deps.every((dep) => dep.status === "success")) {
+                    downloadModelStep();
+                }
+            } catch (err) {
+                setError(err.message || String(err));
+            } finally {
+                setChecking(false);
+            }
+        }
+    };
+
+    const downloadModelStep = async () => {
+        if (window.electron?.ipcRenderer) {
+            setChecking(true);
+            try {
+                const result = await downloadModelStepIPC();
+                setPythonCheckResult((prev) => ({ ...prev, ...result }));
+            } catch (err) {
+                setError(err.message || String(err));
+            } finally {
+                setChecking(false);
+            }
+        }
+    };
+
     const handleProceed = () => {
         closeConfirmDialog();
         openCheckerDialog();
         checkPython();
+    };
+
+    const handleCancelConfirm = () => {
+        if (window.electron?.ipcRenderer) {
+            setIsCancelling(true);
+            window.electron.ipcRenderer.invoke("pronunciation-cancel-process");
+        }
+        // Don't close dialogs or reset state here; wait for confirmation event
+    };
+
+    const handleCancelDismiss = () => {
+        cancelDialogRef.current?.close();
     };
 
     return (
@@ -145,10 +251,15 @@ const PronunciationSettings = () => {
                                 )}
                             </span>
                         </div>
+                        {isCancelling && (
+                            <div className="mt-4 text-center text-lg font-semibold text-orange-500">
+                                {t("settingPage.pronunciationSettings.cancelling", "Cancelling…")}
+                            </div>
+                        )}
                     </div>
                     <PronunciationCheckerInfo
                         t={t}
-                        checking={checking}
+                        checking={checking || isCancelling}
                         error={error}
                         pythonCheckResult={pythonCheckResult}
                         collapseOpen={collapseOpen}
@@ -159,13 +270,21 @@ const PronunciationSettings = () => {
                             type="button"
                             className="btn"
                             onClick={closeCheckerDialog}
-                            disabled={checking}
+                            disabled={checking || isCancelling}
                         >
                             {t("sound_page.closeBtn")}
                         </button>
                     </div>
                 </div>
             </dialog>
+
+            {/* Cancelation confirmation dialog */}
+            <CancelationDialog
+                openRef={cancelDialogRef}
+                onCancel={handleCancelDismiss}
+                onConfirm={handleCancelConfirm}
+                t={t}
+            />
         </>
     );
 };

@@ -1331,8 +1331,7 @@
             "pronunciationModalInstallationProcessWarning": "Please do not close the app while the installation is in progress.",
             "pronunciationModalInstallationProcessStep1": "Checking Python installation…",
             "pronunciationModalInstallationProcessStep2": "Installing required dependencies…",
-            "pronunciationModalInstallationProcessStep3": "Downloading phoneme model…",
-            "pronunciationModalInstallationProcessStep4": "Testing installation…"
+            "pronunciationModalInstallationProcessStep3": "Downloading phoneme model…"
         }
     },
     "downloadPage": {

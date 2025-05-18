@@ -10,8 +10,9 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 import { createSplashWindow, createWindow } from "./electron-main/createWindow.js";
+import { setCustomSaveFolderIPC } from "./electron-main/customFolderLocationOperation.js";
 import { expressApp } from "./electron-main/expressServer.js";
-import { getSaveFolder, readUserSettings, getLogFolder } from "./electron-main/filePath.js";
+import { getLogFolder, getSaveFolder, readUserSettings } from "./electron-main/filePath.js";
 import {
     getCustomSaveFolderIPC,
     getSaveFolderIPC,
@@ -23,10 +24,14 @@ import {
     manageLogFiles,
     setCurrentLogSettings,
 } from "./electron-main/logOperations.js";
-import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
+import {
+    checkPythonInstalled,
+    downloadModel,
+    installDependencies,
+    cancelProcess,
+} from "./electron-main/pronunciationOperations.js";
 import { checkDownloads, checkExtractedFolder } from "./electron-main/videoFileOperations.js";
-import { setCustomSaveFolderIPC } from "./electron-main/customFolderLocationOperation.js";
-import { checkPythonInstalled, installDependencies } from "./electron-main/pronunciationOperations.js";
+import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -327,3 +332,9 @@ ipcMain.handle("check-python-installed", async () => {
 });
 
 installDependencies();
+
+downloadModel();
+
+cancelProcess();
+
+/* End pronunciation checker operations */

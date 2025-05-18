@@ -6,4 +6,20 @@ const checkPythonInstalled = async () => {
     }
 };
 
-export { checkPythonInstalled };
+const installDependenciesIPC = async () => {
+    if (window.electron?.ipcRenderer) {
+        return await window.electron.ipcRenderer.invoke("pronunciation-install-deps");
+    } else {
+        throw new Error("Not running in Electron environment.");
+    }
+};
+
+const downloadModelStepIPC = async () => {
+    if (window.electron?.ipcRenderer) {
+        return await window.electron.ipcRenderer.invoke("pronunciation-download-model");
+    } else {
+        throw new Error("Not running in Electron environment.");
+    }
+};
+
+export { checkPythonInstalled, downloadModelStepIPC, installDependenciesIPC };

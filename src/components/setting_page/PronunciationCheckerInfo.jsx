@@ -38,6 +38,15 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
 
     // Step 3: Downloading phoneme model (not implemented yet)
     let step3Status = "pending";
+    if (pythonCheckResult && pythonCheckResult.modelStatus) {
+        if (pythonCheckResult.modelStatus === "found") {
+            step3Status = "success";
+        } else if (pythonCheckResult.modelStatus === "downloading") {
+            step3Status = "pending";
+        } else if (pythonCheckResult.modelStatus === "error") {
+            step3Status = "error";
+        }
+    }
 
     // Step 4: Testing installation
     let step4Status =
@@ -69,13 +78,6 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
                 "settingPage.pronunciationSettings.pronunciationModalInstallationProcessStep3"
             ),
             status: step3Status,
-        },
-        {
-            key: "step4",
-            label: t(
-                "settingPage.pronunciationSettings.pronunciationModalInstallationProcessStep4"
-            ),
-            status: step4Status,
         },
     ];
 

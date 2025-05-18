@@ -25,7 +25,10 @@ export function getPronunciationStepStatuses(pythonCheckResult, checking, error)
     // Step 3: Downloading phoneme model
     let step3Status = "pending";
     if (pythonCheckResult && pythonCheckResult.modelStatus) {
-        if (pythonCheckResult.modelStatus === "found") {
+        if (
+            pythonCheckResult.modelStatus === "found" ||
+            pythonCheckResult.modelStatus === "success"
+        ) {
             step3Status = "success";
         } else if (pythonCheckResult.modelStatus === "downloading") {
             step3Status = "pending";
@@ -37,4 +40,4 @@ export function getPronunciationStepStatuses(pythonCheckResult, checking, error)
     }
 
     return { step1Status, step2Status, step3Status, deps };
-} 
+}

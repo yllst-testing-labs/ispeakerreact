@@ -158,9 +158,10 @@ const cancelProcess = () => {
         if (currentPythonProcess) {
             currentPythonProcess.kill();
             currentPythonProcess = null;
-            // Send confirmation to renderer
-            event.sender.send("pronunciation-cancelled");
         }
+        // Send confirmation to renderer
+        event.sender.send("pronunciation-cancelled");
+        console.log("Pronunciation process cancelled");
     });
 };
 

@@ -8,45 +8,11 @@ import {
     installDependenciesIPC,
     downloadModelStepIPC,
 } from "./PronunciationUtils";
-import PropTypes from "prop-types";
-
-// Simple cancelation confirmation dialog
-const CancelationDialog = ({ openRef, onCancel, onConfirm, t }) => (
-    <dialog ref={openRef} className="modal">
-        <div className="modal-box">
-            <h3 className="text-lg font-bold">
-                {t("settingPage.pronunciationSettings.cancelTitle", "Cancel installation?")}
-            </h3>
-            <p className="py-4">
-                {t(
-                    "settingPage.pronunciationSettings.cancelBody",
-                    "Are you sure you want to cancel the installation? Progress will be lost."
-                )}
-            </p>
-            <div className="modal-action">
-                <button className="btn btn-error" onClick={onConfirm}>
-                    {t("settingPage.pronunciationSettings.cancelConfirmBtn", "Yes, cancel")}
-                </button>
-                <button className="btn" onClick={onCancel}>
-                    {t("settingPage.pronunciationSettings.cancelDismissBtn", "No, go back")}
-                </button>
-            </div>
-        </div>
-    </dialog>
-);
-
-CancelationDialog.propTypes = {
-    openRef: PropTypes.object.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onConfirm: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
-};
 
 const PronunciationSettings = () => {
     const { t } = useTranslation();
     const confirmDialogRef = useRef(null);
     const checkerDialogRef = useRef(null);
-    const cancelDialogRef = useRef(null);
     const [pythonCheckResult, setPythonCheckResult] = useState(null);
     const [collapseOpen, setCollapseOpen] = useState(false);
     const [checking, setChecking] = useState(false);
@@ -66,11 +32,7 @@ const PronunciationSettings = () => {
     };
 
     const closeCheckerDialog = () => {
-        if (checking || isCancelling) {
-            cancelDialogRef.current?.showModal();
-        } else {
-            checkerDialogRef.current?.close();
-        }
+        checkerDialogRef.current?.close();
     };
 
     // Listen for dependency installation progress
@@ -94,7 +56,6 @@ const PronunciationSettings = () => {
             setChecking(false);
             setPythonCheckResult(null);
             setError(null);
-            cancelDialogRef.current?.close();
             checkerDialogRef.current?.close();
         };
         if (window.electron?.ipcRenderer) {
@@ -195,17 +156,42 @@ const PronunciationSettings = () => {
         checkPython();
     };
 
-    const handleCancelConfirm = () => {
-        if (window.electron?.ipcRenderer) {
-            setIsCancelling(true);
-            window.electron.ipcRenderer.invoke("pronunciation-cancel-process");
-        }
-        // Don't close dialogs or reset state here; wait for confirmation event
-    };
+    // Determine step statuses (replicate logic from PronunciationCheckerInfo)
+    let step1Status = checking
+        ? "pending"
+        : error
+          ? "error"
+          : pythonCheckResult && pythonCheckResult.found
+            ? "success"
+            : pythonCheckResult && pythonCheckResult.found === false
+              ? "error"
+              : "pending";
 
-    const handleCancelDismiss = () => {
-        cancelDialogRef.current?.close();
-    };
+    let step2Status = "pending";
+    let deps = pythonCheckResult && pythonCheckResult.deps;
+    if (deps && Array.isArray(deps)) {
+        if (deps.some((dep) => dep.status === "error")) step2Status = "error";
+        else if (deps.every((dep) => dep.status === "success")) step2Status = "success";
+        else if (deps.some((dep) => dep.status === "pending")) step2Status = "pending";
+    } else if (step1Status === "success") {
+        step2Status = checking ? "pending" : "success";
+    }
+
+    let step3Status = "pending";
+    if (pythonCheckResult && pythonCheckResult.modelStatus) {
+        if (pythonCheckResult.modelStatus === "found") {
+            step3Status = "success";
+        } else if (pythonCheckResult.modelStatus === "downloading") {
+            step3Status = "pending";
+        } else if (pythonCheckResult.modelStatus === "error") {
+            step3Status = "error";
+        }
+    }
+
+    // Consider all steps done if none are pending
+    const allStepsDone = [step1Status, step2Status, step3Status].every(
+        (status) => status === "success" || status === "error"
+    );
 
     return (
         <>
@@ -269,22 +255,27 @@ const PronunciationSettings = () => {
                         <button
                             type="button"
                             className="btn"
-                            onClick={closeCheckerDialog}
-                            disabled={checking || isCancelling}
+                            onClick={
+                                !allStepsDone
+                                    ? () => {
+                                          if (window.electron?.ipcRenderer) {
+                                              setIsCancelling(true);
+                                              window.electron.ipcRenderer.invoke(
+                                                  "pronunciation-cancel-process"
+                                              );
+                                          }
+                                      }
+                                    : closeCheckerDialog
+                            }
+                            disabled={isCancelling}
                         >
-                            {t("sound_page.closeBtn")}
+                            {!allStepsDone
+                                ? t("settingPage.exerciseSettings.cancelBtn", "Cancel")
+                                : t("sound_page.closeBtn", "Close")}
                         </button>
                     </div>
                 </div>
             </dialog>
-
-            {/* Cancelation confirmation dialog */}
-            <CancelationDialog
-                openRef={cancelDialogRef}
-                onCancel={handleCancelDismiss}
-                onConfirm={handleCancelConfirm}
-                t={t}
-            />
         </>
     );
 };

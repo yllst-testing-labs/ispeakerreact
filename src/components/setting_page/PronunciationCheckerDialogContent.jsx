@@ -7,6 +7,7 @@ const PronunciationCheckerDialogContent = ({
     checking,
     closeConfirmDialog,
     handleProceed,
+    hasPreviousInstall,
 }) => {
     return (
         <div className="modal-box">
@@ -14,26 +15,34 @@ const PronunciationCheckerDialogContent = ({
                 {t("settingPage.pronunciationSettings.pronunciationModalHeading")}
             </h3>
             <div className="py-4">
-                <div role="alert" className="alert alert-info text-base">
-                    <IoInformationCircleOutline className="h-6 w-6" />
-                    <span>
-                        <Trans
-                            i18nKey="settingPage.pronunciationSettings.pronunciationModalBodyPython"
-                            components={[
-                                <button
-                                    key="python-link"
-                                    type="button"
-                                    className="link font-semibold underline"
-                                    onClick={() =>
-                                        openExternal("https://www.python.org/downloads/")
-                                    }
-                                />,
-                            ]}
-                        />
-                    </span>
-                </div>
+                {hasPreviousInstall ? (
+                    <div className="alert alert-info mb-4 text-base">
+                        <IoInformationCircleOutline className="h-6 w-6" />
+                        <span>{t("settingPage.pronunciationSettings.previousInstallMsg")}</span>
+                    </div>
+                ) : (
+                    <div role="alert" className="alert alert-info text-base">
+                        <IoInformationCircleOutline className="h-6 w-6" />
+                        <span>
+                            <Trans
+                                i18nKey="settingPage.pronunciationSettings.pronunciationModalBodyPython"
+                                components={[
+                                    <button
+                                        key="python-link"
+                                        type="button"
+                                        className="link font-semibold underline"
+                                        onClick={() =>
+                                            openExternal("https://www.python.org/downloads/")
+                                        }
+                                    />,
+                                ]}
+                            />
+                        </span>
+                    </div>
+                )}
+                <p>{t("settingPage.pronunciationSettings.pronunciationModalBody")}</p>
             </div>
-            <p className="mb-4">{t("settingPage.pronunciationSettings.pronunciationModalBody")}</p>
+
             <div className="modal-action">
                 <button
                     type="button"

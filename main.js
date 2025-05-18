@@ -25,12 +25,13 @@ import {
     setCurrentLogSettings,
 } from "./electron-main/logOperations.js";
 import {
+    cancelProcess,
     checkPythonInstalled,
     downloadModel,
     installDependencies,
-    cancelProcess,
     killCurrentPythonProcess,
     resetGlobalCancel,
+    setupPronunciationInstallStatusIPC,
 } from "./electron-main/pronunciationOperations.js";
 import { checkDownloads, checkExtractedFolder } from "./electron-main/videoFileOperations.js";
 import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
@@ -339,14 +340,16 @@ downloadModel();
 
 cancelProcess();
 
-/* End pronunciation checker operations */
-
-// Add this before or after other app event handlers
-app.on("before-quit", async () => {
-    await killCurrentPythonProcess();
-});
+// Setup pronunciation install status IPC
+setupPronunciationInstallStatusIPC();
 
 // Before starting a new workflow, reset the global cancel flag
 ipcMain.handle("pronunciation-reset-cancel-flag", async () => {
     resetGlobalCancel();
 });
+
+app.on("before-quit", async () => {
+    await killCurrentPythonProcess();
+});
+
+/* End pronunciation checker operations */

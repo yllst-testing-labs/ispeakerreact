@@ -23,6 +23,7 @@ const PronunciationSettings = () => {
     const [checking, setChecking] = useState(false);
     const [error, setError] = useState(null);
     const [isCancelling, setIsCancelling] = useState(false);
+    const [hasPreviousInstall, setHasPreviousInstall] = useState(false);
 
     const openConfirmDialog = () => {
         confirmDialogRef.current?.showModal();
@@ -40,21 +41,44 @@ const PronunciationSettings = () => {
         checkerDialogRef.current?.close();
     };
 
+    // Helper to save install status to electron-conf
+    const saveInstallStatus = async (result) => {
+        if (window.electron?.ipcRenderer) {
+            await window.electron.ipcRenderer.invoke("set-pronunciation-install-status", result);
+        }
+    };
+
+    // On mount, load cached install status
+    useEffect(() => {
+        const fetchInstallStatus = async () => {
+            if (window.electron?.ipcRenderer) {
+                const cachedStatus = await window.electron.ipcRenderer.invoke(
+                    "get-pronunciation-install-status"
+                );
+                if (cachedStatus) {
+                    setPythonCheckResult(cachedStatus);
+                    setHasPreviousInstall(true);
+                }
+            }
+        };
+        fetchInstallStatus();
+    }, []);
+
     // Listen for dependency installation progress
     useEffect(() => {
         const handleDepProgress = (_event, depStatus) => {
             console.log("[Pronunciation] Dependency Progress:", depStatus);
             setPythonCheckResult((prev) => {
-                // Update deps array
                 let deps = Array.isArray(prev?.deps) ? [...prev.deps] : [];
                 const idx = deps.findIndex((d) => d.name === depStatus.name);
                 if (idx !== -1) deps[idx] = depStatus;
                 else deps.push(depStatus);
-                return {
+                const updated = {
                     ...prev,
                     deps,
                     log: depStatus.log || prev?.log || "",
                 };
+                return updated;
             });
         };
         const handleCancelled = () => {
@@ -87,12 +111,15 @@ const PronunciationSettings = () => {
     useEffect(() => {
         const handleModelProgress = (_event, msg) => {
             console.log("[Pronunciation] Model Download Progress:", msg);
-            setPythonCheckResult((prev) => ({
-                ...prev,
-                log: (prev?.log ? prev.log + "\n" : "") + (msg.message || ""),
-                modelStatus: msg.status,
-                modelMessage: msg.message,
-            }));
+            setPythonCheckResult((prev) => {
+                const updated = {
+                    ...prev,
+                    log: (prev?.log ? prev.log + "\n" : "") + (msg.message || ""),
+                    modelStatus: msg.status,
+                    modelMessage: msg.message,
+                };
+                return updated;
+            });
         };
         if (window.electron?.ipcRenderer) {
             window.electron.ipcRenderer.on("pronunciation-model-progress", handleModelProgress);
@@ -112,7 +139,6 @@ const PronunciationSettings = () => {
         console.log("[Pronunciation] Checking Python...");
         setChecking(true);
         setError(null);
-        // Reset pythonCheckResult to clear previous modelStatus/errors
         setPythonCheckResult(null);
         try {
             const result = await checkPythonInstalled();
@@ -137,7 +163,10 @@ const PronunciationSettings = () => {
             try {
                 const result = await installDependenciesIPC();
                 console.log("[Pronunciation] Dependencies installed:", result);
-                setPythonCheckResult((prev) => ({ ...prev, ...result }));
+                setPythonCheckResult((prev) => {
+                    const updated = { ...prev, ...result };
+                    return updated;
+                });
                 if (result.deps && result.deps.every((dep) => dep.status === "success")) {
                     downloadModelStep();
                 }
@@ -154,28 +183,52 @@ const PronunciationSettings = () => {
         console.log("[Pronunciation] Downloading model...");
         if (window.electron?.ipcRenderer) {
             setChecking(true);
-            // Set modelStatus to 'downloading' immediately so UI shows spinner
-            setPythonCheckResult((prev) => ({
-                ...prev,
-                modelStatus: "downloading",
-                log: (prev?.log ? prev.log + "\n" : "") + "Starting model download...\n",
-            }));
+            setPythonCheckResult((prev) => {
+                const updated = {
+                    ...prev,
+                    modelStatus: "downloading",
+                    log: (prev?.log ? prev.log + "\n" : "") + "Starting model download...\n",
+                };
+                return updated;
+            });
             try {
                 const result = await downloadModelStepIPC();
                 console.log("[Pronunciation] Model download result:", result);
-                setPythonCheckResult((prev) => ({ ...prev, ...result }));
+                setPythonCheckResult((prev) => {
+                    const updated = { ...prev, ...result };
+                    return updated;
+                });
             } catch (err) {
                 console.error("[Pronunciation] Model download error:", err);
-                setPythonCheckResult((prev) => ({
-                    ...prev,
-                    modelStatus: "error",
-                    log: (prev?.log ? prev.log + "\n" : "") + (err.message || String(err)),
-                }));
+                setPythonCheckResult((prev) => {
+                    const updated = {
+                        ...prev,
+                        modelStatus: "error",
+                        log: (prev?.log ? prev.log + "\n" : "") + (err.message || String(err)),
+                    };
+                    return updated;
+                });
             } finally {
                 setChecking(false);
             }
         }
     };
+
+    // Save install status when installation is complete (all steps done)
+    useEffect(() => {
+        const { step1Status, step2Status, step3Status } = getPronunciationStepStatuses(
+            pythonCheckResult,
+            checking,
+            error
+        );
+        const allStepsDone = [step1Status, step2Status, step3Status].every(
+            (status) => status === "success" || status === "error"
+        );
+        if (pythonCheckResult && allStepsDone) {
+            saveInstallStatus(pythonCheckResult);
+            setHasPreviousInstall(true);
+        }
+    }, [pythonCheckResult, checking, error]);
 
     const handleProceed = async () => {
         closeConfirmDialog();
@@ -211,9 +264,15 @@ const PronunciationSettings = () => {
                         </p>
                     </div>
                     <div className="flex basis-1/2 justify-end">
-                        <button className="btn" onClick={openConfirmDialog}>
-                            {t("settingPage.pronunciationSettings.pronunciationBtn")}
-                        </button>
+                        {hasPreviousInstall ? (
+                            <button className="btn" onClick={openConfirmDialog}>
+                                {t("settingPage.pronunciationSettings.reinstallBtn")}
+                            </button>
+                        ) : (
+                            <button className="btn" onClick={openConfirmDialog}>
+                                {t("settingPage.pronunciationSettings.pronunciationBtn")}
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -225,6 +284,7 @@ const PronunciationSettings = () => {
                     checking={checking}
                     closeConfirmDialog={closeConfirmDialog}
                     handleProceed={handleProceed}
+                    hasPreviousInstall={hasPreviousInstall}
                 />
             </dialog>
 

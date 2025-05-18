@@ -1337,7 +1337,9 @@
             "installationProcessSuccess": "Installation complete. You can now close this dialog.",
             "installationProcessFailed": "Installation failed. Expand the details to see the error.",
             "stepDone": "done",
-            "stepFailed": "failed"
+            "stepFailed": "failed",
+            "previousInstallMsg": "You have previously installed the pronunciation checker. You can reinstall or check again if needed.",
+            "reinstallBtn": "Reinstall"
         }
     },
     "downloadPage": {

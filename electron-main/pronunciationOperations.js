@@ -1,13 +1,17 @@
 import { ipcMain } from "electron";
+import { Conf } from "electron-conf/main";
+import fkill from "fkill";
 import { spawn } from "node:child_process";
 import * as fsPromises from "node:fs/promises";
 import path from "node:path";
 import { getSaveFolder, readUserSettings } from "./filePath.js";
-import fkill from "fkill";
 
 let currentPythonProcess = null;
 let pendingCancel = false;
 let isGloballyCancelled = false;
+
+// Singleton instance for pronunciation install status
+const installConf = new Conf({ name: "pronunciation-install" });
 
 const checkPythonInstalled = async () => {
     let log = "";
@@ -301,6 +305,17 @@ const killCurrentPythonProcess = async () => {
     }
 };
 
+// IPC handlers for getting/setting install status
+const setupPronunciationInstallStatusIPC = () => {
+    ipcMain.handle("get-pronunciation-install-status", async () => {
+        return installConf.get("status", null);
+    });
+    ipcMain.handle("set-pronunciation-install-status", async (_event, status) => {
+        installConf.set("status", status);
+        return true;
+    });
+};
+
 export {
     cancelProcess,
     checkPythonInstalled,
@@ -308,4 +323,5 @@ export {
     installDependencies,
     killCurrentPythonProcess,
     resetGlobalCancel,
+    setupPronunciationInstallStatusIPC,
 };

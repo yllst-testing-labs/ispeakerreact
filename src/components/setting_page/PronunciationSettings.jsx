@@ -99,11 +99,11 @@ const PronunciationSettings = () => {
         }
         return () => {
             if (window.electron?.ipcRenderer) {
-                window.electron.ipcRenderer.removeAllListeners(
+                window.electron.ipcRenderer.removeListener(
                     "pronunciation-dep-progress",
                     handleDepProgress
                 );
-                window.electron.ipcRenderer.removeAllListeners(
+                window.electron.ipcRenderer.removeListener(
                     "pronunciation-cancelled",
                     handleCancelled
                 );

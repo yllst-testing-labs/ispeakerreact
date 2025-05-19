@@ -34,11 +34,13 @@ export async function convertToWav(inputBlob) {
         "-i",
         "input",
         "-ar",
-        "16000",
+        "22050",
         "-ac",
         "1",
         "-sample_fmt",
         "s16",
+        "-b:a",
+        "64k",
         "output.wav",
     ]);
     const data = await ffmpeg.readFile("output.wav");

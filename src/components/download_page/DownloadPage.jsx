@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import Container from "../../ui/Container";
 import Footer from "../general/Footer";
 import TopNavBar from "../general/TopNavBar";
@@ -68,7 +68,7 @@ const DownloadPage = () => {
                             />
                         </div>
                         <div className="text-center">
-                            <h1 className="animate-fade-in bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 bg-clip-text text-5xl font-extrabold tracking-tight text-balance text-transparent md:text-6xl dark:bg-gradient-to-r dark:from-orange-300 dark:via-green-300 dark:to-red-500 dark:bg-clip-text dark:text-transparent">
+                            <h1 className="animate-fade-in bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 bg-clip-text text-4xl font-extrabold tracking-tight text-balance text-transparent md:text-6xl dark:bg-gradient-to-r dark:from-orange-300 dark:via-green-300 dark:to-red-500 dark:bg-clip-text dark:text-transparent">
                                 {t("downloadPage.titleMain")}
                             </h1>
                             <p className="animate-fade-in mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8 dark:text-slate-300">
@@ -123,7 +123,7 @@ const DownloadPage = () => {
                         <div className="card-body items-center text-center">
                             <div className="mb-2 flex items-center gap-2">
                                 <span className="badge badge-accent badge-sm mr-2 animate-bounce">
-                                    New!
+                                    {t("downloadPage.newBadge")}
                                 </span>
                                 <span className="badge badge-primary badge-lg">
                                     {t("downloadPage.desktopOnly")}
@@ -134,6 +134,24 @@ const DownloadPage = () => {
                             </h2>
                             <p className="text-base text-gray-600 dark:text-slate-400">
                                 {t("downloadPage.featurePronunciationCheckerDesc")}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-slate-400">
+                                <Trans
+                                    i18nKey="downloadPage.featurePronunciationCheckerDescNote"
+                                    components={[
+                                        <button
+                                            key="python-link"
+                                            type="button"
+                                            className="link font-semibold underline link-secondary"
+                                            onClick={() =>
+                                                window.open(
+                                                    "https://www.python.org/downloads/",
+                                                    "_blank"
+                                                )
+                                            }
+                                        />,
+                                    ]}
+                                />
                             </p>
                         </div>
                     </div>

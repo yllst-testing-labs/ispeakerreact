@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { convertToWav } from "../../utils/ffmpegWavConverter";
 import { isElectron } from "../../utils/isElectron";
-import levenshtein from "../../utils/levenshtein";
+import { getCharacterDiff, levenshtein, alignPhonemes } from "../../utils/levenshtein";
 import openExternal from "../../utils/openExternal";
 import { parseIPA } from "./syllableParser";
 
@@ -101,6 +101,14 @@ const PronunciationChecker = ({
         result && phoneme ? levenshtein(clean(result), clean(phoneme)) : null;
     const isClose = phonemeLevenshtein !== null && phonemeLevenshtein <= 1;
 
+    // Align and diff for highlighting
+    let alignedResult = result;
+    let diff = null;
+    if (result && phoneme) {
+        alignedResult = alignPhonemes(result, phoneme);
+        diff = getCharacterDiff(alignedResult.replace(/\s+/g, ""), phoneme.replace(/\s+/g, ""));
+    }
+
     return (
         <>
             <div className="my-4 flex w-full flex-col items-center gap-2">
@@ -151,7 +159,42 @@ const PronunciationChecker = ({
                                                         "wordPage.pronunciationChecker.receivedResult"
                                                     )}
                                                 </span>{" "}
-                                                {result}
+                                                {diff && diff.length > 0
+                                                    ? diff.map((d, idx) => {
+                                                          if (d.type === "same")
+                                                              return (
+                                                                  <span key={idx}>{d.char}</span>
+                                                              );
+                                                          if (d.type === "replace")
+                                                              return (
+                                                                  <span
+                                                                      key={idx}
+                                                                      className="bg-warning rounded px-1 text-black"
+                                                                  >
+                                                                      {d.char}
+                                                                  </span>
+                                                              );
+                                                          if (d.type === "insert")
+                                                              return (
+                                                                  <span
+                                                                      key={idx}
+                                                                      className="bg-success rounded px-1 text-black"
+                                                                  >
+                                                                      {d.char}
+                                                                  </span>
+                                                              );
+                                                          if (d.type === "delete")
+                                                              return (
+                                                                  <span
+                                                                      key={idx}
+                                                                      className="bg-error rounded px-1 text-white"
+                                                                  >
+                                                                      {d.char}
+                                                                  </span>
+                                                              );
+                                                          return null;
+                                                      })
+                                                    : result}
                                             </p>
                                             <p>
                                                 <span className="font-bold">

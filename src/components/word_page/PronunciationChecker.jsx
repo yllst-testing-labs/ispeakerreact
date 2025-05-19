@@ -6,7 +6,14 @@ import { isElectron } from "../../utils/isElectron";
 import openExternal from "../../utils/openExternal";
 import { parseIPA } from "./syllableParser";
 
-const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, modelName, onLoadingChange }) => {
+const PronunciationChecker = ({
+    icon,
+    disabled,
+    wordKey,
+    displayPronunciation,
+    modelName,
+    onLoadingChange,
+}) => {
     const { t } = useTranslation();
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
@@ -22,9 +29,9 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, m
                 setProgress(msg.message);
             }
         };
-        window.electron?.ipcRenderer?.on?.("pronunciation-model-progress", handler);
+        window.electron?.ipcRenderer?.on("pronunciation-model-progress", handler);
         return () => {
-            window.electron?.ipcRenderer?.removeListener?.("pronunciation-model-progress", handler);
+            window.electron?.ipcRenderer?.removeListener("pronunciation-model-progress", handler);
         };
     }, []);
 
@@ -71,13 +78,10 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, m
                 modelName
             );
 
-            console.log("the response is", response);
-
             if (response && response.status === "success") {
                 const phonemes = response.phonemes;
                 const readablePhonemes = phonemes ? JSON.parse(`"${phonemes}"`) : "(none)";
                 setResult(readablePhonemes);
-                console.log(response.phonemes);
             } else {
                 setResult(`Error: ${response?.message || "Unknown error"}`);
             }
@@ -97,7 +101,7 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, m
             <div className="my-4 flex w-full flex-col items-center gap-2">
                 <button
                     type="button"
-                    className="btn btn-primary"
+                    className="btn btn-info"
                     onClick={checkPronunciation}
                     disabled={disabled || loading}
                 >
@@ -106,10 +110,10 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, m
             </div>
 
             <div
-                className={`flex justify-center gap-2 overflow-hidden pt-4 transition-all duration-500 ease-in-out ${showResult || loading ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+                className={`flex justify-center gap-2 overflow-hidden py-4 transition-all duration-500 ease-in-out ${showResult || loading ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
             >
                 {(showResult || loading) && (
-                    <div className="card card-border card-lg w-full shadow-sm md:w-2xl dark:border-slate-600">
+                    <div className="card card-border card-lg w-full shadow-md md:w-2xl dark:border-slate-600">
                         <div className="card-body">
                             <h2 className="card-title">
                                 {t("wordPage.pronunciationChecker.pronunciationResult")}

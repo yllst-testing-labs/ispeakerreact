@@ -130,7 +130,7 @@ const PronunciationSettings = () => {
         }
         return () => {
             if (window.electron?.ipcRenderer) {
-                window.electron.ipcRenderer.removeAllListeners(
+                window.electron.ipcRenderer.removeListener(
                     "pronunciation-model-progress",
                     handleModelProgress
                 );

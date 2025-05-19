@@ -170,7 +170,10 @@ if __name__ == "__main__":
                 }
             });
             py.on("close", (code) => {
-                if (code === 0 && lastJson) {
+                if (lastJson && lastJson.status === "error") {
+                    // Return the detailed error from Python
+                    resolve(lastJson);
+                } else if (code === 0 && lastJson) {
                     resolve(lastJson);
                 } else {
                     resolve({

@@ -22,6 +22,8 @@ const PronunciationChecker = ({
     const webDialogRef = useRef();
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState("");
+    const [errorDetails, setErrorDetails] = useState("");
+    const [showErrorDialog, setShowErrorDialog] = useState(false);
 
     useEffect(() => {
         if (!isElectron()) return;
@@ -54,6 +56,7 @@ const PronunciationChecker = ({
         }
         setLoading(true);
         setProgress("");
+        setErrorDetails("");
         try {
             // 1. Get the original recording blob from Electron
             const originalBlobArrayBuffer = await window.electron.getRecordingBlob(wordKey);
@@ -85,9 +88,11 @@ const PronunciationChecker = ({
                 setResult(readablePhonemes);
             } else {
                 setResult(`Error: ${response?.message || "Unknown error"}`);
+                setErrorDetails(response?.traceback || response?.message || "Unknown error");
             }
         } catch (err) {
             setResult(`Error: ${err.message || err}`);
+            setErrorDetails(err.stack || err.message || JSON.stringify(err));
         } finally {
             setShowResult(true);
             setLoading(false);
@@ -158,7 +163,7 @@ const PronunciationChecker = ({
             </div>
 
             <div
-                className={`flex justify-center gap-2 overflow-hidden py-4 transition-all duration-500 ease-in-out ${showResult || loading ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+                className={`flex justify-center gap-2 overflow-hidden py-4 transition-all duration-500 ease-in-out ${showResult || loading ? "max-h-3/4 opacity-100" : "max-h-0 opacity-0"}`}
             >
                 {(showResult || loading) && (
                     <div className="card card-border card-lg w-full shadow-md md:w-2xl dark:border-slate-600">
@@ -177,11 +182,27 @@ const PronunciationChecker = ({
                             ) : (
                                 <>
                                     {result && result.startsWith && result.startsWith("Error:") ? (
-                                        <p className="text-error">
-                                            {t("wordPage.pronunciationChecker.errorOccurred")}
-                                            {": "}
-                                            {result.replace(/^Error:\s*/, "")}
-                                        </p>
+                                        <>
+                                            <p className="text-error">
+                                                {t("wordPage.pronunciationChecker.errorOccurred")}
+                                            </p>
+                                            <p className="font-mono">
+                                                {result.replace(/^Error:\s*/, "")}
+                                            </p>
+                                            {errorDetails && (
+                                                <div className="flex justify-center">
+                                                    <button
+                                                        className="link underline"
+                                                        type="button"
+                                                        onClick={() => setShowErrorDialog(true)}
+                                                    >
+                                                        {t(
+                                                            "wordPage.pronunciationChecker.errorDetails"
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </>
                                     ) : result === null ? (
                                         <p className="text-warning">
                                             {t("wordPage.pronunciationChecker.cannotHear")}
@@ -223,7 +244,7 @@ const PronunciationChecker = ({
                                                     )}
                                                 </p>
                                             )}
-                                            <p className="text-sm italic text-gray-600 dark:text-gray-400">
+                                            <p className="text-sm text-gray-600 italic dark:text-gray-400">
                                                 {t("wordPage.pronunciationChecker.disclaimerText")}
                                             </p>
                                         </>
@@ -280,6 +301,32 @@ const PronunciationChecker = ({
                         <button
                             className="btn btn-primary"
                             onClick={() => webDialogRef.current.close()}
+                        >
+                            {t("wordPage.pronunciationChecker.okBtn")}
+                        </button>
+                    </div>
+                </div>
+            </dialog>
+
+            {/* Error Details Dialog */}
+            <dialog
+                open={showErrorDialog}
+                className="modal"
+                onClose={() => setShowErrorDialog(false)}
+            >
+                <div className="modal-box">
+                    <h3 className="text-lg font-bold">
+                        {t("wordPage.pronunciationChecker.errorDetailsTitle")}
+                    </h3>
+                    <div className="py-4">
+                        <pre className="max-h-64 overflow-auto rounded bg-gray-100 p-4 text-sm break-all whitespace-pre-wrap dark:bg-gray-800">
+                            {errorDetails}
+                        </pre>
+                    </div>
+                    <div className="modal-action">
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => setShowErrorDialog(false)}
                         >
                             {t("wordPage.pronunciationChecker.okBtn")}
                         </button>

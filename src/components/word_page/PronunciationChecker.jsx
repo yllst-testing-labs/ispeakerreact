@@ -97,16 +97,51 @@ const PronunciationChecker = ({
     const parsedPhonemes = parseIPA(displayPronunciation);
     const phoneme = parsedPhonemes.map((syl) => syl.text).join(" ");
     const clean = (str) => (typeof str === "string" ? str.replace(/\s+/g, "") : "");
+    // Background logic: compare original model output (result) and official phoneme (spaces removed)
     const phonemeLevenshtein =
         result && phoneme ? levenshtein(clean(result), clean(phoneme)) : null;
     const isClose = phonemeLevenshtein !== null && phonemeLevenshtein <= 1;
 
-    // Align and diff for highlighting
+    // Display logic: format and highlight aligned model output
     let alignedResult = result;
     let diff = null;
+    let rendered = null;
     if (result && phoneme) {
-        alignedResult = alignPhonemes(result, phoneme);
-        diff = getCharacterDiff(alignedResult.replace(/\s+/g, ""), phoneme.replace(/\s+/g, ""));
+        alignedResult = alignPhonemes(result, phoneme); // e.g., "ə bɪ lɪ ti"
+        const officialNoSpaces = phoneme.replace(/\s+/g, "");
+        const alignedNoSpaces = alignedResult.replace(/\s+/g, "");
+        diff = getCharacterDiff(alignedNoSpaces, officialNoSpaces);
+        // Render alignedResult with spaces, highlighting differences
+        let diffIdx = 0;
+        rendered = [];
+        for (let i = 0; i < alignedResult.length; i++) {
+            const char = alignedResult[i];
+            if (char === " ") {
+                rendered.push(<span key={`space-${i}`}> </span>);
+            } else if (diff && diff[diffIdx]) {
+                const d = diff[diffIdx];
+                if (d.type === "same") rendered.push(<span key={i}>{char}</span>);
+                else if (d.type === "replace")
+                    rendered.push(
+                        <span key={i} className="bg-warning text-warning-content rounded px-1">
+                            {char}
+                        </span>
+                    );
+                else if (d.type === "insert")
+                    rendered.push(
+                        <span key={i} className="bg-secondary text-secondary-content rounded px-1">
+                            {char}
+                        </span>
+                    );
+                else if (d.type === "delete")
+                    rendered.push(
+                        <span key={i} className="bg-error text-error-content rounded px-1">
+                            {char}
+                        </span>
+                    );
+                diffIdx++;
+            }
+        }
     }
 
     return (
@@ -159,42 +194,7 @@ const PronunciationChecker = ({
                                                         "wordPage.pronunciationChecker.receivedResult"
                                                     )}
                                                 </span>{" "}
-                                                {diff && diff.length > 0
-                                                    ? diff.map((d, idx) => {
-                                                          if (d.type === "same")
-                                                              return (
-                                                                  <span key={idx}>{d.char}</span>
-                                                              );
-                                                          if (d.type === "replace")
-                                                              return (
-                                                                  <span
-                                                                      key={idx}
-                                                                      className="bg-warning rounded px-1 text-black"
-                                                                  >
-                                                                      {d.char}
-                                                                  </span>
-                                                              );
-                                                          if (d.type === "insert")
-                                                              return (
-                                                                  <span
-                                                                      key={idx}
-                                                                      className="bg-success rounded px-1 text-black"
-                                                                  >
-                                                                      {d.char}
-                                                                  </span>
-                                                              );
-                                                          if (d.type === "delete")
-                                                              return (
-                                                                  <span
-                                                                      key={idx}
-                                                                      className="bg-error rounded px-1 text-white"
-                                                                  >
-                                                                      {d.char}
-                                                                  </span>
-                                                              );
-                                                          return null;
-                                                      })
-                                                    : result}
+                                                {diff && diff.length > 0 ? rendered : alignedResult}
                                             </p>
                                             <p>
                                                 <span className="font-bold">

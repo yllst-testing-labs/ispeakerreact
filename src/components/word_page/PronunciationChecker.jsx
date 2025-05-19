@@ -223,6 +223,9 @@ const PronunciationChecker = ({
                                                     )}
                                                 </p>
                                             )}
+                                            <p className="text-sm italic text-gray-600 dark:text-gray-400">
+                                                {t("wordPage.pronunciationChecker.disclaimerText")}
+                                            </p>
                                         </>
                                     )}
                                 </>

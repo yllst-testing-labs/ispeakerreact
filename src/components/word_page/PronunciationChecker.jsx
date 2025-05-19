@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
-import { useRef, useState, useEffect } from "react";
-import { isElectron } from "../../utils/isElectron";
+import { useEffect, useRef, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { convertToWav } from "../../utils/ffmpegWavConverter";
-import { useTranslation } from "react-i18next";
+import { isElectron } from "../../utils/isElectron";
+import openExternal from "../../utils/openExternal";
 import { parseIPA } from "./syllableParser";
 
-const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, modelName }) => {
+const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, modelName, onLoadingChange }) => {
     const { t } = useTranslation();
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
@@ -30,6 +31,10 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, m
     useEffect(() => {
         if (showResult) setProgress("");
     }, [showResult]);
+
+    useEffect(() => {
+        if (onLoadingChange) onLoadingChange(loading);
+    }, [loading, onLoadingChange]);
 
     const checkPronunciation = async () => {
         if (!isElectron()) {
@@ -150,16 +155,18 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, m
 
             <dialog ref={dialogRef} className="modal">
                 <div className="modal-box">
-                    <h3 className="text-lg font-bold">Pronunciation Checker Not Installed</h3>
+                    <h3 className="text-lg font-bold">
+                        {t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalled")}
+                    </h3>
                     <p className="py-4">
-                        Please go to settings and install the Pronunciation Checker files.
+                        {t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalledMsg")}
                     </p>
                     <div className="modal-action">
                         <button
                             className="btn btn-primary"
                             onClick={() => dialogRef.current.close()}
                         >
-                            OK
+                            {t("wordPage.pronunciationChecker.okBtn")}
                         </button>
                     </div>
                 </div>
@@ -167,14 +174,32 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, m
 
             <dialog ref={webDialogRef} className="modal">
                 <div className="modal-box">
-                    <h3 className="text-lg font-bold">Feature Not Available</h3>
-                    <p className="py-4">This feature is not available in the web version.</p>
+                    <h3 className="text-lg font-bold">
+                        {t("wordPage.pronunciationChecker.featureNotAvailable")}
+                    </h3>
+                    <p className="py-4">
+                        <Trans
+                            i18nKey="wordPage.pronunciationChecker.featureNotAvailableMsg"
+                            components={[
+                                <button
+                                    key="download-link"
+                                    type="button"
+                                    className="link font-semibold underline"
+                                    onClick={() =>
+                                        openExternal(
+                                            "https://learnercraft.github.io/ispeakerreact/download"
+                                        )
+                                    }
+                                />,
+                            ]}
+                        />
+                    </p>
                     <div className="modal-action">
                         <button
                             className="btn btn-primary"
                             onClick={() => webDialogRef.current.close()}
                         >
-                            OK
+                            {t("wordPage.pronunciationChecker.okBtn")}
                         </button>
                     </div>
                 </div>
@@ -189,6 +214,7 @@ PronunciationChecker.propTypes = {
     wordKey: PropTypes.string.isRequired,
     displayPronunciation: PropTypes.string,
     modelName: PropTypes.string.isRequired,
+    onLoadingChange: PropTypes.func,
 };
 
 export default PronunciationChecker;

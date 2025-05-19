@@ -51,6 +51,7 @@ const RecordingWaveform = ({
     const [isPlaying, setIsPlaying] = useState(false);
     const [, setRecordingTime] = useState(0);
     const recordingInterval = useRef(null);
+    const [pronunciationLoading, setPronunciationLoading] = useState(false);
 
     const waveformLight = "hsl(224.3 76.3% 48%)"; // Light mode waveform color
     const waveformDark = "hsl(213.1 93.9% 67.8%)"; // Dark mode waveform color
@@ -267,7 +268,9 @@ const RecordingWaveform = ({
                     id="record"
                     className="btn btn-accent"
                     onClick={handleRecordClick}
-                    disabled={disableControls || isPlaying || isAudioLoading}
+                    disabled={
+                        disableControls || isPlaying || isAudioLoading || pronunciationLoading
+                    }
                 >
                     {recording ? (
                         <>
@@ -307,6 +310,7 @@ const RecordingWaveform = ({
                 icon={<BsClipboard2Check className="h-5 w-5" />}
                 wordKey={wordKey}
                 displayPronunciation={displayPronunciation}
+                onLoadingChange={setPronunciationLoading}
             />
 
             {/*recordedUrl && (

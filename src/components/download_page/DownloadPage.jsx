@@ -58,7 +58,7 @@ const DownloadPage = () => {
             <TopNavBar />
             <Container>
                 {/* Hero Section with Gradient */}
-                <div className="animate-fade-in relative isolate rounded-b-3xl bg-gradient-to-br from-blue-100 via-indigo-100 to-white px-6 pt-14 shadow-lg lg:px-8 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800">
+                <div className="animate-fade-in relative isolate rounded-3xl bg-gradient-to-br from-blue-100 via-indigo-100 to-white px-6 pt-14 shadow-lg lg:px-8 dark:bg-gradient-to-br dark:from-indigo-900 dark:via-blue-900 dark:to-purple-900 dark:bg-blend-multiply">
                     <div className="mx-auto max-w-2xl py-20">
                         <div className="mb-8 flex justify-center">
                             <img

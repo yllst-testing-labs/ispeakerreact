@@ -25,4 +25,12 @@ contextBridge.exposeInMainWorld("electron", {
         // Use IPC to ask the main process for the blob
         return await ipcRenderer.invoke("get-recording-blob", key);
     },
+    getFfmpegWasmPath: async () => {
+        return await ipcRenderer.invoke("get-ffmpeg-wasm-path");
+    },
+    getFileAsBlobUrl: async (filePath, mimeType) => {
+        const arrayBuffer = await ipcRenderer.invoke("read-file-buffer", filePath);
+        const blob = new Blob([arrayBuffer], { type: mimeType });
+        return URL.createObjectURL(blob);
+    },
 });

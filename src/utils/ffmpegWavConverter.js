@@ -1,20 +1,23 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { fetchFile } from "@ffmpeg/util";
+import { isElectron } from "./isElectron";
 
 let ffmpeg = null;
 let ffmpegLoading = null;
-
-// Use local files for offline support
-const coreBaseURL = `${import.meta.env.BASE_URL}ffmpeg`;
 
 export async function getFFmpeg() {
     if (!ffmpeg) {
         ffmpeg = new FFmpeg();
         ffmpegLoading = (async () => {
-            await ffmpeg.load({
-                coreURL: await toBlobURL(`${coreBaseURL}/ffmpeg-core.js`, "text/javascript"),
-                wasmURL: await toBlobURL(`${coreBaseURL}/ffmpeg-core.wasm`, "application/wasm"),
-            });
+            let coreURL, wasmURL;
+            if (isElectron()) {
+                const coreBaseURL = await window.electron.getFfmpegWasmPath();
+                const jsPath = `${coreBaseURL}/ffmpeg-core.js`;
+                const wasmPath = `${coreBaseURL}/ffmpeg-core.wasm`;
+                coreURL = await window.electron.getFileAsBlobUrl(jsPath, "text/javascript");
+                wasmURL = await window.electron.getFileAsBlobUrl(wasmPath, "application/wasm");
+            }
+            await ffmpeg.load({ coreURL, wasmURL });
         })();
     }
     if (ffmpegLoading) {

@@ -15,6 +15,7 @@ import { expressApp } from "./electron-main/expressServer.js";
 import { getLogFolder, getSaveFolder, readUserSettings } from "./electron-main/filePath.js";
 import {
     getCustomSaveFolderIPC,
+    getFfmpegWasmPathIPC,
     getSaveFolderIPC,
     getVideoFileDataIPC,
     getVideoSaveFolderIPC,
@@ -292,6 +293,8 @@ app.whenReady()
         // Catch any errors thrown in the app.whenReady() promise itself
         applog.error("Error in app.whenReady():", error);
     });
+
+getFfmpegWasmPathIPC(__dirname);
 
 /* Custom save folder operations */
 

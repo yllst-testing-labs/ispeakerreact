@@ -13,9 +13,22 @@ const startProcess = (cmd, args) => {
 
 // IPC handler to check pronunciation
 const setupPronunciationCheckerIPC = () => {
-    ipcMain.handle("pronunciation-check", async (event, audioPath) => {
+    ipcMain.handle("pronunciation-check", async (event, audioPath, modelName) => {
         const saveFolder = await getSaveFolder(readUserSettings);
-        const modelDir = path.join(saveFolder, "phoneme-model");
+        // If modelName is not provided, read from user settings
+        if (!modelName) {
+            const userSettings = await readUserSettings();
+            modelName = userSettings.modelName;
+        }
+
+        let modelDir;
+        if (modelName) {
+            const safeModelFolder = modelName.replace(/\//g, "_");
+            modelDir = path.join(saveFolder, "phoneme-model", safeModelFolder);
+            console.log(`[PronunciationChecker] modelDir: ${safeModelFolder}`);
+        } else {
+            modelDir = path.join(saveFolder, "phoneme-model");
+        }
         const logSettings = getCurrentLogSettings();
 
         // Configure electron-log with current settings

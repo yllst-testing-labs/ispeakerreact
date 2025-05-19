@@ -5,7 +5,7 @@ import { convertToWav } from "../../utils/ffmpegWavConverter";
 import { useTranslation } from "react-i18next";
 import { parseIPA } from "./syllableParser";
 
-const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation }) => {
+const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation, modelName }) => {
     const { t } = useTranslation();
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
@@ -59,13 +59,14 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation })
                 realWavKey
             );
 
-            // 5. Run the Python process with the new WAV
+            // 5. Run the Python process with the new WAV and selected model
             const response = await window.electron.ipcRenderer.invoke(
                 "pronunciation-check",
-                audioPath
+                audioPath,
+                modelName
             );
 
-            console.log(response);
+            console.log("the response is", response);
 
             if (response && response.status === "success") {
                 const phonemes = response.phonemes;
@@ -187,6 +188,7 @@ PronunciationChecker.propTypes = {
     disabled: PropTypes.bool,
     wordKey: PropTypes.string.isRequired,
     displayPronunciation: PropTypes.string,
+    modelName: PropTypes.string.isRequired,
 };
 
 export default PronunciationChecker;

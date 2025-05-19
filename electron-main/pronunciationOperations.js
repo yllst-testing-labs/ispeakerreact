@@ -4,7 +4,7 @@ import fkill from "fkill";
 import { spawn } from "node:child_process";
 import * as fsPromises from "node:fs/promises";
 import path from "node:path";
-import { getSaveFolder, readUserSettings } from "./filePath.js";
+import { getSaveFolder, readUserSettings, settingsConf } from "./filePath.js";
 
 let currentPythonProcess = null;
 let pendingCancel = false;
@@ -272,6 +272,15 @@ const downloadModel = () => {
         const finalStatus = await downloadModelToDir(modelDir, modelName, (msg) => {
             event.sender.send("pronunciation-model-progress", msg);
         });
+        // After successful download, update user settings with modelName
+        console.log(
+            `[PronunciationOperations] finalStatus: ${JSON.stringify(finalStatus, null, 2)}`
+        );
+        if (finalStatus && (finalStatus.status === "success" || finalStatus.status === "found")) {
+            settingsConf.set("modelName", modelName);
+            console.log(`[PronunciationOperations] modelName updated to ${modelName}`);
+            console.log(`[PronunciationOperations] settingsConf: ${settingsConf.get("modelName")}`);
+        }
         // Return summary to renderer
         return finalStatus;
     });

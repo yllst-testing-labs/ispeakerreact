@@ -379,6 +379,11 @@
         "ratePronunciation": "Rate your pronunciation:",
         "feedbackBtn": "Give feedback",
         "pronunciationChecker": {
+            "pronunciationCheckerNotInstalled": "Pronunciation checker not installed",
+            "pronunciationCheckerNotInstalledMsg": "Please go to settings and install the pronunciation checker.",
+            "featureNotAvailable": "Feature not available",
+            "featureNotAvailableMsg": "This feature is not available in the web version. Please <0>download the app</0> to use this feature.",
+            "okBtn": "OK",
             "checkPronunciationBtn": "Check pronunciation",
             "inProgress": "Checking your pronunciation, please wait…",
             "pronunciationResult": "Result",

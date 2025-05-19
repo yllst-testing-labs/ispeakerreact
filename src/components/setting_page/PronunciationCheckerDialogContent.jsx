@@ -21,11 +21,34 @@ const PronunciationCheckerDialogContent = ({
             <div className="py-4">
                 {/* Model selection dropdown */}
                 <div className="mb-4">
-                    <label className="mb-1 block font-semibold">
-                        {t(
-                            "settingPage.pronunciationSettings.modelSelectLabel",
-                            "Select model to download"
-                        )}
+                    <label className="mb-2 block font-semibold">
+                        {t("settingPage.pronunciationSettings.modelSelectLabel")}
+                        <div className="dropdown dropdown-bottom dropdown-center">
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                className="btn btn-circle btn-ghost btn-sm align-middle"
+                            >
+                                <IoInformationCircleOutline className="h-5 w-5" />
+                            </div>
+                            <div
+                                tabIndex={0}
+                                className="dropdown-content card bg-base-100 z-3 w-96 text-base font-normal shadow-md"
+                            >
+                                <div className="card-body">
+                                    <h3 className="text-base font-semibold">
+                                        {t(
+                                            "settingPage.pronunciationSettings.modelExplanationTitle"
+                                        )}
+                                    </h3>
+                                    <p>
+                                        {t(
+                                            "settingPage.pronunciationSettings.modelExplanationBody"
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </label>
                     <select
                         className="select select-bordered w-full"
@@ -40,7 +63,7 @@ const PronunciationCheckerDialogContent = ({
                         ))}
                     </select>
                     {/* Show description for selected model */}
-                    <div className="mt-2 min-h-[1.5em] text-sm text-gray-600">
+                    <div className="mt-2 min-h-[1.5em] text-sm text-gray-600 dark:text-gray-400">
                         {modelOptions.find((opt) => opt.value === modelValue) &&
                             t(modelOptions.find((opt) => opt.value === modelValue).description)}
                     </div>
@@ -80,11 +103,11 @@ const PronunciationCheckerDialogContent = ({
                     onClick={closeConfirmDialog}
                     disabled={checking}
                 >
-                    {t("settingPage.exerciseSettings.cancelBtn", "Cancel")}
+                    {t("settingPage.exerciseSettings.cancelBtn")}
                 </button>
                 {!checking && (
                     <button type="button" className="btn btn-primary" onClick={handleProceed}>
-                        {t("settingPage.pronunciationSettings.pronunciationModalBtn", "Proceed")}
+                        {t("settingPage.pronunciationSettings.pronunciationModalBtn")}
                     </button>
                 )}
             </div>

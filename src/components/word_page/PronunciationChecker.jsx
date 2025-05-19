@@ -204,9 +204,23 @@ const PronunciationChecker = ({
                                                 </span>{" "}
                                                 {phoneme}
                                             </p>
-                                            {isClose && (
+                                            {phonemeLevenshtein === 0 && (
+                                                <p className="text-success">
+                                                    {t(
+                                                        "wordPage.pronunciationChecker.perfectResult"
+                                                    )}
+                                                </p>
+                                            )}
+                                            {isClose && phonemeLevenshtein !== 0 && (
                                                 <p className="text-success">
                                                     {t("wordPage.pronunciationChecker.closeResult")}
+                                                </p>
+                                            )}
+                                            {!isClose && phonemeLevenshtein !== 0 && (
+                                                <p className="text-warning">
+                                                    {t(
+                                                        "wordPage.pronunciationChecker.notSoCloseResult"
+                                                    )}
                                                 </p>
                                             )}
                                         </>

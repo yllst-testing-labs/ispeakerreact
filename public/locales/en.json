@@ -389,10 +389,11 @@
             "pronunciationResult": "Result",
             "receivedResult": "What we hear:",
             "correctResult": "Correct pronunciation:",
+            "perfectResult": "You seem to pronounce it perfectly!",
             "closeResult": "You seem to be close to the correct pronunciation!",
+            "notSoCloseResult": "You seem have pronounced it a bit wrong. Try practicing it again and you will get it right! Alternatively, try again with other phoneme recognition models in Settings.",
             "cannotHear": "Cannot hear your pronunciation. Please record again, preferably in a quiet environment.",
-            "errorOccurred": "An error occurred.",
-            "closeResultMsg": "The phoneme difference is {{phonemeDifference}} out of {{phonemeLength}}."
+            "errorOccurred": "An error occurred."
         }
     },
     "exercise_page": {
@@ -1356,7 +1357,9 @@
             "stepFailed": "failed",
             "previousInstallMsg": "You have previously installed the pronunciation checker. You can reinstall, change the model or check again if needed.",
             "reinstallBtn": "Reinstall",
-            "modelSelectLabel": "Select model to download",
+            "modelSelectLabel": "Select a model to download",
+            "modelExplanationTitle": "What is a phoneme recognition model?",
+            "modelExplanationBody": "A phoneme recognition model is a tool that listens to speech and breaks it down into the small sounds (called phonemes) that make up each word. It uses AI to help understand how words are pronounced. Bigger models are usually more accurate but take more time to process.",
             "modelDescription1": "High accuracy, might take longer to process.",
             "modelDescription2": "Smaller, faster to process."
         }

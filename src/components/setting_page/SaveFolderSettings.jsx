@@ -33,8 +33,7 @@ const SaveFolderSettings = () => {
             }
         };
         window.electron.ipcRenderer.on("move-folder-progress", handler);
-        return () =>
-            window.electron.ipcRenderer.removeAllListeners("move-folder-progress");
+        return () => window.electron.ipcRenderer.removeAllListeners("move-folder-progress");
     }, [t]);
 
     const handleChooseFolder = async () => {

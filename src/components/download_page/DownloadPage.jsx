@@ -172,10 +172,10 @@ const DownloadPage = () => {
                             <div className="flex flex-1 items-center py-8">
                                 <img
                                     alt="Screenshot"
-                                    src={`${import.meta.env.BASE_URL}images/screenshots/screenshot-00.webp`}
+                                    src={`${import.meta.env.BASE_URL}images/screenshots/screenshot-08.webp`}
                                     width={1920}
                                     height={1080}
-                                    className="w-[48rem] max-w-none rounded-lg shadow-xl transition-transform duration-300 hover:scale-105 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+                                    className="w-[48rem] max-w-none rounded-lg shadow-xl transition-transform duration-300 sm:w-[57rem] md:-ml-4 lg:-ml-0"
                                 />
                             </div>
                         </div>

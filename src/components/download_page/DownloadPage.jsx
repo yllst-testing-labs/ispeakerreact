@@ -68,10 +68,10 @@ const DownloadPage = () => {
                             />
                         </div>
                         <div className="text-center">
-                            <h1 className="animate-fade-in bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 bg-clip-text text-5xl font-extrabold tracking-tight text-balance text-transparent md:text-6xl">
+                            <h1 className="animate-fade-in bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 bg-clip-text text-5xl font-extrabold tracking-tight text-balance text-transparent md:text-6xl dark:bg-gradient-to-r dark:from-orange-300 dark:via-green-300 dark:to-red-500 dark:bg-clip-text dark:text-transparent">
                                 {t("downloadPage.titleMain")}
                             </h1>
-                            <p className="animate-fade-in mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8 dark:text-slate-400">
+                            <p className="animate-fade-in mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8 dark:text-slate-300">
                                 {t("downloadPage.descriptionMain")}
                             </p>
                             <div className="animate-fade-in mt-10 flex items-center justify-center gap-x-6">

@@ -118,18 +118,28 @@ const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation })
                                 </div>
                             ) : (
                                 <>
-                                    <p>
-                                        <span className="font-bold">
-                                            {t("wordPage.pronunciationChecker.receivedResult")}
-                                        </span>{" "}
-                                        {result}
-                                    </p>
-                                    <p>
-                                        <span className="font-bold">
-                                            {t("wordPage.pronunciationChecker.correctResult")}
-                                        </span>{" "}
-                                        {phoneme}
-                                    </p>
+                                    {result && result.startsWith("Error:") ? (
+                                        <p className="text-error">{result}</p>
+                                    ) : (
+                                        <>
+                                            <p>
+                                                <span className="font-bold">
+                                                    {t(
+                                                        "wordPage.pronunciationChecker.receivedResult"
+                                                    )}
+                                                </span>{" "}
+                                                {result}
+                                            </p>
+                                            <p>
+                                                <span className="font-bold">
+                                                    {t(
+                                                        "wordPage.pronunciationChecker.correctResult"
+                                                    )}
+                                                </span>{" "}
+                                                {phoneme}
+                                            </p>
+                                        </>
+                                    )}
                                 </>
                             )}
                         </div>

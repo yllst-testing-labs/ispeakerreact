@@ -158,23 +158,104 @@ const downloadModelToDir = async (modelDir, modelName, onProgress) => {
     // Write Python code to temp file in save folder
     const pyCode = `
 import os, sys, json
+
 try:
-    from huggingface_hub import snapshot_download
+    from huggingface_hub import snapshot_download, list_repo_files
 except ImportError:
     print(json.dumps({"status": "error", "message": "huggingface_hub not installed"}))
     sys.exit(1)
-model_dir = r'''${modelDir}'''
-model_file = os.path.join(model_dir, "model.safetensors")
-if not os.path.exists(model_file):
-    print(json.dumps({"status": "downloading", "message": "Starting model download..."}))
+
+model_dir = r"""${modelDir}"""
+repo_id = "${modelName}"
+
+try:
+    files = list_repo_files(repo_id)
+except Exception as e:
+    print(
+        json.dumps(
+            {"status": "error", "message": f"Failed to list repo files: {str(e)}"}
+        )
+    )
+    sys.exit(1)
+
+has_safetensors = any(f.endswith(".safetensors") for f in files)
+has_bin = any(f.endswith(".bin") for f in files)
+
+if has_safetensors and has_bin:
+    print(
+        json.dumps(
+            {
+                "status": "downloading",
+                "message": "Both .safetensors and .bin found. Downloading all except .bin...",
+            }
+        )
+    )
     try:
-        snapshot_download(repo_id="${modelName}", local_dir=model_dir, ignore_patterns=["*.bin"])
-        print(json.dumps({"status": "downloading", "message": "Model download complete."}))
+        snapshot_download(
+            repo_id=repo_id, local_dir=model_dir, ignore_patterns=["*.bin"]
+        )
+        print(
+            json.dumps(
+                {"status": "success", "message": "Downloaded all files except .bin"}
+            )
+        )
+    except Exception as e:
+        print(json.dumps({"status": "error", "message": f"Download failed: {str(e)}"}))
+        sys.exit(1)
+elif has_safetensors:
+    print(
+        json.dumps(
+            {
+                "status": "downloading",
+                "message": "Only .safetensors found. Downloading all files...",
+            }
+        )
+    )
+    try:
+        snapshot_download(repo_id=repo_id, local_dir=model_dir)
+        print(
+            json.dumps(
+                {
+                    "status": "success",
+                    "message": "Downloaded all files (including .safetensors)",
+                }
+            )
+        )
+    except Exception as e:
+        print(json.dumps({"status": "error", "message": f"Download failed: {str(e)}"}))
+        sys.exit(1)
+elif has_bin:
+    print(
+        json.dumps(
+            {
+                "status": "downloading",
+                "message": "Only .bin found. Downloading all files...",
+            }
+        )
+    )
+    try:
+        snapshot_download(repo_id=repo_id, local_dir=model_dir)
+        print(
+            json.dumps(
+                {
+                    "status": "success",
+                    "message": "Downloaded all files (including .bin)",
+                }
+            )
+        )
     except Exception as e:
         print(json.dumps({"status": "error", "message": f"Download failed: {str(e)}"}))
         sys.exit(1)
 else:
-    print(json.dumps({"status": "found", "message": "Model loaded from local directory."}))
+    print(
+        json.dumps(
+            {
+                "status": "error",
+                "message": "No model file (.safetensors or .bin) found in repo.",
+            }
+        )
+    )
+    sys.exit(1)
 `;
     const saveFolder = await getSaveFolder(readUserSettings);
     const tempPyPath = path.join(saveFolder, "download_model_temp.py");

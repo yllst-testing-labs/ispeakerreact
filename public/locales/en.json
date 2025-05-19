@@ -1345,7 +1345,7 @@
             "installationProcessFailed": "Installation failed. Expand the details to see the error.",
             "stepDone": "done",
             "stepFailed": "failed",
-            "previousInstallMsg": "You have previously installed the pronunciation checker. You can reinstall or check again if needed.",
+            "previousInstallMsg": "You have previously installed the pronunciation checker. You can reinstall, change the model or check again if needed.",
             "reinstallBtn": "Reinstall",
             "modelSelectLabel": "Select model to download",
             "modelDescription1": "High accuracy, might take longer to process.",

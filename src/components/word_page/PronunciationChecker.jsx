@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { convertToWav } from "../../utils/ffmpegWavConverter";
 import { isElectron } from "../../utils/isElectron";
+import levenshtein from "../../utils/levenshtein";
 import openExternal from "../../utils/openExternal";
 import { parseIPA } from "./syllableParser";
 
@@ -80,7 +81,7 @@ const PronunciationChecker = ({
 
             if (response && response.status === "success") {
                 const phonemes = response.phonemes;
-                const readablePhonemes = phonemes ? JSON.parse(`"${phonemes}"`) : "(none)";
+                const readablePhonemes = phonemes ? JSON.parse(`"${phonemes}"`) : null;
                 setResult(readablePhonemes);
             } else {
                 setResult(`Error: ${response?.message || "Unknown error"}`);
@@ -95,6 +96,10 @@ const PronunciationChecker = ({
 
     const parsedPhonemes = parseIPA(displayPronunciation);
     const phoneme = parsedPhonemes.map((syl) => syl.text).join(" ");
+    const clean = (str) => (typeof str === "string" ? str.replace(/\s+/g, "") : "");
+    const phonemeLevenshtein =
+        result && phoneme ? levenshtein(clean(result), clean(phoneme)) : null;
+    const isClose = phonemeLevenshtein !== null && phonemeLevenshtein <= 1;
 
     return (
         <>
@@ -128,8 +133,16 @@ const PronunciationChecker = ({
                                 </div>
                             ) : (
                                 <>
-                                    {result && result.startsWith("Error:") ? (
-                                        <p className="text-error">{result}</p>
+                                    {result && result.startsWith && result.startsWith("Error:") ? (
+                                        <p className="text-error">
+                                            {t("wordPage.pronunciationChecker.errorOccurred")}
+                                            {": "}
+                                            {result.replace(/^Error:\s*/, "")}
+                                        </p>
+                                    ) : result === null ? (
+                                        <p className="text-warning">
+                                            {t("wordPage.pronunciationChecker.cannotHear")}
+                                        </p>
                                     ) : (
                                         <>
                                             <p>
@@ -148,6 +161,11 @@ const PronunciationChecker = ({
                                                 </span>{" "}
                                                 {phoneme}
                                             </p>
+                                            {isClose && (
+                                                <p className="text-success">
+                                                    {t("wordPage.pronunciationChecker.closeResult")}
+                                                </p>
+                                            )}
                                         </>
                                     )}
                                 </>

@@ -388,7 +388,11 @@
             "inProgress": "Checking your pronunciation, please wait…",
             "pronunciationResult": "Result",
             "receivedResult": "What we hear:",
-            "correctResult": "Correct pronunciation:"
+            "correctResult": "Correct pronunciation:",
+            "closeResult": "You seem to be close to the correct pronunciation!",
+            "cannotHear": "Cannot hear your pronunciation. Please record again, preferably in a quiet environment.",
+            "errorOccurred": "An error occurred.",
+            "closeResultMsg": "The phoneme difference is {{phonemeDifference}} out of {{phonemeLength}}."
         }
     },
     "exercise_page": {

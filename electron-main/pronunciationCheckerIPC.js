@@ -33,14 +33,18 @@ import torch
 import torchaudio
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 
+# Set console encoding to UTF-8
+if sys.platform == 'win32':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
 MODEL_DIR = r"""${modelDir}"""
 AUDIO_PATH = r"""${audioPath}"""
 
 def log_json(obj):
-    msg = json.dumps(obj)
-    pretty = json.dumps(obj, indent=2, ensure_ascii=False)
-    print(msg)
-    print(pretty, file=sys.stderr)
+    # Send a single JSON string to stdout
+    print(json.dumps(obj, ensure_ascii=False))
 
 def main():
     try:
@@ -75,10 +79,8 @@ def main():
         result = transcription[0].strip()
         if result == "":
             log_json({"status": "success", "phonemes": None, "message": "No phonemes detected."})
-            print(json.dumps({"status": "success", "phonemes": None, "message": "No phonemes detected."}))
         else:
             log_json({"status": "success", "phonemes": result})
-            print(json.dumps({"status": "success", "phonemes": result}))
 
     except Exception as e:
         import traceback
@@ -112,9 +114,27 @@ if __name__ == "__main__":
                 for (const line of lines) {
                     if (line.trim().startsWith("{") && line.trim().endsWith("}")) {
                         try {
-                            lastJson = JSON.parse(line.trim());
-                            if (lastJson.status === "progress") {
-                                applog.info(`[PronunciationChecker] ${lastJson.message}`);
+                            const jsonData = JSON.parse(line.trim());
+                            lastJson = jsonData;
+
+                            // Log with appropriate level based on status
+                            const logMessage = {
+                                component: "PronunciationChecker",
+                                ...jsonData,
+                            };
+
+                            switch (jsonData.status) {
+                                case "progress":
+                                    applog.info(logMessage);
+                                    break;
+                                case "success":
+                                    applog.info(logMessage);
+                                    break;
+                                case "error":
+                                    applog.error(logMessage);
+                                    break;
+                                default:
+                                    applog.info(logMessage);
                             }
                         } catch {
                             applog.error(
@@ -128,7 +148,11 @@ if __name__ == "__main__":
                 const lines = data.toString().split(/\r?\n/);
                 for (const line of lines) {
                     if (line.trim()) {
-                        applog.error(`[PronunciationChecker] ${line.trim()}`);
+                        applog.error({
+                            component: "PronunciationChecker",
+                            status: "error",
+                            message: line.trim(),
+                        });
                     }
                 }
             });

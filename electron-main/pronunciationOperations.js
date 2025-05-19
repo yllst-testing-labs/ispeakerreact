@@ -91,7 +91,14 @@ const startProcess = (cmd, args, onExit) => {
     return proc;
 };
 
-const dependencies = ["numpy", "torch", "torchaudio", "transformers", "huggingface_hub[hf_xet]", "soundfile"];
+const dependencies = [
+    "numpy",
+    "torch",
+    "torchaudio",
+    "transformers",
+    "huggingface_hub[hf_xet]",
+    "soundfile",
+];
 
 const resetGlobalCancel = () => {
     isGloballyCancelled = false;
@@ -137,7 +144,7 @@ const installDependencies = () => {
 };
 
 // Extracted model download logic
-const downloadModelToDir = async (modelDir, onProgress) => {
+const downloadModelToDir = async (modelDir, modelName, onProgress) => {
     if (isGloballyCancelled) {
         if (onProgress) onProgress({ status: "cancelled", message: "Cancelled before start" });
         return { status: "cancelled", message: "Cancelled before start" };
@@ -161,7 +168,7 @@ model_file = os.path.join(model_dir, "model.safetensors")
 if not os.path.exists(model_file):
     print(json.dumps({"status": "downloading", "message": "Starting model download..."}))
     try:
-        snapshot_download(repo_id="vitouphy/wav2vec2-xls-r-300m-timit-phoneme", local_dir=model_dir, ignore_patterns=["*.bin"])
+        snapshot_download(repo_id="${modelName}", local_dir=model_dir, ignore_patterns=["*.bin"])
         print(json.dumps({"status": "downloading", "message": "Model download complete."}))
     except Exception as e:
         print(json.dumps({"status": "error", "message": f"Download failed: {str(e)}"}))
@@ -256,11 +263,13 @@ else:
 };
 
 const downloadModel = () => {
-    ipcMain.handle("pronunciation-download-model", async (event) => {
+    ipcMain.handle("pronunciation-download-model", async (event, modelName) => {
         const saveFolder = await getSaveFolder(readUserSettings);
-        const modelDir = path.join(saveFolder, "phoneme-model");
+        // Replace / with _ for folder name
+        const safeModelFolder = modelName.replace(/\//g, "_");
+        const modelDir = path.join(saveFolder, "phoneme-model", safeModelFolder);
         // Forward progress to renderer
-        const finalStatus = await downloadModelToDir(modelDir, (msg) => {
+        const finalStatus = await downloadModelToDir(modelDir, modelName, (msg) => {
             event.sender.send("pronunciation-model-progress", msg);
         });
         // Return summary to renderer
@@ -366,8 +375,6 @@ const migrateOldStatusToStructured = (status) => {
         timestamp: Date.now(),
     };
 };
-
-
 
 export {
     cancelProcess,

@@ -14,6 +14,7 @@ import {
     installDependenciesIPC,
 } from "./PronunciationUtils";
 import { getPronunciationStepStatuses } from "./pronunciationStepUtils";
+import modelOptions from "./modelOptions";
 
 const PronunciationSettings = () => {
     const { t } = useTranslation();
@@ -24,6 +25,9 @@ const PronunciationSettings = () => {
     const [error, setError] = useState(null);
     const [isCancelling, setIsCancelling] = useState(false);
     const [hasPreviousInstall, setHasPreviousInstall] = useState(false);
+    // Model selection state
+    const [modelValue, setModelValue] = useState("vitouphy/wav2vec2-xls-r-300m-timit-phoneme");
+    const onModelChange = (value) => setModelValue(value);
 
     const openConfirmDialog = () => {
         confirmDialogRef.current?.showModal();
@@ -180,7 +184,7 @@ const PronunciationSettings = () => {
     };
 
     const downloadModelStep = async () => {
-        console.log("[Pronunciation] Downloading model...");
+        console.log("[Pronunciation] Downloading model...", modelValue);
         if (window.electron?.ipcRenderer) {
             setChecking(true);
             setPythonCheckResult((prev) => {
@@ -192,7 +196,8 @@ const PronunciationSettings = () => {
                 return updated;
             });
             try {
-                const result = await downloadModelStepIPC();
+                // Pass modelValue to IPC
+                const result = await downloadModelStepIPC(modelValue);
                 console.log("[Pronunciation] Model download result:", result);
                 setPythonCheckResult((prev) => {
                     const updated = { ...prev, ...result };
@@ -254,6 +259,10 @@ const PronunciationSettings = () => {
         allStepsDone &&
         [step1Status, step2Status, step3Status].some((status) => status === "error");
 
+    // Find the selected model's size
+    const selectedModel = modelOptions.find((opt) => opt.value === modelValue);
+    const selectedModelSize = selectedModel ? selectedModel.size : "";
+
     return (
         <>
             <div className="mt-4">
@@ -285,6 +294,8 @@ const PronunciationSettings = () => {
                     closeConfirmDialog={closeConfirmDialog}
                     handleProceed={handleProceed}
                     hasPreviousInstall={hasPreviousInstall}
+                    modelValue={modelValue}
+                    onModelChange={onModelChange}
                 />
             </dialog>
 
@@ -346,6 +357,7 @@ const PronunciationSettings = () => {
                         checking={checking || isCancelling}
                         error={error}
                         pythonCheckResult={pythonCheckResult}
+                        modelSize={selectedModelSize}
                     />
                     <div className="modal-action">
                         <button

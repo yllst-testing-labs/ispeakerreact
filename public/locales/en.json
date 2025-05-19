@@ -1339,14 +1339,17 @@
             "installationProcessWarning": "Please do not close the app while the installation is in progress.",
             "installationProcessStep1": "Checking Python installation…",
             "installationProcessStep2": "Installing required dependencies…",
-            "installationProcessStep3": "Downloading phoneme recognition files (about 1.2GB)…",
+            "installationProcessStep3": "Downloading phoneme recognition files (about {{size}})…",
             "installationProcessCancelling": "Cancelling…",
             "installationProcessSuccess": "Installation complete. You can now close this dialog.",
             "installationProcessFailed": "Installation failed. Expand the details to see the error.",
             "stepDone": "done",
             "stepFailed": "failed",
             "previousInstallMsg": "You have previously installed the pronunciation checker. You can reinstall or check again if needed.",
-            "reinstallBtn": "Reinstall"
+            "reinstallBtn": "Reinstall",
+            "modelSelectLabel": "Select model to download",
+            "modelDescription1": "High accuracy, might take longer to process.",
+            "modelDescription2": "Smaller, faster to process."
         }
     },
     "downloadPage": {

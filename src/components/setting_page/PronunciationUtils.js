@@ -14,9 +14,9 @@ const installDependenciesIPC = async () => {
     }
 };
 
-const downloadModelStepIPC = async () => {
+const downloadModelStepIPC = async (modelName) => {
     if (window.electron?.ipcRenderer) {
-        return await window.electron.ipcRenderer.invoke("pronunciation-download-model");
+        return await window.electron.ipcRenderer.invoke("pronunciation-download-model", modelName);
     } else {
         throw new Error("Not running in Electron environment.");
     }

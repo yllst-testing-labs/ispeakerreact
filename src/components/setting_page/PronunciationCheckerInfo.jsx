@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { IoCheckmark, IoCloseOutline } from "react-icons/io5";
 import { getPronunciationStepStatuses } from "./pronunciationStepUtils";
 
-const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => {
+const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult, modelSize }) => {
     // Helper to get status icon
     const getStatusIcon = (status) => {
         if (status === "pending")
@@ -35,7 +35,7 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult }) => 
         },
         {
             key: "step3",
-            label: t("settingPage.pronunciationSettings.installationProcessStep3"),
+            label: t("settingPage.pronunciationSettings.installationProcessStep3", { size: modelSize }),
             status: step3Status,
         },
     ];
@@ -120,6 +120,7 @@ PronunciationCheckerInfo.propTypes = {
     checking: PropTypes.bool.isRequired,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
     pythonCheckResult: PropTypes.oneOfType([PropTypes.object, PropTypes.oneOf([null])]),
+    modelSize: PropTypes.string.isRequired,
 };
 
 export default PronunciationCheckerInfo;

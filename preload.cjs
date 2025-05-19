@@ -20,4 +20,8 @@ contextBridge.exposeInMainWorld("electron", {
         // Send log message to the main process
         ipcRenderer.send("renderer-log", { level, message });
     },
+    getRecordingBlob: async (key) => {
+        // Use IPC to ask the main process for the blob
+        return await ipcRenderer.invoke("get-recording-blob", key);
+    },
 });

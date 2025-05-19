@@ -91,7 +91,7 @@ const startProcess = (cmd, args, onExit) => {
     return proc;
 };
 
-const dependencies = ["numpy", "torch", "torchaudio", "transformers", "huggingface_hub[hf_xet]"];
+const dependencies = ["numpy", "torch", "torchaudio", "transformers", "huggingface_hub[hf_xet]", "soundfile"];
 
 const resetGlobalCancel = () => {
     isGloballyCancelled = false;
@@ -366,6 +366,8 @@ const migrateOldStatusToStructured = (status) => {
         timestamp: Date.now(),
     };
 };
+
+
 
 export {
     cancelProcess,

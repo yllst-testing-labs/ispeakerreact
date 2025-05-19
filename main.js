@@ -35,6 +35,10 @@ import {
 } from "./electron-main/pronunciationOperations.js";
 import { checkDownloads, checkExtractedFolder } from "./electron-main/videoFileOperations.js";
 import { verifyAndExtractIPC } from "./electron-main/zipOperation.js";
+import {
+    setupPronunciationCheckerIPC,
+    setupGetRecordingBlobIPC,
+} from "./electron-main/pronunciationCheckerIPC.js";
 
 const DEFAULT_PORT = 8998;
 
@@ -354,8 +358,16 @@ ipcMain.handle("pronunciation-reset-cancel-flag", async () => {
     resetGlobalCancel();
 });
 
+/* End pronunciation checker operations */
+
+ipcMain.handle("get-recording-path", async (_event, wordKey) => {
+    const saveFolder = await getSaveFolder(readUserSettings);
+    return path.join(saveFolder, "saved_recordings", `${wordKey}.wav`);
+});
+
+setupPronunciationCheckerIPC();
+setupGetRecordingBlobIPC();
+
 app.on("before-quit", async () => {
     await killCurrentPythonProcess();
 });
-
-/* End pronunciation checker operations */

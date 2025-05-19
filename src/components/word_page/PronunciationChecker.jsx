@@ -1,12 +1,32 @@
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { isElectron } from "../../utils/isElectron";
+import { convertToWav } from "../../utils/ffmpegWavConverter";
 
-const PronunciationChecker = ({ icon, disabled }) => {
+const PronunciationChecker = ({ icon, disabled, wordKey }) => {
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
     const dialogRef = useRef();
     const webDialogRef = useRef();
+    const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState("");
+
+    useEffect(() => {
+        if (!isElectron()) return;
+        const handler = (_event, msg) => {
+            if (msg && msg.status === "progress") {
+                setProgress(msg.message);
+            }
+        };
+        window.electron?.ipcRenderer?.on?.("pronunciation-model-progress", handler);
+        return () => {
+            window.electron?.ipcRenderer?.removeListener?.("pronunciation-model-progress", handler);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (showResult) setProgress("");
+    }, [showResult]);
 
     const checkPronunciation = async () => {
         if (!isElectron()) {
@@ -16,17 +36,47 @@ const PronunciationChecker = ({ icon, disabled }) => {
             }
             return;
         }
-        // IPC call to get status
-        const status = await window.electron.ipcRenderer.invoke("get-pronunciation-install-status");
-        if (!status?.model || status.model.status !== "success") {
-            // Open dialog
-            if (dialogRef.current) {
-                dialogRef.current.showModal();
+        setLoading(true);
+        setProgress("");
+        try {
+            // 1. Get the original recording blob from Electron
+            const originalBlobArrayBuffer = await window.electron.getRecordingBlob(wordKey);
+            const originalBlob = new Blob([originalBlobArrayBuffer]);
+
+            // 2. Convert to real WAV
+            const realWavBlob = await convertToWav(originalBlob);
+
+            // 3. Save the new WAV to disk with -realwav suffix
+            const realWavKey = `${wordKey}-realwav`;
+            await window.electron.saveRecording(realWavKey, await realWavBlob.arrayBuffer());
+
+            // 4. Get the file path for the new WAV
+            const audioPath = await window.electron.ipcRenderer.invoke(
+                "get-recording-path",
+                realWavKey
+            );
+
+            // 5. Run the Python process with the new WAV
+            const response = await window.electron.ipcRenderer.invoke(
+                "pronunciation-check",
+                audioPath
+            );
+
+            console.log(response);
+
+            if (response && response.status === "success") {
+                const phonemes = response.phonemes;
+                const readablePhonemes = phonemes ? JSON.parse(`"${phonemes}"`) : "(none)";
+                setResult(`Phonemes: ${readablePhonemes}`);
+                console.log(response.phonemes);
+            } else {
+                setResult(`Error: ${response?.message || "Unknown error"}`);
             }
-        } else {
-            // Run checker logic here, for now just simulate result
-            setResult("Your pronunciation is great!");
+        } catch (err) {
+            setResult(`Error: ${err.message || err}`);
+        } finally {
             setShowResult(true);
+            setLoading(false);
         }
     };
 
@@ -37,11 +87,20 @@ const PronunciationChecker = ({ icon, disabled }) => {
                     type="button"
                     className="btn btn-primary"
                     onClick={checkPronunciation}
-                    disabled={disabled}
+                    disabled={disabled || loading}
                 >
                     {icon} Check pronunciation
                 </button>
             </div>
+
+            {loading && (
+                <div className="my-2 flex flex-col items-center justify-center">
+                    <span className="loading loading-spinner loading-lg"></span>
+                    <span className="ml-2">
+                        {progress || "Converting and checking pronunciation..."}
+                    </span>
+                </div>
+            )}
 
             <div
                 className={`flex justify-center gap-2 overflow-hidden pt-4 transition-all duration-500 ease-in-out ${showResult ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
@@ -95,6 +154,7 @@ const PronunciationChecker = ({ icon, disabled }) => {
 PronunciationChecker.propTypes = {
     icon: PropTypes.node,
     disabled: PropTypes.bool,
+    wordKey: PropTypes.string.isRequired,
 };
 
 export default PronunciationChecker;

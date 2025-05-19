@@ -304,6 +304,7 @@ const RecordingWaveform = ({
             <PronunciationChecker
                 disabled={!recordedUrl || disableControls || isAudioLoading}
                 icon={<BsClipboard2Check className="h-5 w-5" />}
+                wordKey={wordKey}
             />
 
             {/*recordedUrl && (

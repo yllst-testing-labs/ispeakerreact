@@ -1,9 +1,10 @@
-import { ipcMain } from "electron";
-import { getSaveFolder, readUserSettings } from "./filePath.js";
-import path from "node:path";
-import * as fsPromises from "node:fs/promises";
-import applog from "electron-log";
 import { spawn } from "child_process";
+import { ipcMain } from "electron";
+import applog from "electron-log";
+import * as fsPromises from "node:fs/promises";
+import path from "node:path";
+import { getSaveFolder, readUserSettings } from "./filePath.js";
+import { getCurrentLogSettings } from "./logOperations.js";
 
 const startProcess = (cmd, args) => {
     const proc = spawn(cmd, args, { shell: true });
@@ -15,18 +16,23 @@ const setupPronunciationCheckerIPC = () => {
     ipcMain.handle("pronunciation-check", async (event, audioPath) => {
         const saveFolder = await getSaveFolder(readUserSettings);
         const modelDir = path.join(saveFolder, "phoneme-model");
-        const logFilePath = path.join(saveFolder, "pronunciation_checker.log").replace(/\\/g, "/");
+        const logSettings = getCurrentLogSettings();
+
+        // Configure electron-log with current settings
+        applog.transports.file.maxSize = logSettings.maxLogSize;
+        applog.transports.console.level = logSettings.logLevel;
+
         applog.info(`[PronunciationChecker] audioPath: ${audioPath}`);
         applog.info(`[PronunciationChecker] modelDir: ${modelDir}`);
+
         // Robust Python script for model inference
         const pyCode = `import os
 import sys
 import json
 import torch
 import torchaudio
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 
-LOG_PATH = r'${logFilePath}'
 MODEL_DIR = r"""${modelDir}"""
 AUDIO_PATH = r"""${audioPath}"""
 
@@ -35,11 +41,6 @@ def log_json(obj):
     pretty = json.dumps(obj, indent=2, ensure_ascii=False)
     print(msg)
     print(pretty, file=sys.stderr)
-    try:
-        with open(LOG_PATH, 'a', encoding='utf-8') as f:
-            f.write(pretty + '\\n')
-    except Exception as log_exc:
-        print(f"Failed to write log: {log_exc}", file=sys.stderr)
 
 def main():
     try:
@@ -95,7 +96,9 @@ if __name__ == "__main__":
         return new Promise((resolve) => {
             const py = startProcess("python", ["-u", tempPyPath], (err) => {
                 fsPromises.unlink(tempPyPath).catch(() => {
-                    console.warn("Failed to delete temp pronunciation checker file");
+                    applog.warn(
+                        "[PronunciationChecker] Failed to delete temp pronunciation checker file"
+                    );
                 });
                 if (err) {
                     applog.error(
@@ -110,22 +113,33 @@ if __name__ == "__main__":
                     if (line.trim().startsWith("{") && line.trim().endsWith("}")) {
                         try {
                             lastJson = JSON.parse(line.trim());
+                            if (lastJson.status === "progress") {
+                                applog.info(`[PronunciationChecker] ${lastJson.message}`);
+                            }
                         } catch {
-                            console.error(`[PronunciationChecker] Failed to parse JSON: ${line.trim()}`);
+                            applog.error(
+                                `[PronunciationChecker] Failed to parse JSON: ${line.trim()}`
+                            );
                         }
                     }
                 }
-                applog.info(`[PronunciationChecker][stdout] ${data.toString()}`);
             });
             py.stderr.on("data", (data) => {
-                applog.info(`[PronunciationChecker][stderr] ${data.toString()}`);
+                const lines = data.toString().split(/\r?\n/);
+                for (const line of lines) {
+                    if (line.trim()) {
+                        applog.error(`[PronunciationChecker] ${line.trim()}`);
+                    }
+                }
             });
             py.on("close", (code) => {
-                applog.info(`[PronunciationChecker] Python process closed with code: ${code}`);
-                if (lastJson) {
+                if (code === 0 && lastJson) {
                     resolve(lastJson);
                 } else {
-                    resolve({ status: code === 0 ? "success" : "error", code });
+                    resolve({
+                        status: "error",
+                        message: `Process exited with code ${code}`,
+                    });
                 }
             });
         });
@@ -146,4 +160,4 @@ const setupGetRecordingBlobIPC = () => {
     });
 };
 
-export { setupPronunciationCheckerIPC, setupGetRecordingBlobIPC };
+export { setupGetRecordingBlobIPC, setupPronunciationCheckerIPC };

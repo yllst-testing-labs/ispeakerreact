@@ -74,8 +74,10 @@ def main():
         result = transcription[0].strip()
         if result == "":
             log_json({"status": "success", "phonemes": None, "message": "No phonemes detected."})
+            print(json.dumps({"status": "success", "phonemes": None, "message": "No phonemes detected."}))
         else:
             log_json({"status": "success", "phonemes": result})
+            print(json.dumps({"status": "success", "phonemes": result}))
 
     except Exception as e:
         import traceback
@@ -101,8 +103,18 @@ if __name__ == "__main__":
                     );
                 }
             });
-            // Log all output in real time
+            let lastJson = null;
             py.stdout.on("data", (data) => {
+                const lines = data.toString().split(/\r?\n/);
+                for (const line of lines) {
+                    if (line.trim().startsWith("{") && line.trim().endsWith("}")) {
+                        try {
+                            lastJson = JSON.parse(line.trim());
+                        } catch {
+                            console.error(`[PronunciationChecker] Failed to parse JSON: ${line.trim()}`);
+                        }
+                    }
+                }
                 applog.info(`[PronunciationChecker][stdout] ${data.toString()}`);
             });
             py.stderr.on("data", (data) => {
@@ -110,7 +122,11 @@ if __name__ == "__main__":
             });
             py.on("close", (code) => {
                 applog.info(`[PronunciationChecker] Python process closed with code: ${code}`);
-                resolve({ status: code === 0 ? "success" : "error", code });
+                if (lastJson) {
+                    resolve(lastJson);
+                } else {
+                    resolve({ status: code === 0 ? "success" : "error", code });
+                }
             });
         });
     });

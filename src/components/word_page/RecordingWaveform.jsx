@@ -40,6 +40,7 @@ const RecordingWaveform = ({
     onActivityChange = null,
     onRecordingSaved = null,
     isAudioLoading = false,
+    displayPronunciation,
     t,
 }) => {
     const waveformRef = useRef(null);
@@ -305,6 +306,7 @@ const RecordingWaveform = ({
                 disabled={!recordedUrl || disableControls || isAudioLoading}
                 icon={<BsClipboard2Check className="h-5 w-5" />}
                 wordKey={wordKey}
+                displayPronunciation={displayPronunciation}
             />
 
             {/*recordedUrl && (
@@ -328,6 +330,7 @@ RecordingWaveform.propTypes = {
     t: PropTypes.func.isRequired,
     onRecordingSaved: PropTypes.func,
     isAudioLoading: PropTypes.bool,
+    displayPronunciation: PropTypes.string,
 };
 
 export default RecordingWaveform;

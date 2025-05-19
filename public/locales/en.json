@@ -377,7 +377,14 @@
         "secondaryBadge": "S",
         "pauseRecordingBtn": "Pause recording",
         "ratePronunciation": "Rate your pronunciation:",
-        "feedbackBtn": "Give feedback"
+        "feedbackBtn": "Give feedback",
+        "pronunciationChecker": {
+            "checkPronunciationBtn": "Check pronunciation",
+            "inProgress": "Checking your pronunciation, please wait…",
+            "pronunciationResult": "Result",
+            "receivedResult": "What we hear:",
+            "correctResult": "Correct pronunciation:"
+        }
     },
     "exercise_page": {
         "exerciseSubheading": "Select an exercise to get started.",

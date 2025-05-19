@@ -259,6 +259,7 @@ const WordDetails = ({ word, handleBack, t, accent, onReviewUpdate, scrollRef })
                         t={t}
                         onRecordingSaved={() => setIsRecordingExists(true)}
                         isAudioLoading={isAudioLoading}
+                        displayPronunciation={displayPronunciation}
                     />
 
                     <ReviewRecording

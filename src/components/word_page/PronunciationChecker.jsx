@@ -2,8 +2,11 @@ import PropTypes from "prop-types";
 import { useRef, useState, useEffect } from "react";
 import { isElectron } from "../../utils/isElectron";
 import { convertToWav } from "../../utils/ffmpegWavConverter";
+import { useTranslation } from "react-i18next";
+import { parseIPA } from "./syllableParser";
 
-const PronunciationChecker = ({ icon, disabled, wordKey }) => {
+const PronunciationChecker = ({ icon, disabled, wordKey, displayPronunciation }) => {
+    const { t } = useTranslation();
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
     const dialogRef = useRef();
@@ -67,7 +70,7 @@ const PronunciationChecker = ({ icon, disabled, wordKey }) => {
             if (response && response.status === "success") {
                 const phonemes = response.phonemes;
                 const readablePhonemes = phonemes ? JSON.parse(`"${phonemes}"`) : "(none)";
-                setResult(`Phonemes: ${readablePhonemes}`);
+                setResult(readablePhonemes);
                 console.log(response.phonemes);
             } else {
                 setResult(`Error: ${response?.message || "Unknown error"}`);
@@ -80,6 +83,9 @@ const PronunciationChecker = ({ icon, disabled, wordKey }) => {
         }
     };
 
+    const parsedPhonemes = parseIPA(displayPronunciation);
+    const phoneme = parsedPhonemes.map((syl) => syl.text).join(" ");
+
     return (
         <>
             <div className="my-4 flex w-full flex-col items-center gap-2">
@@ -89,28 +95,43 @@ const PronunciationChecker = ({ icon, disabled, wordKey }) => {
                     onClick={checkPronunciation}
                     disabled={disabled || loading}
                 >
-                    {icon} Check pronunciation
+                    {icon} {t("wordPage.pronunciationChecker.checkPronunciationBtn")}
                 </button>
             </div>
 
-            {loading && (
-                <div className="my-2 flex flex-col items-center justify-center">
-                    <span className="loading loading-spinner loading-lg"></span>
-                    <span className="ml-2">
-                        {progress || "Converting and checking pronunciation..."}
-                    </span>
-                </div>
-            )}
-
             <div
-                className={`flex justify-center gap-2 overflow-hidden pt-4 transition-all duration-500 ease-in-out ${showResult ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+                className={`flex justify-center gap-2 overflow-hidden pt-4 transition-all duration-500 ease-in-out ${showResult || loading ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
             >
-                {result && (
+                {(showResult || loading) && (
                     <div className="card card-border card-lg w-full shadow-sm md:w-2xl dark:border-slate-600">
                         <div className="card-body">
-                            <h2 className="card-title">Pronunciation result</h2>
+                            <h2 className="card-title">
+                                {t("wordPage.pronunciationChecker.pronunciationResult")}
+                            </h2>
                             <div className="divider divider-secondary mt-0 mb-4"></div>
-                            <p>{result}</p>
+                            {loading ? (
+                                <div className="my-2 flex flex-col items-center justify-center">
+                                    <span className="loading loading-spinner loading-lg"></span>
+                                    <span className="my-2">
+                                        {progress || t("wordPage.pronunciationChecker.inProgress")}
+                                    </span>
+                                </div>
+                            ) : (
+                                <>
+                                    <p>
+                                        <span className="font-bold">
+                                            {t("wordPage.pronunciationChecker.receivedResult")}
+                                        </span>{" "}
+                                        {result}
+                                    </p>
+                                    <p>
+                                        <span className="font-bold">
+                                            {t("wordPage.pronunciationChecker.correctResult")}
+                                        </span>{" "}
+                                        {phoneme}
+                                    </p>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}
@@ -155,6 +176,7 @@ PronunciationChecker.propTypes = {
     icon: PropTypes.node,
     disabled: PropTypes.bool,
     wordKey: PropTypes.string.isRequired,
+    displayPronunciation: PropTypes.string,
 };
 
 export default PronunciationChecker;

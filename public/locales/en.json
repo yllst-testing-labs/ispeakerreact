@@ -393,7 +393,7 @@
             "correctResult": "Correct pronunciation:",
             "perfectResult": "You seem to pronounce it perfectly!",
             "closeResult": "You seem to be close to the correct pronunciation!",
-            "notSoCloseResult": "You seem have pronounced it a bit wrong. Try practicing it again and you will get it right! Alternatively, try again with other phoneme recognition models in Settings.",
+            "notSoCloseResult": "You seem to mispronounce some syllables. Try practicing it again and you will get it right! Alternatively, try again with other phoneme recognition models in Settings.",
             "cannotHear": "Cannot hear your pronunciation. Please record again, preferably in a quiet environment.",
             "errorOccurred": "An error occurred. Reason:",
             "errorDetails": "See error details",

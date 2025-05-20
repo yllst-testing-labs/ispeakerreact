@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { convertToWav } from "../../utils/ffmpegWavConverter";
 import { isElectron } from "../../utils/isElectron";
-import { alignPhonemes, getCharacterDiff, levenshtein } from "../../utils/levenshtein";
 import openExternal from "../../utils/openExternal";
+import { arePhonemesClose, normalizeIPAString } from "./ipaUtils";
 import { parseIPA } from "./syllableParser";
 
 const PronunciationChecker = ({
@@ -144,51 +144,120 @@ const PronunciationChecker = ({
 
     const parsedPhonemes = parseIPA(displayPronunciation);
     const phoneme = parsedPhonemes.map((syl) => syl.text).join(" ");
-    const clean = (str) => (typeof str === "string" ? str.replace(/\s+/g, "") : "");
-    // Background logic: compare original model output (result) and official phoneme (spaces removed)
+    // Remove all spaces for comparison
+    const normalizedResultNoSpaces = normalizeIPAString(result).replace(/ /g, "");
+    const normalizedPhonemeNoSpaces = normalizeIPAString(phoneme).replace(/ /g, "");
+    // Character-based Levenshtein with fuzzy matching
+    function charLevenshtein(a, b) {
+        const dp = Array(a.length + 1)
+            .fill(null)
+            .map(() => Array(b.length + 1).fill(0));
+        for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+        for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+        for (let i = 1; i <= a.length; i++) {
+            for (let j = 1; j <= b.length; j++) {
+                if (arePhonemesClose(a[i - 1], b[j - 1])) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.min(
+                        dp[i - 1][j] + 1, // deletion
+                        dp[i][j - 1] + 1, // insertion
+                        dp[i - 1][j - 1] + 1 // substitution
+                    );
+                }
+            }
+        }
+        return dp[a.length][b.length];
+    }
     const phonemeLevenshtein =
-        result && phoneme ? levenshtein(clean(result), clean(phoneme)) : null;
+        result && phoneme
+            ? charLevenshtein(normalizedResultNoSpaces, normalizedPhonemeNoSpaces)
+            : null;
     const isClose = phonemeLevenshtein !== null && phonemeLevenshtein <= 1;
+
+    // Utility: format model output to match official phoneme's spacing
+    function formatToOfficialSpacing(modelStr, officialStr) {
+        // Remove spaces from both
+        const model = modelStr.replace(/ /g, "");
+        const official = officialStr.trim().split(/\s+/);
+        let idx = 0;
+        const groups = official.map((syll) => {
+            const group = model.slice(idx, idx + syll.length);
+            idx += syll.length;
+            return group;
+        });
+        return groups.join(" ");
+    }
 
     // Display logic: format and highlight aligned model output
     let alignedResult = result;
     let diff = null;
     let rendered = null;
-    if (result && phoneme) {
-        alignedResult = alignPhonemes(result, phoneme);
-        const officialNoSpaces = phoneme.replace(/\s+/g, "");
-        const alignedNoSpaces = alignedResult.replace(/\s+/g, "");
-        diff = getCharacterDiff(alignedNoSpaces, officialNoSpaces);
-
+    // If too many mistakes, show a try again message
+    if (phonemeLevenshtein !== null && phonemeLevenshtein > 5) {
+        rendered = <p className="text-accent">{t("wordPage.pronunciationChecker.cannotHear")}</p>;
+    } else if (result && phoneme) {
+        // Format model output to match official phoneme's spacing
+        alignedResult = formatToOfficialSpacing(normalizedResultNoSpaces, phoneme);
+        // Build a diff array for rendering (character by character)
+        diff = [];
+        const modelArr = alignedResult.replace(/ /g, "").split("");
+        const officialArr = normalizedPhonemeNoSpaces.split("");
+        let i = 0,
+            j = 0;
+        while (i < modelArr.length && j < officialArr.length) {
+            if (arePhonemesClose(modelArr[i], officialArr[j])) {
+                diff.push({ type: "same", value: modelArr[i] });
+                i++;
+                j++;
+            } else {
+                diff.push({ type: "replace", value: modelArr[i] });
+                i++;
+                j++;
+            }
+        }
+        while (i < modelArr.length) {
+            diff.push({ type: "delete", value: modelArr[i] });
+            i++;
+        }
+        while (j < officialArr.length) {
+            diff.push({ type: "insert", value: officialArr[j] });
+            j++;
+        }
         // Render alignedResult with spaces, highlighting differences
-        let diffIdx = 0;
+        // Insert spaces to match official phoneme's spacing
+        let spaceIdx = 0;
+        let charCount = 0;
+        const officialSyllables = phoneme.trim().split(/\s+/);
+        const syllableBoundaries = officialSyllables.map((syll) => syll.length);
+        let currentBoundary = syllableBoundaries[spaceIdx] || 0;
         rendered = [];
-        for (let i = 0; i < alignedResult.length; i++) {
-            const char = alignedResult[i];
-            if (char === " ") {
-                rendered.push(<span key={`space-${i}`}> </span>);
-            } else if (diff && diff[diffIdx]) {
-                const d = diff[diffIdx];
-                if (d.type === "same") rendered.push(<span key={i}>{char}</span>);
-                else if (d.type === "replace")
-                    rendered.push(
-                        <span key={i} className="bg-warning text-warning-content rounded px-1">
-                            {char}
-                        </span>
-                    );
-                else if (d.type === "insert")
-                    rendered.push(
-                        <span key={i} className="bg-secondary text-secondary-content rounded px-1">
-                            {char}
-                        </span>
-                    );
-                else if (d.type === "delete")
-                    rendered.push(
-                        <span key={i} className="bg-error text-error-content rounded px-1">
-                            {char}
-                        </span>
-                    );
-                diffIdx++;
+        for (let idx = 0; idx < diff.length; idx++) {
+            const d = diff[idx];
+            if (d.type === "same") rendered.push(<span key={idx}>{d.value}</span>);
+            if (d.type === "replace")
+                rendered.push(
+                    <span key={idx} className="bg-warning text-warning-content rounded px-1">
+                        {d.value}
+                    </span>
+                );
+            if (d.type === "insert")
+                rendered.push(
+                    <span key={idx} className="bg-secondary text-secondary-content rounded px-1">
+                        {d.value}
+                    </span>
+                );
+            if (d.type === "delete")
+                rendered.push(
+                    <span key={idx} className="bg-error text-error-content rounded px-1">
+                        {d.value}
+                    </span>
+                );
+            charCount++;
+            if (charCount === currentBoundary && idx !== diff.length - 1) {
+                rendered.push(<span key={`space-${idx}`}> </span>);
+                spaceIdx++;
+                currentBoundary += syllableBoundaries[spaceIdx] || 0;
             }
         }
     }
@@ -248,7 +317,7 @@ const PronunciationChecker = ({
                                             )}
                                         </>
                                     ) : result === null ? (
-                                        <p className="text-warning">
+                                        <p className="text-accent">
                                             {t("wordPage.pronunciationChecker.cannotHear")}
                                         </p>
                                     ) : (
@@ -259,7 +328,7 @@ const PronunciationChecker = ({
                                                         "wordPage.pronunciationChecker.receivedResult"
                                                     )}
                                                 </span>{" "}
-                                                {diff && diff.length > 0 ? rendered : alignedResult}
+                                                {rendered}
                                             </p>
                                             <p>
                                                 <span className="font-bold">
@@ -282,7 +351,7 @@ const PronunciationChecker = ({
                                                 </p>
                                             )}
                                             {!isClose && phonemeLevenshtein !== 0 && (
-                                                <p className="text-warning">
+                                                <p className="text-accent">
                                                     {t(
                                                         "wordPage.pronunciationChecker.notSoCloseResult"
                                                     )}

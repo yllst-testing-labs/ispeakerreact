@@ -54,7 +54,11 @@ const PronunciationChecker = ({
             return obj.some(hasErrorStatus);
         }
         for (const key in obj) {
-            if (key === "status" && (obj[key] === "error" || obj[key] === "failed")) {
+            if (
+                (key === "status" &&
+                    (obj[key] === "error" || obj[key] === "failed" || obj[key] === "cancelled")) ||
+                (key === "found" && obj[key] === false)
+            ) {
                 return true;
             }
             if (typeof obj[key] === "object" && hasErrorStatus(obj[key])) {
@@ -300,12 +304,12 @@ const PronunciationChecker = ({
                 <div className="modal-box">
                     <h3 className="text-lg font-bold">
                         {showFailedInstall
-                            ? t("settingPage.pronunciationSettings.installationProcessFailed")
+                            ? t("wordPage.pronunciationChecker.installationProcessFailed")
                             : t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalled")}
                     </h3>
                     <p className="py-4">
                         {showFailedInstall
-                            ? t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalledMsg")
+                            ? t("wordPage.pronunciationChecker.installationProcessFailedMsg")
                             : t(
                                   "wordPage.pronunciationChecker.pronunciationCheckerNotInstalledMsg"
                               )}

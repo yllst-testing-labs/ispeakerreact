@@ -35,7 +35,9 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult, model
         },
         {
             key: "step3",
-            label: t("settingPage.pronunciationSettings.installationProcessStep3", { size: modelSize }),
+            label: t("settingPage.pronunciationSettings.installationProcessStep3", {
+                size: modelSize,
+            }),
             status: step3Status,
         },
     ];
@@ -43,8 +45,19 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult, model
     // Ref for the log container
     const logRef = useRef(null);
     // Get the log output
-    const logOutput =
-        pythonCheckResult && (pythonCheckResult.log || pythonCheckResult.stdout || "");
+    const logOutput = [
+        pythonCheckResult?.pythonLog
+            ? `--- Python Check ---\n${pythonCheckResult.pythonLog}`
+            : null,
+        pythonCheckResult?.dependencyLog
+            ? `--- Dependency Installation ---\n${pythonCheckResult.dependencyLog}`
+            : null,
+        pythonCheckResult?.modelLog
+            ? `--- Model Download ---\n${pythonCheckResult.modelLog}`
+            : null,
+    ]
+        .filter(Boolean)
+        .join("\n\n");
     // Auto-scroll to bottom when log changes
     useEffect(() => {
         if (logRef.current && logOutput) {

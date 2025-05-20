@@ -80,7 +80,7 @@ const PronunciationSettings = () => {
                 const updated = {
                     ...prev,
                     deps,
-                    log: depStatus.log || prev?.log || "",
+                    dependencyLog: depStatus.log || prev?.dependencyLog || "",
                 };
                 return updated;
             });
@@ -118,7 +118,8 @@ const PronunciationSettings = () => {
             setPythonCheckResult((prev) => {
                 const updated = {
                     ...prev,
-                    log: (prev?.log ? prev.log + "\n" : "") + (msg.message || ""),
+                    log: undefined, // Remove old log field if present
+                    modelLog: (prev?.modelLog ? prev.modelLog + "\n" : "") + (msg.message || ""),
                     modelStatus: msg.status,
                     modelMessage: msg.message,
                 };
@@ -147,7 +148,11 @@ const PronunciationSettings = () => {
         try {
             const result = await checkPythonInstalled();
             console.log("[Pronunciation] Python check result:", result);
-            setPythonCheckResult(result);
+            setPythonCheckResult((prev) => ({
+                ...prev,
+                pythonLog: result.log || "",
+                ...result,
+            }));
             if (result.found) {
                 installDependencies();
             }

@@ -71,7 +71,6 @@ const PronunciationSettings = () => {
     // Listen for dependency installation progress
     useEffect(() => {
         const handleDepProgress = (_event, depStatus) => {
-            console.log("[Pronunciation] Dependency Progress:", depStatus);
             setPythonCheckResult((prev) => {
                 let deps = Array.isArray(prev?.deps) ? [...prev.deps] : [];
                 const idx = deps.findIndex((d) => d.name === depStatus.name);
@@ -86,7 +85,6 @@ const PronunciationSettings = () => {
             });
         };
         const handleCancelled = () => {
-            console.log("[Pronunciation] Cancelled");
             setIsCancelling(false);
             setChecking(false);
             setPythonCheckResult(null);
@@ -114,7 +112,6 @@ const PronunciationSettings = () => {
     // Listen for model download progress (live console output)
     useEffect(() => {
         const handleModelProgress = (_event, msg) => {
-            console.log("[Pronunciation] Model Download Progress:", msg);
             setPythonCheckResult((prev) => {
                 const updated = {
                     ...prev,
@@ -141,13 +138,11 @@ const PronunciationSettings = () => {
 
     // Decoupled logic for checking Python installation
     const checkPython = async () => {
-        console.log("[Pronunciation] Checking Python...");
         setChecking(true);
         setError(null);
         setPythonCheckResult(null);
         try {
             const result = await checkPythonInstalled();
-            console.log("[Pronunciation] Python check result:", result);
             setPythonCheckResult((prev) => ({
                 ...prev,
                 pythonLog: result.log || "",
@@ -166,12 +161,10 @@ const PronunciationSettings = () => {
 
     // Function to trigger dependency installation
     const installDependencies = async () => {
-        console.log("[Pronunciation] Installing dependencies...");
         if (window.electron?.ipcRenderer) {
             setChecking(true);
             try {
                 const result = await installDependenciesIPC();
-                console.log("[Pronunciation] Dependencies installed:", result);
                 setPythonCheckResult((prev) => {
                     const updated = { ...prev, ...result };
                     return updated;
@@ -189,7 +182,6 @@ const PronunciationSettings = () => {
     };
 
     const downloadModelStep = async () => {
-        console.log("[Pronunciation] Downloading model...", modelValue);
         if (window.electron?.ipcRenderer) {
             setChecking(true);
             setPythonCheckResult((prev) => {
@@ -203,7 +195,6 @@ const PronunciationSettings = () => {
             try {
                 // Pass modelValue to IPC
                 const result = await downloadModelStepIPC(modelValue);
-                console.log("[Pronunciation] Model download result:", result);
                 setPythonCheckResult((prev) => {
                     const updated = { ...prev, ...result };
                     return updated;

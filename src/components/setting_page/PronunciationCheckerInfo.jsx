@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoCheckmark, IoCloseOutline } from "react-icons/io5";
 import { getPronunciationStepStatuses } from "./pronunciationStepUtils";
 
@@ -65,6 +65,9 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult, model
         }
     }, [logOutput]);
 
+    // Add state for copy confirmation
+    const [copied, setCopied] = useState(false);
+
     return (
         <div className="mt-2">
             <ol className="mb-4 space-y-2">
@@ -104,17 +107,37 @@ const PronunciationCheckerInfo = ({ t, checking, error, pythonCheckResult, model
                     {pythonCheckResult && (
                         <div>
                             {logOutput ? (
-                                <div
-                                    ref={logRef}
-                                    className="bg-base-200 border-base-300 max-h-60 overflow-y-auto rounded border p-2 font-mono whitespace-pre-wrap"
-                                >
-                                    {logOutput}
-                                </div>
+                                <>
+                                    <div
+                                        ref={logRef}
+                                        className="bg-base-200 border-base-300 mb-4 max-h-60 overflow-y-auto rounded border p-2 font-mono whitespace-pre-wrap"
+                                    >
+                                        {logOutput}
+                                    </div>
+
+                                    <button
+                                        className="btn btn-sm btn-outline mb-2"
+                                        type="button"
+                                        onClick={async () => {
+                                            await navigator.clipboard.writeText(
+                                                `\u0060\u0060\u0060\n${logOutput}\n\u0060\u0060\u0060`
+                                            );
+                                            setCopied(true);
+                                            setTimeout(() => setCopied(false), 1500);
+                                        }}
+                                    >
+                                        {copied
+                                            ? t(
+                                                  "settingPage.pronunciationSettings.pronunciationCopyLogCopied"
+                                              )
+                                            : t(
+                                                  "settingPage.pronunciationSettings.pronunciationCopyLogBtn"
+                                              )}
+                                    </button>
+                                </>
                             ) : pythonCheckResult.stderr ? (
                                 <div>
-                                    <span className="font-bold">
-                                        {t("settingPage.pronunciationSettings.stderr", "Stderr")}:
-                                    </span>{" "}
+                                    <span className="font-bold">Stderr:</span>{" "}
                                     <pre className="inline whitespace-pre-wrap">
                                         {pythonCheckResult.stderr}
                                     </pre>

@@ -341,7 +341,7 @@ const PronunciationChecker = ({
                                             <p className="font-bold">
                                                 {t("wordPage.pronunciationChecker.colorLegend")}
                                             </p>
-                                            <ul className="list-disc list-inside">
+                                            <ul className="list-inside list-disc">
                                                 <li>
                                                     <span className="bg-info text-info-content rounded px-1">
                                                         {t(

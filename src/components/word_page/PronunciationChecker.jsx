@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { convertToWav } from "../../utils/ffmpegWavConverter";
 import { isElectron } from "../../utils/isElectron";
-import { getCharacterDiff, levenshtein, alignPhonemes } from "../../utils/levenshtein";
+import { alignPhonemes, getCharacterDiff, levenshtein } from "../../utils/levenshtein";
 import openExternal from "../../utils/openExternal";
 import { parseIPA } from "./syllableParser";
 
@@ -18,12 +18,13 @@ const PronunciationChecker = ({
     const { t } = useTranslation();
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
-    const dialogRef = useRef();
+    const notInstalledDialogRef = useRef();
     const webDialogRef = useRef();
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState("");
     const [errorDetails, setErrorDetails] = useState("");
     const [showErrorDialog, setShowErrorDialog] = useState(false);
+    const [showFailedInstall, setShowFailedInstall] = useState(false);
 
     useEffect(() => {
         if (!isElectron()) return;
@@ -46,6 +47,23 @@ const PronunciationChecker = ({
         if (onLoadingChange) onLoadingChange(loading);
     }, [loading, onLoadingChange]);
 
+    // Recursively check for any status key with value 'error' or 'failed'
+    const hasErrorStatus = (obj) => {
+        if (!obj || typeof obj !== "object") return false;
+        if (Array.isArray(obj)) {
+            return obj.some(hasErrorStatus);
+        }
+        for (const key in obj) {
+            if (key === "status" && (obj[key] === "error" || obj[key] === "failed")) {
+                return true;
+            }
+            if (typeof obj[key] === "object" && hasErrorStatus(obj[key])) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     const checkPronunciation = async () => {
         if (!isElectron()) {
             // Show dialog for web
@@ -53,6 +71,27 @@ const PronunciationChecker = ({
                 webDialogRef.current.showModal();
             }
             return;
+        }
+        // Fetch install status on demand
+        let installStatus = null;
+        if (window.electron?.ipcRenderer) {
+            installStatus = await window.electron.ipcRenderer.invoke(
+                "get-pronunciation-install-status"
+            );
+        }
+        // 1. No install status at all
+        if (!installStatus) {
+            setShowFailedInstall(false);
+            if (notInstalledDialogRef.current) notInstalledDialogRef.current.showModal();
+            return;
+        }
+        // 2. Check for any error/failed status in the object
+        if (hasErrorStatus(installStatus)) {
+            setShowFailedInstall(true);
+            if (notInstalledDialogRef.current) notInstalledDialogRef.current.showModal();
+            return;
+        } else {
+            setShowFailedInstall(false);
         }
         setLoading(true);
         setProgress("");
@@ -112,10 +151,11 @@ const PronunciationChecker = ({
     let diff = null;
     let rendered = null;
     if (result && phoneme) {
-        alignedResult = alignPhonemes(result, phoneme); // e.g., "ə bɪ lɪ ti"
+        alignedResult = alignPhonemes(result, phoneme);
         const officialNoSpaces = phoneme.replace(/\s+/g, "");
         const alignedNoSpaces = alignedResult.replace(/\s+/g, "");
         diff = getCharacterDiff(alignedNoSpaces, officialNoSpaces);
+
         // Render alignedResult with spaces, highlighting differences
         let diffIdx = 0;
         rendered = [];
@@ -256,18 +296,24 @@ const PronunciationChecker = ({
                 )}
             </div>
 
-            <dialog ref={dialogRef} className="modal">
+            <dialog ref={notInstalledDialogRef} className="modal">
                 <div className="modal-box">
                     <h3 className="text-lg font-bold">
-                        {t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalled")}
+                        {showFailedInstall
+                            ? t("settingPage.pronunciationSettings.installationProcessFailed")
+                            : t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalled")}
                     </h3>
                     <p className="py-4">
-                        {t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalledMsg")}
+                        {showFailedInstall
+                            ? t("wordPage.pronunciationChecker.pronunciationCheckerNotInstalledMsg")
+                            : t(
+                                  "wordPage.pronunciationChecker.pronunciationCheckerNotInstalledMsg"
+                              )}
                     </p>
                     <div className="modal-action">
                         <button
                             className="btn btn-primary"
-                            onClick={() => dialogRef.current.close()}
+                            onClick={() => notInstalledDialogRef.current.close()}
                         >
                             {t("wordPage.pronunciationChecker.okBtn")}
                         </button>

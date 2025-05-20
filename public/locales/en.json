@@ -380,7 +380,9 @@
         "feedbackBtn": "Give feedback",
         "pronunciationChecker": {
             "pronunciationCheckerNotInstalled": "Pronunciation checker not installed",
-            "pronunciationCheckerNotInstalledMsg": "Please go to settings and install the pronunciation checker.",
+            "pronunciationCheckerNotInstalledMsg": "Please go to Settings and install the pronunciation checker.",
+            "installationProcessFailed": "Something went wrong…",
+            "installationProcessFailedMsg": "It seems like some problem occurred while installing the pronunciation checker. Please try reinstalling it in Settings.",
             "featureNotAvailable": "Feature not available",
             "featureNotAvailableMsg": "This feature is not available in the web version. Please <0>download the app</0> to use this feature.",
             "okBtn": "OK",

@@ -4,6 +4,7 @@ import fkill from "fkill";
 import { spawn } from "node:child_process";
 import * as fsPromises from "node:fs/promises";
 import path from "node:path";
+import process from "node:process";
 import { getSaveFolder, readUserSettings, settingsConf } from "./filePath.js";
 
 let currentPythonProcess = null;
@@ -104,6 +105,67 @@ const resetGlobalCancel = () => {
     isGloballyCancelled = false;
 };
 
+// --- VENV HELPERS ---
+const getVenvDir = async () => {
+    const saveFolder = await getSaveFolder(readUserSettings);
+    return path.join(saveFolder, "pronunciation-venv");
+};
+
+const getVenvPythonPath = async () => {
+    const venvDir = await getVenvDir();
+    if (process.platform === "win32") {
+        return path.join(venvDir, "Scripts", "python.exe");
+    } else {
+        return path.join(venvDir, "bin", "python");
+    }
+};
+
+const getVenvPipPath = async () => {
+    const venvDir = await getVenvDir();
+    if (process.platform === "win32") {
+        return path.join(venvDir, "Scripts", "pip.exe");
+    } else {
+        return path.join(venvDir, "bin", "pip");
+    }
+};
+
+const ensureVenvExists = async () => {
+    const venvDir = await getVenvDir();
+    let venvPython = await getVenvPythonPath();
+    try {
+        await fsPromises.access(venvPython);
+        // Already exists
+        return venvPython;
+    } catch {
+        // Create venv
+        // Use system python to create venv
+        let systemPython = "python";
+        // Try to use python3 if available
+        try {
+            await new Promise((resolve, reject) => {
+                const proc = spawn("python3", ["--version"], { shell: true });
+                proc.on("close", (code) => {
+                    if (code === 0) resolve();
+                    else reject();
+                });
+            });
+            systemPython = "python3";
+        } catch {
+            // fallback to python
+        }
+        await new Promise((resolve, reject) => {
+            const proc = spawn(systemPython, ["-m", "venv", venvDir], { shell: true });
+            proc.on("close", (code) => {
+                if (code === 0) resolve();
+                else reject(new Error("Failed to create venv"));
+            });
+        });
+        // Store venv path in settings
+        settingsConf.set("pronunciationVenvPath", venvDir);
+        return venvPython;
+    }
+};
+
 const installDependencies = () => {
     ipcMain.handle("pronunciation-install-deps", async (event) => {
         if (isGloballyCancelled) {
@@ -111,16 +173,29 @@ const installDependencies = () => {
         }
         let log = "";
         event.sender.send("pronunciation-dep-progress", { name: "all", status: "pending" });
+        // Ensure venv exists
+        let venvPip;
+        try {
+            await ensureVenvExists();
+            venvPip = await getVenvPipPath();
+        } catch (err) {
+            log += `Failed to create virtual environment: ${err.message}\n`;
+            event.sender.send("pronunciation-dep-progress", {
+                name: "all",
+                status: "error",
+                log: log.trim(),
+            });
+            return { deps: [{ name: "all", status: "error" }], log };
+        }
         return new Promise((resolve) => {
-            const pipArgs = ["-m", "pip", "install", ...dependencies];
-            const pipProcess = startProcess("python", pipArgs, (err) => {
+            const pipArgs = ["install", ...dependencies];
+            const pipProcess = startProcess(venvPip, pipArgs, (err) => {
                 const status = err ? "error" : "success";
                 event.sender.send("pronunciation-dep-progress", {
                     name: "all",
                     status,
                     log: log.trim(),
                 });
-
                 resolve({ deps: [{ name: "all", status }], log });
             });
             pipProcess.stdout.on("data", (data) => {
@@ -154,6 +229,19 @@ const downloadModelToDir = async (modelDir, modelName, onProgress) => {
         await fsPromises.access(modelDir);
     } catch {
         await fsPromises.mkdir(modelDir, { recursive: true });
+    }
+    // Ensure venv exists and get venv Python path
+    let venvPython;
+    try {
+        await ensureVenvExists();
+        venvPython = await getVenvPythonPath();
+    } catch (err) {
+        if (onProgress)
+            onProgress({
+                status: "error",
+                message: `Failed to create virtual environment: ${err.message}`,
+            });
+        return { status: "error", message: `Failed to create virtual environment: ${err.message}` };
     }
     // Write Python code to temp file in save folder
     const pyCode = `
@@ -264,7 +352,7 @@ else:
     if (onProgress)
         onProgress({ status: "downloading", message: "Preparing to download model..." });
     return new Promise((resolve) => {
-        const py = startProcess("python", ["-u", tempPyPath], (err) => {
+        const py = startProcess(venvPython, ["-u", tempPyPath], (err) => {
             currentPythonProcess = null;
             fsPromises.unlink(tempPyPath).catch(() => {
                 console.log("Failed to delete temp file");
@@ -474,4 +562,6 @@ export {
     killCurrentPythonProcess,
     resetGlobalCancel,
     setupPronunciationInstallStatusIPC,
+    ensureVenvExists,
+    getVenvPythonPath,
 };

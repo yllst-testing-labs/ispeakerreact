@@ -5,6 +5,7 @@ import * as fsPromises from "node:fs/promises";
 import path from "node:path";
 import { getSaveFolder, readUserSettings } from "./filePath.js";
 import { getCurrentLogSettings } from "./logOperations.js";
+import { getVenvPythonPath, ensureVenvExists } from "./pronunciationOperations.js";
 
 const startProcess = (cmd, args) => {
     const proc = spawn(cmd, args, { shell: true });
@@ -107,9 +108,17 @@ if __name__ == "__main__":
         const tempPyPath = path.join(saveFolder, "pronunciation_checker_temp.py");
         await fsPromises.writeFile(tempPyPath, pyCode, "utf-8");
         applog.info(`[PronunciationChecker] tempPyPath: ${tempPyPath}`);
-        applog.info(`[PronunciationChecker] About to run: python -u ${tempPyPath}`);
+        let venvPython;
+        try {
+            await ensureVenvExists();
+            venvPython = await getVenvPythonPath();
+        } catch (err) {
+            applog.error(`[PronunciationChecker] Failed to create or find venv: ${err.message}`);
+            return { status: "error", message: `Failed to create or find venv: ${err.message}` };
+        }
+        applog.info(`[PronunciationChecker] About to run: ${venvPython} -u ${tempPyPath}`);
         return new Promise((resolve) => {
-            const py = startProcess("python", ["-u", tempPyPath], (err) => {
+            const py = startProcess(venvPython, ["-u", tempPyPath], (err) => {
                 fsPromises.unlink(tempPyPath).catch(() => {
                     applog.warn(
                         "[PronunciationChecker] Failed to delete temp pronunciation checker file"

@@ -13,7 +13,10 @@ import {
     downloadModelStepIPC,
     installDependenciesIPC,
 } from "./PronunciationUtils";
-import { getPronunciationStepStatuses } from "./pronunciationStepUtils";
+import {
+    getPronunciationStepStatuses,
+    getPronunciationInstallState,
+} from "./pronunciationStepUtils";
 import modelOptions from "./modelOptions";
 
 const PronunciationSettings = () => {
@@ -24,7 +27,7 @@ const PronunciationSettings = () => {
     const [checking, setChecking] = useState(false);
     const [error, setError] = useState(null);
     const [isCancelling, setIsCancelling] = useState(false);
-    const [hasPreviousInstall, setHasPreviousInstall] = useState(false);
+    const [installState, setInstallState] = useState("not_installed");
     // Model selection state
     const [modelValue, setModelValue] = useState("vitouphy/wav2vec2-xls-r-300m-timit-phoneme");
     const onModelChange = (value) => setModelValue(value);
@@ -59,9 +62,23 @@ const PronunciationSettings = () => {
                 const cachedStatus = await window.electron.ipcRenderer.invoke(
                     "get-pronunciation-install-status"
                 );
-                if (cachedStatus) {
+                const state = getPronunciationInstallState(cachedStatus);
+                setInstallState(state);
+                console.log("cachedStatus", cachedStatus);
+                if (state === "complete") {
                     setPythonCheckResult(cachedStatus);
-                    setHasPreviousInstall(true);
+                    setError(null);
+                } else if (state === "failed") {
+                    setPythonCheckResult(cachedStatus);
+                    setError(
+                        cachedStatus?.log ||
+                            cachedStatus?.modelMessage ||
+                            cachedStatus?.dependencyLog ||
+                            "Installation failed."
+                    );
+                } else {
+                    setPythonCheckResult(null);
+                    setError(null);
                 }
             }
         };
@@ -227,7 +244,6 @@ const PronunciationSettings = () => {
         );
         if (pythonCheckResult && allStepsDone) {
             saveInstallStatus(pythonCheckResult);
-            setHasPreviousInstall(true);
         }
     }, [pythonCheckResult, checking, error]);
 
@@ -269,7 +285,7 @@ const PronunciationSettings = () => {
                         </p>
                     </div>
                     <div className="flex basis-1/2 justify-end">
-                        {hasPreviousInstall ? (
+                        {installState === "complete" ? (
                             <button className="btn" onClick={openConfirmDialog}>
                                 {t("settingPage.pronunciationSettings.reinstallBtn")}
                             </button>
@@ -289,9 +305,10 @@ const PronunciationSettings = () => {
                     checking={checking}
                     closeConfirmDialog={closeConfirmDialog}
                     handleProceed={handleProceed}
-                    hasPreviousInstall={hasPreviousInstall}
+                    installState={installState}
                     modelValue={modelValue}
                     onModelChange={onModelChange}
+                    error={error}
                 />
             </dialog>
 

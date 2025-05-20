@@ -1,5 +1,5 @@
 // Utility to calculate step statuses for pronunciation checker
-export function getPronunciationStepStatuses(pythonCheckResult, checking, error) {
+const getPronunciationStepStatuses = (pythonCheckResult, checking, error) => {
     // Step 1: Checking Python installation
     let step1Status = checking
         ? "pending"
@@ -44,4 +44,43 @@ export function getPronunciationStepStatuses(pythonCheckResult, checking, error)
     }
 
     return { step1Status, step2Status, step3Status, deps };
-}
+};
+
+// Utility to determine overall install state: 'not_installed', 'failed', or 'complete'
+const getPronunciationInstallState = (statusObj) => {
+    if (!statusObj) return "not_installed";
+    // Recursively check for any error/failed status
+    const hasErrorStatus = (obj) => {
+        if (!obj || typeof obj !== "object") return false;
+        if (Array.isArray(obj)) {
+            return obj.some(hasErrorStatus);
+        }
+        for (const key in obj) {
+            if (
+                (key === "status" &&
+                    (obj[key] === "error" || obj[key] === "failed" || obj[key] === "cancelled")) ||
+                (key === "found" && obj[key] === false)
+            ) {
+                return true;
+            }
+            if (typeof obj[key] === "object" && hasErrorStatus(obj[key])) {
+                return true;
+            }
+        }
+        return false;
+    };
+    if (hasErrorStatus(statusObj)) return "failed";
+    // If all steps are success/found, consider complete
+    if (
+        statusObj.python?.found === true &&
+        (!statusObj.dependencies ||
+            (Array.isArray(statusObj.dependencies) &&
+                statusObj.dependencies.every((dep) => dep.status === "success"))) &&
+        (statusObj.model?.status === "found" || statusObj.model?.status === "success")
+    ) {
+        return "complete";
+    }
+    return "not_installed";
+};
+
+export { getPronunciationInstallState, getPronunciationStepStatuses };

@@ -9,9 +9,10 @@ const PronunciationCheckerDialogContent = ({
     checking,
     closeConfirmDialog,
     handleProceed,
-    hasPreviousInstall,
+    installState,
     modelValue,
     onModelChange,
+    error,
 }) => {
     return (
         <div className="modal-box">
@@ -68,29 +69,74 @@ const PronunciationCheckerDialogContent = ({
                             t(modelOptions.find((opt) => opt.value === modelValue).description)}
                     </div>
                 </div>
-                {hasPreviousInstall ? (
+                {installState === "failed" && error && (
+                    <div className="alert alert-error mb-4 text-base">
+                        <IoInformationCircleOutline className="h-6 w-6" />
+                        <div>
+                            <p>{t("settingPage.pronunciationSettings.previousInstallFailedMsg")}</p>
+                            <p>
+                                <Trans
+                                    i18nKey="settingPage.pronunciationSettings.pronunciationModalBodyPython2"
+                                    components={[
+                                        <button
+                                            key="python-link"
+                                            type="button"
+                                            className="link font-semibold underline"
+                                            onClick={() =>
+                                                openExternal(
+                                                    "https://learnercraft.github.io/blog/2025-05-20-how-to-install-python-for-beginners/"
+                                                )
+                                            }
+                                        />,
+                                    ]}
+                                />
+                            </p>
+                        </div>
+                    </div>
+                )}
+                {installState === "complete" && (
                     <div className="alert alert-info mb-4 text-base">
                         <IoInformationCircleOutline className="h-6 w-6" />
                         <span>{t("settingPage.pronunciationSettings.previousInstallMsg")}</span>
                     </div>
-                ) : (
-                    <div role="alert" className="alert alert-info text-base">
+                )}
+                {installState === "not_installed" && (
+                    <div role="alert" className="alert alert-info mb-4 text-base">
                         <IoInformationCircleOutline className="h-6 w-6" />
-                        <span>
-                            <Trans
-                                i18nKey="settingPage.pronunciationSettings.pronunciationModalBodyPython"
-                                components={[
-                                    <button
-                                        key="python-link"
-                                        type="button"
-                                        className="link font-semibold underline"
-                                        onClick={() =>
-                                            openExternal("https://www.python.org/downloads/")
-                                        }
-                                    />,
-                                ]}
-                            />
-                        </span>
+                        <div>
+                            <p className="mb-2">
+                                <Trans
+                                    i18nKey="settingPage.pronunciationSettings.pronunciationModalBodyPython"
+                                    components={[
+                                        <button
+                                            key="python-link"
+                                            type="button"
+                                            className="link font-semibold underline"
+                                            onClick={() =>
+                                                openExternal("https://www.python.org/downloads/")
+                                            }
+                                        />,
+                                    ]}
+                                />
+                            </p>
+                            <p>
+                                <Trans
+                                    i18nKey="settingPage.pronunciationSettings.pronunciationModalBodyPython2"
+                                    components={[
+                                        <button
+                                            key="python-link"
+                                            type="button"
+                                            className="link font-semibold underline"
+                                            onClick={() =>
+                                                openExternal(
+                                                    "https://learnercraft.github.io/blog/2025-05-20-how-to-install-python-for-beginners/"
+                                                )
+                                            }
+                                        />,
+                                    ]}
+                                />
+                            </p>
+                        </div>
                     </div>
                 )}
                 <p>{t("settingPage.pronunciationSettings.pronunciationModalBody")}</p>
@@ -120,9 +166,10 @@ PronunciationCheckerDialogContent.propTypes = {
     checking: PropTypes.bool.isRequired,
     closeConfirmDialog: PropTypes.func.isRequired,
     handleProceed: PropTypes.func.isRequired,
-    hasPreviousInstall: PropTypes.bool.isRequired,
+    installState: PropTypes.string.isRequired,
     modelValue: PropTypes.string.isRequired,
     onModelChange: PropTypes.func.isRequired,
+    error: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
 };
 
 export default PronunciationCheckerDialogContent;

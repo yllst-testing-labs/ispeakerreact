@@ -4,6 +4,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { convertToWav } from "../../utils/ffmpegWavConverter";
 import { isElectron } from "../../utils/isElectron";
 import openExternal from "../../utils/openExternal";
+import { getPronunciationInstallState } from "../setting_page/pronunciationStepUtils";
 import { arePhonemesClose, normalizeIPAString } from "./ipaUtils";
 import { parseIPA } from "./syllableParser";
 
@@ -47,27 +48,6 @@ const PronunciationChecker = ({
         if (onLoadingChange) onLoadingChange(loading);
     }, [loading, onLoadingChange]);
 
-    // Recursively check for any status key with value 'error' or 'failed'
-    const hasErrorStatus = (obj) => {
-        if (!obj || typeof obj !== "object") return false;
-        if (Array.isArray(obj)) {
-            return obj.some(hasErrorStatus);
-        }
-        for (const key in obj) {
-            if (
-                (key === "status" &&
-                    (obj[key] === "error" || obj[key] === "failed" || obj[key] === "cancelled")) ||
-                (key === "found" && obj[key] === false)
-            ) {
-                return true;
-            }
-            if (typeof obj[key] === "object" && hasErrorStatus(obj[key])) {
-                return true;
-            }
-        }
-        return false;
-    };
-
     const checkPronunciation = async () => {
         if (!isElectron()) {
             // Show dialog for web
@@ -84,13 +64,13 @@ const PronunciationChecker = ({
             );
         }
         // 1. No install status at all
-        if (!installStatus) {
+        const installState = getPronunciationInstallState(installStatus);
+        if (installState === "not_installed") {
             setShowFailedInstall(false);
             if (notInstalledDialogRef.current) notInstalledDialogRef.current.showModal();
             return;
         }
-        // 2. Check for any error/failed status in the object
-        if (hasErrorStatus(installStatus)) {
+        if (installState === "failed") {
             setShowFailedInstall(true);
             if (notInstalledDialogRef.current) notInstalledDialogRef.current.showModal();
             return;

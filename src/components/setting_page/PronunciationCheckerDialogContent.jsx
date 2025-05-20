@@ -69,11 +69,13 @@ const PronunciationCheckerDialogContent = ({
                             t(modelOptions.find((opt) => opt.value === modelValue).description)}
                     </div>
                 </div>
-                {installState === "failed" && error && (
+                {installState === "failed" && (
                     <div className="alert alert-error mb-4 text-base">
                         <IoInformationCircleOutline className="h-6 w-6" />
                         <div>
-                            <p>{t("settingPage.pronunciationSettings.previousInstallFailedMsg")}</p>
+                            <p className="mb-2">
+                                {t("settingPage.pronunciationSettings.previousInstallFailedMsg")}
+                            </p>
                             <p>
                                 <Trans
                                     i18nKey="settingPage.pronunciationSettings.pronunciationModalBodyPython2"

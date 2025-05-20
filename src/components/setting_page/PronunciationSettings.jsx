@@ -46,6 +46,24 @@ const PronunciationSettings = () => {
 
     const closeCheckerDialog = () => {
         checkerDialogRef.current?.close();
+        // Update installState after closing if all steps are done
+        const { step1Status, step2Status, step3Status } = getPronunciationStepStatuses(
+            pythonCheckResult,
+            checking,
+            error
+        );
+        const allStepsDone = [step1Status, step2Status, step3Status].every(
+            (status) => status === "success" || status === "error"
+        );
+        if (allStepsDone) {
+            // Transform pythonCheckResult to expected structure for getPronunciationInstallState
+            const installStatusObj = {
+                python: { found: pythonCheckResult?.found },
+                dependencies: pythonCheckResult?.deps,
+                model: { status: pythonCheckResult?.modelStatus },
+            };
+            setInstallState(getPronunciationInstallState(installStatusObj));
+        }
     };
 
     // Helper to save install status to electron-conf

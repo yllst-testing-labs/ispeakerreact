@@ -237,13 +237,13 @@ const PronunciationChecker = ({
             if (d.type === "same") rendered.push(<span key={idx}>{d.value}</span>);
             if (d.type === "replace")
                 rendered.push(
-                    <span key={idx} className="bg-warning text-warning-content rounded px-1">
+                    <span key={idx} className="bg-info text-info-content rounded px-1">
                         {d.value}
                     </span>
                 );
             if (d.type === "insert")
                 rendered.push(
-                    <span key={idx} className="bg-secondary text-secondary-content rounded px-1">
+                    <span key={idx} className="bg-accent text-accent-content rounded px-1">
                         {d.value}
                     </span>
                 );
@@ -338,6 +338,32 @@ const PronunciationChecker = ({
                                                 </span>{" "}
                                                 {phoneme}
                                             </p>
+                                            <p className="font-bold">
+                                                {t("wordPage.pronunciationChecker.colorLegend")}
+                                            </p>
+                                            <ul className="list-disc list-inside">
+                                                <li>
+                                                    <span className="bg-info text-info-content rounded px-1">
+                                                        {t(
+                                                            "wordPage.pronunciationChecker.colorLegendMispronounce"
+                                                        )}
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span className="bg-error text-error-content rounded px-1">
+                                                        {t(
+                                                            "wordPage.pronunciationChecker.colorLegendExtra"
+                                                        )}
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span className="bg-accent text-accent-content rounded px-1">
+                                                        {t(
+                                                            "wordPage.pronunciationChecker.colorLegendMissing"
+                                                        )}
+                                                    </span>
+                                                </li>
+                                            </ul>
                                             {phonemeLevenshtein === 0 && (
                                                 <p className="text-success">
                                                     {t(

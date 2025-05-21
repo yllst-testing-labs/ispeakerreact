@@ -64,9 +64,11 @@ export function normalizeIPAString(str) {
 
 // Check if two IPA tokens are fuzzy matches (close enough)
 export function arePhonemesClose(a, b) {
+    // Ignore the long mark ː in comparison
+    if (a === "ː" || b === "ː") return true;
+    a = normalizeIPAToken(a.replace(/ː/gu, ""));
+    b = normalizeIPAToken(b.replace(/ː/gu, ""));
     if (a === b) return true;
-    a = normalizeIPAToken(a);
-    b = normalizeIPAToken(b);
     for (const group of FUZZY_PHONEME_GROUPS) {
         if (group.includes(a) && group.includes(b)) return true;
     }

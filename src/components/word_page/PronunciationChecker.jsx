@@ -173,8 +173,10 @@ const PronunciationChecker = ({
     let alignedResult = result;
     let diff = null;
     let rendered = null;
+    const resultTooFarOff = phonemeLevenshtein !== null && phonemeLevenshtein > 5;
+
     // If too many mistakes, show a try again message
-    if (phonemeLevenshtein !== null && phonemeLevenshtein > 5) {
+    if (resultTooFarOff) {
         rendered = <p className="text-accent">{t("wordPage.pronunciationChecker.cannotHear")}</p>;
     } else if (result && phoneme) {
         // Format model output to match official phoneme's spacing
@@ -296,7 +298,7 @@ const PronunciationChecker = ({
                                                 </div>
                                             )}
                                         </>
-                                    ) : result === null ? (
+                                    ) : result === null || resultTooFarOff ? (
                                         <p className="text-accent">
                                             {t("wordPage.pronunciationChecker.cannotHear")}
                                         </p>

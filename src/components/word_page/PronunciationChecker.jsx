@@ -166,6 +166,10 @@ const PronunciationChecker = ({
             idx += syll.length;
             return group;
         });
+        // Add any extra phonemes from the model output
+        if (idx < model.length) {
+            groups.push(model.slice(idx));
+        }
         return groups.join(" ");
     }
 
@@ -214,8 +218,31 @@ const PronunciationChecker = ({
         const syllableBoundaries = officialSyllables.map((syll) => syll.length);
         let currentBoundary = syllableBoundaries[spaceIdx] || 0;
         rendered = [];
+        let afterLastSyllable = false;
         for (let idx = 0; idx < diff.length; idx++) {
             const d = diff[idx];
+            // Insert a space after the last official syllable if there are extra phonemes
+            if (!afterLastSyllable && charCount === currentBoundary && idx !== diff.length - 1) {
+                rendered.push(<span key={`space-${idx}`}> </span>);
+                spaceIdx++;
+                if (spaceIdx >= syllableBoundaries.length) {
+                    afterLastSyllable = true;
+                }
+                currentBoundary += syllableBoundaries[spaceIdx] || 0;
+            }
+            // If we've just passed the last syllable boundary, insert a separator before extra phonemes
+            if (
+                afterLastSyllable &&
+                charCount === currentBoundary - (syllableBoundaries[spaceIdx - 1] || 0)
+            ) {
+                rendered.push(
+                    <span key={`extra-separator`} className="mx-1 text-xs text-gray-400">
+                        |{/* separator for extra phonemes */}
+                    </span>
+                );
+                // Only insert once
+                afterLastSyllable = false;
+            }
             if (d.type === "same") rendered.push(<span key={idx}>{d.value}</span>);
             if (d.type === "replace")
                 rendered.push(
@@ -236,11 +263,6 @@ const PronunciationChecker = ({
                     </span>
                 );
             charCount++;
-            if (charCount === currentBoundary && idx !== diff.length - 1) {
-                rendered.push(<span key={`space-${idx}`}> </span>);
-                spaceIdx++;
-                currentBoundary += syllableBoundaries[spaceIdx] || 0;
-            }
         }
     }
 

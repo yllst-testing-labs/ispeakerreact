@@ -5,7 +5,12 @@ import { convertToWav } from "../../utils/ffmpegWavConverter";
 import { isElectron } from "../../utils/isElectron";
 import openExternal from "../../utils/openExternal";
 import { getPronunciationInstallState } from "../setting_page/pronunciationStepUtils";
-import { arePhonemesClose, normalizeIPAString } from "./ipaUtils";
+import {
+    arePhonemesClose,
+    normalizeIPAString,
+    charLevenshtein,
+    formatToOfficialSpacing,
+} from "./ipaUtils";
 import { parseIPA } from "./syllableParser";
 
 // Add CSS animation for radial progress
@@ -150,50 +155,11 @@ const PronunciationChecker = ({
     const normalizedResultNoSpaces = normalizeIPAString(result).replace(/ /g, "");
     const normalizedPhonemeNoSpaces = normalizeIPAString(phoneme).replace(/ /g, "");
     // Character-based Levenshtein with fuzzy matching
-    function charLevenshtein(a, b) {
-        const dp = Array(a.length + 1)
-            .fill(null)
-            .map(() => Array(b.length + 1).fill(0));
-        for (let i = 0; i <= a.length; i++) dp[i][0] = i;
-        for (let j = 0; j <= b.length; j++) dp[0][j] = j;
-        for (let i = 1; i <= a.length; i++) {
-            for (let j = 1; j <= b.length; j++) {
-                if (arePhonemesClose(a[i - 1], b[j - 1])) {
-                    dp[i][j] = dp[i - 1][j - 1];
-                } else {
-                    dp[i][j] = Math.min(
-                        dp[i - 1][j] + 1, // deletion
-                        dp[i][j - 1] + 1, // insertion
-                        dp[i - 1][j - 1] + 1 // substitution
-                    );
-                }
-            }
-        }
-        return dp[a.length][b.length];
-    }
     const phonemeLevenshtein =
         result && phoneme
             ? charLevenshtein(normalizedResultNoSpaces, normalizedPhonemeNoSpaces)
             : null;
     const isClose = phonemeLevenshtein !== null && phonemeLevenshtein <= 1;
-
-    // Utility: format model output to match official phoneme's spacing
-    function formatToOfficialSpacing(modelStr, officialStr) {
-        // Remove spaces from both
-        const model = modelStr.replace(/ /g, "");
-        const official = officialStr.trim().split(/\s+/);
-        let idx = 0;
-        const groups = official.map((syll) => {
-            const group = model.slice(idx, idx + syll.length);
-            idx += syll.length;
-            return group;
-        });
-        // Add any extra phonemes from the model output
-        if (idx < model.length) {
-            groups.push(model.slice(idx));
-        }
-        return groups.join(" ");
-    }
 
     // Display logic: format and highlight aligned model output
     let alignedResult = result;

@@ -46,12 +46,10 @@ const FUZZY_PHONEME_GROUPS = [
 ];
 
 // Normalize a single IPA token
-export function normalizeIPAToken(token) {
-    return IPA_NORMALIZATION_MAP[token] || token;
-}
+const normalizeIPAToken = (token) => IPA_NORMALIZATION_MAP[token] || token;
 
 // Normalize a full IPA string (tokenized by space)
-export function normalizeIPAString(str) {
+const normalizeIPAString = (str) => {
     if (!str) return "";
     return str
         .toLowerCase()
@@ -60,10 +58,10 @@ export function normalizeIPAString(str) {
         .split(" ")
         .map(normalizeIPAToken)
         .join(" ");
-}
+};
 
 // Check if two IPA tokens are fuzzy matches (close enough)
-export function arePhonemesClose(a, b) {
+const arePhonemesClose = (a, b) => {
     // Ignore the long mark ː in comparison
     if (a === "ː" || b === "ː") return true;
     a = normalizeIPAToken(a.replace(/ː/gu, ""));
@@ -73,4 +71,53 @@ export function arePhonemesClose(a, b) {
         if (group.includes(a) && group.includes(b)) return true;
     }
     return false;
-}
+};
+
+// Character-based Levenshtein with fuzzy matching
+const charLevenshtein = (a, b) => {
+    const dp = Array(a.length + 1)
+        .fill(null)
+        .map(() => Array(b.length + 1).fill(0));
+    for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+    for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            if (arePhonemesClose(a[i - 1], b[j - 1])) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = Math.min(
+                    dp[i - 1][j] + 1, // deletion
+                    dp[i][j - 1] + 1, // insertion
+                    dp[i - 1][j - 1] + 1 // substitution
+                );
+            }
+        }
+    }
+    return dp[a.length][b.length];
+};
+
+// Format model output to match official phoneme's spacing
+const formatToOfficialSpacing = (modelStr, officialStr) => {
+    // Remove spaces from both
+    const model = modelStr.replace(/ /g, "");
+    const official = officialStr.trim().split(/\s+/);
+    let idx = 0;
+    const groups = official.map((syll) => {
+        const group = model.slice(idx, idx + syll.length);
+        idx += syll.length;
+        return group;
+    });
+    // Add any extra phonemes from the model output
+    if (idx < model.length) {
+        groups.push(model.slice(idx));
+    }
+    return groups.join(" ");
+};
+
+export {
+    arePhonemesClose,
+    charLevenshtein,
+    formatToOfficialSpacing,
+    normalizeIPAString,
+    normalizeIPAToken,
+};

@@ -8,6 +8,27 @@ import { getPronunciationInstallState } from "../setting_page/pronunciationStepU
 import { arePhonemesClose, normalizeIPAString } from "./ipaUtils";
 import { parseIPA } from "./syllableParser";
 
+// Add CSS animation for radial progress
+// https://github.com/saadeghi/daisyui/discussions/3206
+const radialProgressStyle = `
+@property --_value {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+}
+.animate-value {
+    animation: grow 1s ease-in-out 0s forwards;
+}
+@keyframes grow {
+    from {
+        --_value: 0;
+    }
+    to {
+        --_value: var(--target-value);
+    }
+}
+`;
+
 const PronunciationChecker = ({
     icon,
     disabled,
@@ -343,8 +364,9 @@ const PronunciationChecker = ({
                                         <>
                                             {accuracyScore !== null && (
                                                 <div className="mb-4 flex flex-col items-center">
+                                                    <style>{radialProgressStyle}</style>
                                                     <div
-                                                        className={`radial-progress mb-2 ${
+                                                        className={`radial-progress animate-value mb-2 ${
                                                             accuracyScore >= 70
                                                                 ? "text-primary"
                                                                 : accuracyScore >= 40
@@ -352,8 +374,9 @@ const PronunciationChecker = ({
                                                                   : "text-error"
                                                         }`}
                                                         style={{
-                                                            "--value": accuracyScore,
+                                                            "--value": "var(--_value)",
                                                             "--size": "5rem",
+                                                            "--target-value": accuracyScore,
                                                         }}
                                                         aria-valuenow={accuracyScore}
                                                         role="progressbar"

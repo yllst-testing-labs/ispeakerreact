@@ -26,6 +26,7 @@ const PronunciationChecker = ({
     const [errorDetails, setErrorDetails] = useState("");
     const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [showFailedInstall, setShowFailedInstall] = useState(false);
+    let accuracyScore = null;
 
     useEffect(() => {
         if (!isElectron()) return;
@@ -179,7 +180,6 @@ const PronunciationChecker = ({
     let rendered = null;
     const resultTooFarOff = phonemeLevenshtein !== null && phonemeLevenshtein > 5;
 
-    // If too many mistakes, show a try again message
     if (resultTooFarOff) {
         rendered = <p className="text-accent">{t("wordPage.pronunciationChecker.cannotHear")}</p>;
     } else if (result && phoneme) {
@@ -210,6 +210,21 @@ const PronunciationChecker = ({
             diff.push({ type: "insert", value: officialArr[j] });
             j++;
         }
+
+        // --- Score calculation ---
+        let insertions = 0,
+            deletions = 0,
+            substitutions = 0;
+        diff.forEach((d) => {
+            if (d.type === "insert") insertions++;
+            if (d.type === "delete") deletions++;
+            if (d.type === "replace") substitutions++;
+        });
+        const total = officialArr.length;
+        const errors = insertions + deletions + substitutions;
+        accuracyScore = total > 0 ? Math.max(0, Math.round(((total - errors) / total) * 100)) : 0;
+        // --- End score calculation ---
+
         // Render alignedResult with spaces, highlighting differences
         // Insert spaces to match official phoneme's spacing
         let spaceIdx = 0;
@@ -326,6 +341,23 @@ const PronunciationChecker = ({
                                         </p>
                                     ) : (
                                         <>
+                                            {accuracyScore !== null && (
+                                                <div className="flex flex-col items-center mb-4">
+                                                    <div
+                                                        className="radial-progress mb-2"
+                                                        style={{ "--value": accuracyScore }}
+                                                        aria-valuenow={accuracyScore}
+                                                        role="progressbar"
+                                                    >
+                                                        {accuracyScore}
+                                                    </div>
+                                                    <p className="text-sm text-gray-600 italic dark:text-gray-400">
+                                                        {t(
+                                                            "wordPage.pronunciationChecker.approximateScore"
+                                                        )}
+                                                    </p>
+                                                </div>
+                                            )}
                                             <p>
                                                 <span className="font-bold">
                                                     {t(

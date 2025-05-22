@@ -389,6 +389,7 @@
             "checkPronunciationBtn": "Check pronunciation",
             "inProgress": "Checking your pronunciation, please wait…",
             "pronunciationResult": "Result",
+            "approximateScore": "Approximate score",
             "receivedResult": "What we hear:",
             "correctResult": "Target pronunciation:",
             "colorLegend": "Color legend:",

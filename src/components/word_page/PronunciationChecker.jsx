@@ -342,14 +342,25 @@ const PronunciationChecker = ({
                                     ) : (
                                         <>
                                             {accuracyScore !== null && (
-                                                <div className="flex flex-col items-center mb-4">
+                                                <div className="mb-4 flex flex-col items-center">
                                                     <div
-                                                        className="radial-progress mb-2"
-                                                        style={{ "--value": accuracyScore }}
+                                                        className={`radial-progress mb-2 ${
+                                                            accuracyScore >= 70
+                                                                ? "text-primary"
+                                                                : accuracyScore >= 40
+                                                                  ? "text-warning"
+                                                                  : "text-error"
+                                                        }`}
+                                                        style={{
+                                                            "--value": accuracyScore,
+                                                            "--size": "5rem",
+                                                        }}
                                                         aria-valuenow={accuracyScore}
                                                         role="progressbar"
                                                     >
-                                                        {accuracyScore}
+                                                        <span className="text-xl font-semibold">
+                                                            {accuracyScore}
+                                                        </span>
                                                     </div>
                                                     <p className="text-sm text-gray-600 italic dark:text-gray-400">
                                                         {t(

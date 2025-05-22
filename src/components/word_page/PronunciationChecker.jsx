@@ -236,18 +236,30 @@ const PronunciationChecker = ({
             // Start with base score
             let score = 100;
 
-            // Minor deductions for common mistakes
-            if (extraAtEnd > 0) {
-                score -= 10; // Small penalty for extra sounds at end
-            }
-            if (mispronounced > 0) {
-                score -= mispronounced * 10; // -10 points per mispronunciation
-            }
-
-            // Larger deductions for other errors
+            // Count different types of errors present
+            const hasExtra = extraAtEnd > 0;
+            const hasMispronounced = mispronounced > 0;
+            const hasSubstitution = diff.some((d) => d.type === "substitution");
             const otherErrors = totalErrors - mispronounced - extraAtEnd;
-            if (otherErrors > 0) {
-                score -= otherErrors * 25; // Bigger penalty for insertions/deletions
+            const hasOtherErrors = otherErrors > 0;
+
+            // Calculate error type count
+            const errorTypes = [hasExtra, hasMispronounced, hasSubstitution, hasOtherErrors].filter(
+                Boolean
+            ).length;
+
+            if (errorTypes === 1) {
+                // Single error type - be lenient
+                if (hasExtra) score -= 10;
+                if (hasMispronounced) score -= 10;
+                if (hasSubstitution) score -= 5;
+                if (hasOtherErrors) score -= 25;
+            } else if (errorTypes > 1) {
+                // Multiple error types - progressive penalties
+                if (hasExtra) score -= 10;
+                if (hasMispronounced) score -= 10;
+                if (hasSubstitution) score -= 10;
+                if (hasOtherErrors) score -= 30;
             }
 
             accuracyScore = Math.round(Math.max(0, score));

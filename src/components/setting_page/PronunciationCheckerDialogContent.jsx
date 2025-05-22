@@ -12,7 +12,6 @@ const PronunciationCheckerDialogContent = ({
     installState,
     modelValue,
     onModelChange,
-    error,
 }) => {
     return (
         <div className="modal-box">
@@ -171,7 +170,6 @@ PronunciationCheckerDialogContent.propTypes = {
     installState: PropTypes.string.isRequired,
     modelValue: PropTypes.string.isRequired,
     onModelChange: PropTypes.func.isRequired,
-    error: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
 };
 
 export default PronunciationCheckerDialogContent;

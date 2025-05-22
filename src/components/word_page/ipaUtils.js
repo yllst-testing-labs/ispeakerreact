@@ -27,6 +27,14 @@ const IPA_NORMALIZATION_MAP = {
     // Add more as needed
 };
 
+// Common learner substitutions that should be treated as very close matches
+const LEARNER_SUBSTITUTIONS = [
+    ["ʊ", "u"],
+    ["i", "ɪ"],
+    ["ɑ", "a"],
+    ["ɔ", "o"],
+];
+
 // Fuzzy phoneme groups (each array contains close phonemes)
 const FUZZY_PHONEME_GROUPS = [
     ["ɑ", "ɑː"],
@@ -114,10 +122,18 @@ const formatToOfficialSpacing = (modelStr, officialStr) => {
     return groups.join(" ");
 };
 
+// Check if two phonemes are common learner substitutions
+const isLearnerSubstitution = (a, b) => {
+    return LEARNER_SUBSTITUTIONS.some(
+        ([p1, p2]) => (a === p1 && b === p2) || (a === p2 && b === p1)
+    );
+};
+
 export {
     arePhonemesClose,
     charLevenshtein,
     formatToOfficialSpacing,
+    isLearnerSubstitution,
     normalizeIPAString,
     normalizeIPAToken,
 };

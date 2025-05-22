@@ -7,9 +7,10 @@ import openExternal from "../../utils/openExternal";
 import { getPronunciationInstallState } from "../setting_page/pronunciationStepUtils";
 import {
     arePhonemesClose,
-    normalizeIPAString,
     charLevenshtein,
     formatToOfficialSpacing,
+    normalizeIPAString,
+    isLearnerSubstitution,
 } from "./ipaUtils";
 import { parseIPA } from "./syllableParser";
 
@@ -183,6 +184,10 @@ const PronunciationChecker = ({
                 diff.push({ type: "same", value: modelArr[i] });
                 i++;
                 j++;
+            } else if (isLearnerSubstitution(modelArr[i], officialArr[j])) {
+                diff.push({ type: "substitution", value: modelArr[i] });
+                i++;
+                j++;
             } else {
                 diff.push({ type: "replace", value: modelArr[i] });
                 i++;
@@ -199,17 +204,54 @@ const PronunciationChecker = ({
         }
 
         // --- Score calculation ---
-        let insertions = 0,
-            deletions = 0,
-            substitutions = 0;
-        diff.forEach((d) => {
-            if (d.type === "insert") insertions++;
-            if (d.type === "delete") deletions++;
-            if (d.type === "replace") substitutions++;
+        let matchCount = 0;
+        let extraAtEnd = 0;
+        let mispronounced = 0;
+        let totalErrors = 0;
+
+        // Analyze errors
+        diff.forEach((d, idx) => {
+            if (d.type === "same") {
+                matchCount++;
+            } else {
+                // Check if it's an extra sound at the end
+                if (d.type === "delete" && idx >= officialArr.length) {
+                    extraAtEnd++;
+                } else {
+                    totalErrors++;
+                    if (d.type === "replace") {
+                        mispronounced++;
+                    }
+                }
+            }
         });
-        const total = officialArr.length;
-        const errors = insertions + deletions + substitutions;
-        accuracyScore = total > 0 ? Math.max(0, Math.round(((total - errors) / total) * 100)) : 0;
+
+        const totalPhonemes = officialArr.length;
+
+        // Calculate score
+        if (matchCount === 0 || matchCount / totalPhonemes < 0.3) {
+            // Completely different word
+            accuracyScore = 0;
+        } else {
+            // Start with base score
+            let score = 100;
+
+            // Minor deductions for common mistakes
+            if (extraAtEnd > 0) {
+                score -= 10; // Small penalty for extra sounds at end
+            }
+            if (mispronounced > 0) {
+                score -= mispronounced * 10; // -10 points per mispronunciation
+            }
+
+            // Larger deductions for other errors
+            const otherErrors = totalErrors - mispronounced - extraAtEnd;
+            if (otherErrors > 0) {
+                score -= otherErrors * 25; // Bigger penalty for insertions/deletions
+            }
+
+            accuracyScore = Math.round(Math.max(0, score));
+        }
         // --- End score calculation ---
 
         // Render alignedResult with spaces, highlighting differences
@@ -249,6 +291,12 @@ const PronunciationChecker = ({
             if (d.type === "replace")
                 rendered.push(
                     <span key={idx} className="bg-info text-info-content rounded px-1">
+                        {d.value}
+                    </span>
+                );
+            if (d.type === "substitution")
+                rendered.push(
+                    <span key={idx} className="bg-warning text-warning-content rounded px-1">
                         {d.value}
                     </span>
                 );
@@ -396,6 +444,13 @@ const PronunciationChecker = ({
                                                     <span className="bg-accent text-accent-content rounded px-1">
                                                         {t(
                                                             "wordPage.pronunciationChecker.colorLegendMissing"
+                                                        )}
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span className="bg-warning text-warning-content rounded px-1">
+                                                        {t(
+                                                            "wordPage.pronunciationChecker.colorLegendSubstitution"
                                                         )}
                                                     </span>
                                                 </li>

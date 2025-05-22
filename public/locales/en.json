@@ -396,6 +396,7 @@
             "colorLegendMispronounce": "Mispronounced phoneme",
             "colorLegendMissing": "Missing phoneme",
             "colorLegendExtra": "Extra phoneme",
+            "colorLegendSubstitution": "Substitution",
             "perfectResult": "You seem to pronounce it perfectly!",
             "closeResult": "You seem to be close to the correct pronunciation!",
             "notSoCloseResult": "You seem to mispronounce some phonemes. Try practicing it again and you will get it right! Alternatively, try again with other phoneme recognition models in Settings.",

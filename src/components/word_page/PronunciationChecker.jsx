@@ -365,7 +365,7 @@ const PronunciationChecker = ({
                                             <p className="text-error">
                                                 {t("wordPage.pronunciationChecker.errorOccurred")}
                                             </p>
-                                            <p className="font-mono">
+                                            <p className="font-mono whitespace-pre-wrap break-words">
                                                 {result.replace(/^Error:\s*/, "")}
                                             </p>
                                             {errorDetails && (

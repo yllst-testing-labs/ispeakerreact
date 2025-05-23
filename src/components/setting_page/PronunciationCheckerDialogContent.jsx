@@ -58,7 +58,7 @@ const PronunciationCheckerDialogContent = ({
                     >
                         {modelOptions.map((opt) => (
                             <option key={opt.value} value={opt.value}>
-                                {opt.label} ({opt.size})
+                                {opt.value} ({opt.size})
                             </option>
                         ))}
                     </select>

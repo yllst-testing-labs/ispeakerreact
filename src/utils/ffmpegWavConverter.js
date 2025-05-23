@@ -1,11 +1,11 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-import { isElectron } from "./isElectron";
+import isElectron from "./isElectron";
 
 let ffmpeg = null;
 let ffmpegLoading = null;
 
-export async function getFFmpeg() {
+const getFFmpeg = async () => {
     if (!ffmpeg) {
         ffmpeg = new FFmpeg();
         ffmpegLoading = (async () => {
@@ -25,9 +25,9 @@ export async function getFFmpeg() {
         ffmpegLoading = null;
     }
     return ffmpeg;
-}
+};
 
-export async function convertToWav(inputBlob) {
+const convertToWav = async (inputBlob) => {
     const ffmpeg = await getFFmpeg();
     await ffmpeg.writeFile("input", await fetchFile(inputBlob));
     await ffmpeg.exec([
@@ -48,4 +48,6 @@ export async function convertToWav(inputBlob) {
     await ffmpeg.deleteFile("input");
     await ffmpeg.deleteFile("output.wav");
     return wavBlob;
-}
+};
+
+export default convertToWav;

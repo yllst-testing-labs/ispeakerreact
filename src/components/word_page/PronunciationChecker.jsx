@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { convertToWav } from "../../utils/ffmpegWavConverter";
-import { isElectron } from "../../utils/isElectron";
+import convertToWav from "../../utils/ffmpegWavConverter";
+import isElectron from "../../utils/isElectron";
 import openExternal from "../../utils/openExternal";
 import { getPronunciationInstallState } from "../setting_page/pronunciationStepUtils";
 import {

@@ -130,6 +130,30 @@ const getVenvPipPath = async () => {
     }
 };
 
+const upgradeVenvPip = async () => {
+    const venvPython = await getVenvPythonPath();
+    return new Promise((resolve, reject) => {
+        const proc = spawn(venvPython, ["-m", "pip", "install", "--upgrade", "pip"], {
+            shell: true,
+        });
+        let output = "";
+        let error = "";
+        proc.stdout.on("data", (data) => {
+            output += data.toString();
+        });
+        proc.stderr.on("data", (data) => {
+            error += data.toString();
+        });
+        proc.on("close", (code) => {
+            if (code === 0) {
+                resolve(output);
+            } else {
+                reject(new Error(error || `pip upgrade failed with code ${code}`));
+            }
+        });
+    });
+};
+
 const ensureVenvExists = async () => {
     const venvDir = await getVenvDir();
     let venvPython = await getVenvPythonPath();
@@ -179,6 +203,12 @@ const installDependencies = () => {
         try {
             await ensureVenvExists();
             venvPip = await getVenvPipPath();
+            try {
+                await upgradeVenvPip();
+                log += "Upgraded pip to latest version.\n";
+            } catch (err) {
+                log += `Failed to upgrade pip: ${err.message}\n`;
+            }
         } catch (err) {
             log += `Failed to create virtual environment: ${err.message}\n`;
             event.sender.send("pronunciation-dep-progress", {

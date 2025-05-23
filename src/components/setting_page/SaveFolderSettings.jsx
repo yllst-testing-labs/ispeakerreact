@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoWarningOutline } from "react-icons/io5";
-import { isElectron } from "../../utils/isElectron";
+import isElectron from "../../utils/isElectron";
 import { sonnerErrorToast, sonnerSuccessToast } from "../../utils/sonnerCustomToast";
 
 const SaveFolderSettings = () => {
@@ -138,7 +138,7 @@ const SaveFolderSettings = () => {
             </div>
             {moveDialogOpen && (
                 <dialog open ref={moveDialogRef} className="modal modal-open">
-                    <form method="dialog" className="modal-box">
+                    <div className="modal-box min-h-[350px] w-10/12 max-w-2xl">
                         <h3 className="text-lg font-bold">
                             {t("settingPage.saveFolderSettings.saveFolderMovingTitle")}
                         </h3>
@@ -154,7 +154,7 @@ const SaveFolderSettings = () => {
                                                             ? "saveFolderCopyPhase"
                                                             : moveProgress.phase === "delete"
                                                               ? "saveFolderDeletePhase"
-                                                              : "saveFolderMovingPhase"
+                                                              : "saveFolderDeleteEmptyDirPhase"
                                                     }`
                                                 )}{" "}
                                                 <span lang="en" className="font-mono! break-all">
@@ -187,7 +187,7 @@ const SaveFolderSettings = () => {
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </dialog>
             )}
         </>

@@ -40,48 +40,66 @@ const setupPronunciationCheckerIPC = () => {
         applog.info(`[PronunciationChecker] modelDir: ${modelDir}`);
 
         // Robust Python script for model inference
-        const pyCode = `import os
+        const pyCode = `
 import sys
 import json
 import torch
-import torchaudio
-from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
+import librosa
+from transformers.models.wav2vec2 import (
+    Wav2Vec2Processor,
+    Wav2Vec2ForCTC,
+    Wav2Vec2FeatureExtractor,
+    Wav2Vec2CTCTokenizer,
+)
 
 # Set console encoding to UTF-8
-if sys.platform == 'win32':
+if sys.platform == "win32":
     import codecs
-    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
-    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer, "strict")
+    sys.stderr = codecs.getwriter("utf-8")(sys.stderr.buffer, "strict")
 
 MODEL_DIR = r"""${modelDir}"""
 AUDIO_PATH = r"""${audioPath}"""
+
 
 def log_json(obj):
     # Send a single JSON string to stdout
     print(json.dumps(obj, ensure_ascii=False))
 
+
 def main():
     try:
         log_json({"status": "progress", "message": "Loading processor..."})
-        processor = Wav2Vec2Processor.from_pretrained(MODEL_DIR)
-        log_json({"status": "progress", "message": "Loading model..."})
-        model = Wav2Vec2ForCTC.from_pretrained(MODEL_DIR).to("cpu")
+        feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(MODEL_DIR)
+        tokenizer = Wav2Vec2CTCTokenizer.from_pretrained(MODEL_DIR)
+        processor = Wav2Vec2Processor(
+            feature_extractor=feature_extractor, tokenizer=tokenizer
+        )
+        model = Wav2Vec2ForCTC.from_pretrained(MODEL_DIR)
         log_json({"status": "progress", "message": "Model loaded."})
 
         log_json({"status": "progress", "message": f"Loading audio: {AUDIO_PATH}"})
-        waveform, sample_rate = torchaudio.load(AUDIO_PATH)
-        log_json({"status": "progress", "message": f"Audio loaded. Sample rate: {sample_rate}"})
-
-        if sample_rate != 16000:
-            log_json({"status": "progress", "message": f"Resampling from {sample_rate} to 16000..."})
-            resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
-            waveform = resampler(waveform)
-        waveform = waveform.mean(dim=0, keepdim=True)
-        log_json({"status": "progress", "message": f"Waveform shape: {waveform.shape}, dtype: {waveform.dtype}"})
+        speech_array, sampling_rate = librosa.load(
+            AUDIO_PATH, sr=16000
+        )  # Ensure 16kHz for wav2vec2
+        log_json(
+            {
+                "status": "progress",
+                "message": f"Audio loaded. Sample rate: {sampling_rate}",
+            }
+        )
 
         log_json({"status": "progress", "message": "Preparing inputs for model..."})
-        inputs = processor(waveform.squeeze().numpy(), sampling_rate=16000, return_tensors="pt")
-        log_json({"status": "progress", "message": f"Input tensor shape: {inputs['input_values'].shape}, dtype: {inputs['input_values'].dtype}"})
+        inputs = processor(
+            speech_array, sampling_rate=16000, return_tensors="pt", padding=True
+        )
+        log_json(
+            {
+                "status": "progress",
+                "message": f"Input tensor shape: {inputs['input_values'].shape}, dtype: {inputs['input_values'].dtype}",
+            }
+        )
 
         log_json({"status": "progress", "message": "Running model..."})
         with torch.no_grad():
@@ -90,17 +108,24 @@ def main():
 
         predicted_ids = torch.argmax(logits, dim=-1)
         transcription = processor.batch_decode(predicted_ids)
-        result = transcription[0].strip()
-        if result == "":
-            log_json({"status": "success", "phonemes": None, "message": "No phonemes detected."})
+        if transcription == "":
+            log_json(
+                {
+                    "status": "success",
+                    "phonemes": None,
+                    "message": "No phonemes detected.",
+                }
+            )
         else:
-            log_json({"status": "success", "phonemes": result})
+            log_json({"status": "success", "phonemes": transcription[0].strip()})
 
     except Exception as e:
         import traceback
+
         tb = traceback.format_exc()
         log_json({"status": "error", "message": str(e), "traceback": tb})
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

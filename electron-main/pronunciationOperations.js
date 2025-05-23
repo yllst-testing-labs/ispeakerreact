@@ -95,10 +95,11 @@ const startProcess = (cmd, args, onExit) => {
 const dependencies = [
     "numpy",
     "torch",
-    "torchaudio",
     "transformers",
     "huggingface_hub[hf_xet]",
-    "soundfile",
+    "librosa",
+    "protobuf", // for facebook models
+    "phonemizer", // for facebook models
 ];
 
 const resetGlobalCancel = () => {
@@ -188,7 +189,7 @@ const installDependencies = () => {
             return { deps: [{ name: "all", status: "error" }], log };
         }
         return new Promise((resolve) => {
-            const pipArgs = ["install", ...dependencies];
+            const pipArgs = ["install", ...dependencies, "-U"];
             const pipProcess = startProcess(venvPip, pipArgs, (err) => {
                 const status = err ? "error" : "success";
                 event.sender.send("pronunciation-dep-progress", {

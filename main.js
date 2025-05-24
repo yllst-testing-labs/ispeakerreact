@@ -9,6 +9,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
+import { Conf } from "electron-conf/main";
 import { createSplashWindow, createWindow } from "./electron-main/createWindow.js";
 import { setCustomSaveFolderIPC } from "./electron-main/customFolderLocationOperation.js";
 import { expressApp } from "./electron-main/expressServer.js";
@@ -59,6 +60,9 @@ if (electronSquirrelStartup) app.quit();
 
 // Log operations
 manageLogFiles();
+
+const conf = new Conf();
+conf.registerRendererListener();
 
 let mainWindow;
 
@@ -267,32 +271,39 @@ app.on("activate", () => {
     }
 });
 
-app.whenReady()
-    .then(() => {
-        // 1. Show splash window immediately
-        createSplashWindow(__dirname);
+const gotTheLock = app.requestSingleInstanceLock();
 
-        // 2. Start heavy work in parallel after splash is shown
-        setImmediate(() => {
-            // Create main window (can be shown after splash)
-            createWindow(__dirname, (srv) => {
-                server = srv;
-            });
+if (!gotTheLock) {
+    app.quit();
+    process.exit(0);
+} else {
+    app.whenReady()
+        .then(() => {
+            // 1. Show splash window immediately
+            createSplashWindow(__dirname, ipcMain, conf);
 
-            // Wait for log settings and manage logs in background
-            ipcMain.once("update-log-settings", (event, settings) => {
-                setCurrentLogSettings(settings);
-                applog.info("Log settings received from renderer:", settings);
-                manageLogFiles().then(() => {
-                    applog.info("Log files managed successfully.");
+            // 2. Start heavy work in parallel after splash is shown
+            setImmediate(() => {
+                // Create main window (can be shown after splash)
+                createWindow(__dirname, (srv) => {
+                    server = srv;
+                });
+
+                // Wait for log settings and manage logs in background
+                ipcMain.once("update-log-settings", (event, settings) => {
+                    setCurrentLogSettings(settings);
+                    applog.info("Log settings received from renderer:", settings);
+                    manageLogFiles().then(() => {
+                        applog.info("Log files managed successfully.");
+                    });
                 });
             });
+        })
+        .catch((error) => {
+            // Catch any errors thrown in the app.whenReady() promise itself
+            applog.error("Error in app.whenReady():", error);
         });
-    })
-    .catch((error) => {
-        // Catch any errors thrown in the app.whenReady() promise itself
-        applog.error("Error in app.whenReady():", error);
-    });
+}
 
 getFfmpegWasmPathIPC(__dirname);
 
@@ -322,7 +333,7 @@ ipcMain.handle("get-log-settings", async () => {
 
 // DEBUG: Trace undefined logs
 const origConsoleLog = console.log;
-console.log =  (...args) => {
+console.log = (...args) => {
     if (args.length === 1 && args[0] === undefined) {
         origConsoleLog.call(console, "console.log(undefined) called! Stack trace:");
         origConsoleLog.call(console, new Error().stack);

@@ -142,7 +142,7 @@ const DownloadPage = () => {
                                         <button
                                             key="python-link"
                                             type="button"
-                                            className="link font-semibold underline link-secondary"
+                                            className="link font-semibold underline link-info"
                                             onClick={() =>
                                                 window.open(
                                                     "https://www.python.org/downloads/",

@@ -140,10 +140,18 @@ const PronunciationChecker = ({
             } else {
                 setResult(`Error: ${response?.message || "Unknown error"}`);
                 setErrorDetails(response?.traceback || response?.message || "Unknown error");
+                window.electron.log(
+                    "error",
+                    `Pronunciation check error. Traceback: ${response?.traceback || "Unknown error"}`
+                );
             }
         } catch (err) {
             setResult(`Error: ${err.message || err}`);
             setErrorDetails(err.stack || err.message || JSON.stringify(err));
+            window.electron.log(
+                "error",
+                `Pronunciation check error. Stack trace: ${err.stack || err.message || JSON.stringify(err)}`
+            );
         } finally {
             setShowResult(true);
             setLoading(false);
@@ -365,7 +373,7 @@ const PronunciationChecker = ({
                                             <p className="text-error">
                                                 {t("wordPage.pronunciationChecker.errorOccurred")}
                                             </p>
-                                            <p className="font-mono whitespace-pre-wrap break-words">
+                                            <p className="font-mono break-words whitespace-pre-wrap">
                                                 {result.replace(/^Error:\s*/, "")}
                                             </p>
                                             {errorDetails && (

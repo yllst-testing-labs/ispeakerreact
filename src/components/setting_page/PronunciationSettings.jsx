@@ -94,6 +94,7 @@ const PronunciationSettings = () => {
                             cachedStatus?.dependencyLog ||
                             "Installation failed."
                     );
+                    window.electron.log("error", `Pronunciation install failed. ${cachedStatus}`);
                 } else {
                     setPythonCheckResult(null);
                     setError(null);
@@ -210,6 +211,10 @@ const PronunciationSettings = () => {
             } catch (err) {
                 console.error("[Pronunciation] Dependency install error:", err);
                 setError(err.message || String(err));
+                window.electron.log(
+                    "error",
+                    `Dependency install error: ${err.message || String(err)}`
+                );
             } finally {
                 setChecking(false);
             }
@@ -244,6 +249,7 @@ const PronunciationSettings = () => {
                     };
                     return updated;
                 });
+                window.electron.log("error", `Model download error: ${err.message || String(err)}`);
             } finally {
                 setChecking(false);
             }

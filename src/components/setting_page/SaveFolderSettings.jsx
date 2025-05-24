@@ -15,6 +15,7 @@ const SaveFolderSettings = () => {
     const moveDialogRef = useRef(null);
     const confirmRef = useRef(null);
     const [confirmAction, setConfirmAction] = useState(null);
+    const [processStarting, setProcessStarting] = useState(false);
 
     useEffect(() => {
         if (!isElectron()) return;
@@ -27,6 +28,7 @@ const SaveFolderSettings = () => {
     useEffect(() => {
         if (!isElectron()) return;
         const handler = (_event, data) => {
+            setProcessStarting(false);
             setMoveProgress(data);
             setMoveDialogOpen(true);
             if (data.phase === "delete-done") {
@@ -42,7 +44,10 @@ const SaveFolderSettings = () => {
 
     useEffect(() => {
         if (!isElectron()) return;
-        const handler = (_event, data) => setVenvDeleteStatus(data);
+        const handler = (_event, data) => {
+            setProcessStarting(false);
+            setVenvDeleteStatus(data);
+        };
         window.electron.ipcRenderer.on("venv-delete-status", handler);
         return () => window.electron.ipcRenderer.removeAllListeners("venv-delete-status");
     }, []);
@@ -52,6 +57,7 @@ const SaveFolderSettings = () => {
         setMoveDialogOpen(false);
         setMoveProgress(null);
         setVenvDeleteStatus(null);
+        setProcessStarting(true);
         try {
             // Open folder dialog via Electron
             const folderPaths = await window.electron.ipcRenderer.invoke("show-open-dialog", {
@@ -89,6 +95,7 @@ const SaveFolderSettings = () => {
         setMoveDialogOpen(false);
         setMoveProgress(null);
         setVenvDeleteStatus(null);
+        setProcessStarting(true);
         try {
             setMoveDialogOpen(true);
             setMoveProgress({ moved: 0, total: 1, phase: "copy", name: "" });
@@ -205,16 +212,16 @@ const SaveFolderSettings = () => {
                             {t("settingPage.saveFolderSettings.saveFolderMovingTitle")}
                         </h3>
                         <div className="py-4">
-                            {venvDeleteStatus && venvDeleteStatus.status === "deleting" && (
+                            {processStarting ? (
+                                <span className="loading loading-spinner loading-md"></span>
+                            ) : venvDeleteStatus && venvDeleteStatus.status === "deleting" ? (
                                 <>
                                     <div className="mb-2">
                                         {t("settingPage.saveFolderSettings.saveFolderDeleteVenv")}
                                     </div>
                                     <progress className="progress progress-primary w-full"></progress>
                                 </>
-                            )}
-                            {(!venvDeleteStatus || venvDeleteStatus.status !== "deleting") &&
-                            moveProgress ? (
+                            ) : moveProgress ? (
                                 <>
                                     <div className="mb-2">
                                         {t(
@@ -240,9 +247,7 @@ const SaveFolderSettings = () => {
                                         {t("settingPage.saveFolderSettings.saveFolderMovingFiles")}
                                     </div>
                                 </>
-                            ) : (
-                                <span className="loading loading-spinner loading-md"></span>
-                            )}
+                            ) : null}
                             <div role="alert" className="alert alert-warning mt-6">
                                 <IoWarningOutline className="h-6 w-6" />
                                 <div>

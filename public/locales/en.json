@@ -1342,7 +1342,15 @@
             "saveFolderDeletePhase": "Deleting files:",
             "saveFolderMovingFiles": "files processed",
             "saveFolderMovingBtn": "Please wait…",
-            "saveFolderMovingWarning": "Do not close the app while the files are being moved."
+            "saveFolderMovingWarning": "Do not close the app while the files are being moved.",
+            "saveFolderConfirmTitle": "Confirm moving…",
+            "saveFolderConfirmDescription": [
+                "Are you sure you want to change the data location?",
+                "Once started, you cannot cancel the operation.",
+                "If you have installed the pronunciation checker, you will need to reinstall its dependencies. Your downloaded models will not be affected."
+            ],
+            "saveFolderConfirmBtn": "Confirm",
+            "saveFolderConfirmCancelBtn": "Cancel"
         },
         "savedRecordingLocationSettings": {
             "savedRecordingLocationHeading": "Saved recording location",

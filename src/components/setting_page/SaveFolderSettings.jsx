@@ -11,7 +11,10 @@ const SaveFolderSettings = () => {
     const [loading, setLoading] = useState(false);
     const [moveDialogOpen, setMoveDialogOpen] = useState(false);
     const [moveProgress, setMoveProgress] = useState(null);
+    const [venvDeleteStatus] = useState(null);
     const moveDialogRef = useRef(null);
+    const confirmRef = useRef(null);
+    const [confirmAction, setConfirmAction] = useState(null);
 
     useEffect(() => {
         if (!isElectron()) return;
@@ -89,6 +92,31 @@ const SaveFolderSettings = () => {
         }
     };
 
+    const openChooseDialog = () => {
+        setConfirmAction("choose");
+        confirmRef.current.showModal();
+    };
+
+    const openResetDialog = () => {
+        setConfirmAction("reset");
+        confirmRef.current.showModal();
+    };
+
+    const handleConfirm = () => {
+        if (confirmAction === "choose") {
+            handleChooseFolder();
+        } else if (confirmAction === "reset") {
+            handleResetDefault();
+        }
+        confirmRef.current.close();
+        setConfirmAction(null);
+    };
+
+    const handleCancel = () => {
+        confirmRef.current.close();
+        setConfirmAction(null);
+    };
+
     if (!isElectron()) return null;
 
     return (
@@ -115,7 +143,7 @@ const SaveFolderSettings = () => {
                     <button
                         type="button"
                         className="btn btn-block"
-                        onClick={handleChooseFolder}
+                        onClick={openChooseDialog}
                         disabled={loading}
                     >
                         {loading ? (
@@ -128,7 +156,7 @@ const SaveFolderSettings = () => {
                         <button
                             type="button"
                             className="btn btn-secondary btn-block"
-                            onClick={handleResetDefault}
+                            onClick={openResetDialog}
                             disabled={loading}
                         >
                             {t("settingPage.saveFolderSettings.saveFolderResetBtn")}
@@ -136,6 +164,30 @@ const SaveFolderSettings = () => {
                     )}
                 </div>
             </div>
+            <dialog ref={confirmRef} className="modal">
+                <div className="modal-box">
+                    <h3 className="text-lg font-bold">
+                        {t("settingPage.saveFolderSettings.saveFolderConfirmTitle")}
+                    </h3>
+                    <div className="py-4">
+                        {t("settingPage.saveFolderSettings.saveFolderConfirmDescription", {
+                            returnObjects: true,
+                        }).map((desc, index) => (
+                            <p className="mb-2" key={index}>
+                                {desc}
+                            </p>
+                        ))}
+                    </div>
+                    <div className="modal-action">
+                        <button type="button" className="btn btn-primary" onClick={handleConfirm}>
+                            {t("settingPage.saveFolderSettings.saveFolderConfirmBtn")}
+                        </button>
+                        <button type="button" className="btn" onClick={handleCancel}>
+                            {t("settingPage.saveFolderSettings.saveFolderConfirmCancelBtn")}
+                        </button>
+                    </div>
+                </div>
+            </dialog>
             {moveDialogOpen && (
                 <dialog open ref={moveDialogRef} className="modal modal-open">
                     <div className="modal-box min-h-[350px] w-10/12 max-w-2xl">
@@ -143,7 +195,13 @@ const SaveFolderSettings = () => {
                             {t("settingPage.saveFolderSettings.saveFolderMovingTitle")}
                         </h3>
                         <div className="py-4">
-                            {moveProgress ? (
+                            {venvDeleteStatus && venvDeleteStatus.status === "deleting" && (
+                                <div className="mb-4">
+                                    Deleting pronunciation checker dependencies...
+                                </div>
+                            )}
+                            {(!venvDeleteStatus || venvDeleteStatus.status !== "deleting") &&
+                            moveProgress ? (
                                 <>
                                     {moveProgress.name ? (
                                         <>

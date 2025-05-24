@@ -11,7 +11,7 @@ const SaveFolderSettings = () => {
     const [loading, setLoading] = useState(false);
     const [moveDialogOpen, setMoveDialogOpen] = useState(false);
     const [moveProgress, setMoveProgress] = useState(null);
-    const [venvDeleteStatus] = useState(null);
+    const [venvDeleteStatus, setVenvDeleteStatus] = useState(null);
     const moveDialogRef = useRef(null);
     const confirmRef = useRef(null);
     const [confirmAction, setConfirmAction] = useState(null);
@@ -32,6 +32,7 @@ const SaveFolderSettings = () => {
             if (data.phase === "delete-done") {
                 setMoveDialogOpen(false);
                 setMoveProgress(null);
+                setVenvDeleteStatus(null);
                 sonnerSuccessToast(t("toast.folderChanged"));
             }
         };
@@ -39,10 +40,18 @@ const SaveFolderSettings = () => {
         return () => window.electron.ipcRenderer.removeAllListeners("move-folder-progress");
     }, [t]);
 
+    useEffect(() => {
+        if (!isElectron()) return;
+        const handler = (_event, data) => setVenvDeleteStatus(data);
+        window.electron.ipcRenderer.on("venv-delete-status", handler);
+        return () => window.electron.ipcRenderer.removeAllListeners("venv-delete-status");
+    }, []);
+
     const handleChooseFolder = async () => {
         setLoading(true);
         setMoveDialogOpen(false);
         setMoveProgress(null);
+        setVenvDeleteStatus(null);
         try {
             // Open folder dialog via Electron
             const folderPaths = await window.electron.ipcRenderer.invoke("show-open-dialog", {
@@ -79,6 +88,7 @@ const SaveFolderSettings = () => {
         setLoading(true);
         setMoveDialogOpen(false);
         setMoveProgress(null);
+        setVenvDeleteStatus(null);
         try {
             setMoveDialogOpen(true);
             setMoveProgress({ moved: 0, total: 1, phase: "copy", name: "" });
@@ -196,44 +206,39 @@ const SaveFolderSettings = () => {
                         </h3>
                         <div className="py-4">
                             {venvDeleteStatus && venvDeleteStatus.status === "deleting" && (
-                                <div className="mb-4">
-                                    Deleting pronunciation checker dependencies...
-                                </div>
+                                <>
+                                    <div className="mb-2">
+                                        {t("settingPage.saveFolderSettings.saveFolderDeleteVenv")}
+                                    </div>
+                                    <progress className="progress progress-primary w-full"></progress>
+                                </>
                             )}
                             {(!venvDeleteStatus || venvDeleteStatus.status !== "deleting") &&
                             moveProgress ? (
                                 <>
-                                    {moveProgress.name ? (
-                                        <>
-                                            <div className="mb-2">
-                                                {t(
-                                                    `settingPage.saveFolderSettings.${
-                                                        moveProgress.phase === "copy"
-                                                            ? "saveFolderCopyPhase"
-                                                            : moveProgress.phase === "delete"
-                                                              ? "saveFolderDeletePhase"
-                                                              : "saveFolderDeleteEmptyDirPhase"
-                                                    }`
-                                                )}{" "}
-                                                <span lang="en" className="font-mono! break-all">
-                                                    {moveProgress.name}
-                                                </span>
-                                            </div>
-                                            <progress
-                                                className="progress progress-primary w-full"
-                                                value={moveProgress.moved}
-                                                max={moveProgress.total}
-                                            ></progress>
-                                            <div className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                                                {moveProgress.moved} / {moveProgress.total}{" "}
-                                                {t(
-                                                    "settingPage.saveFolderSettings.saveFolderMovingFiles"
-                                                )}
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <span className="loading loading-spinner loading-md"></span>
-                                    )}
+                                    <div className="mb-2">
+                                        {t(
+                                            `settingPage.saveFolderSettings.${
+                                                moveProgress.phase === "copy"
+                                                    ? "saveFolderCopyPhase"
+                                                    : moveProgress.phase === "delete"
+                                                      ? "saveFolderDeletePhase"
+                                                      : "saveFolderDeleteEmptyDirPhase"
+                                            }`
+                                        )}{" "}
+                                        <span lang="en" className="font-mono! break-all">
+                                            {moveProgress.name}
+                                        </span>
+                                    </div>
+                                    <progress
+                                        className="progress progress-primary w-full"
+                                        value={moveProgress.moved}
+                                        max={moveProgress.total}
+                                    ></progress>
+                                    <div className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                                        {moveProgress.moved} / {moveProgress.total}{" "}
+                                        {t("settingPage.saveFolderSettings.saveFolderMovingFiles")}
+                                    </div>
                                 </>
                             ) : (
                                 <span className="loading loading-spinner loading-md"></span>

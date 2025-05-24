@@ -194,6 +194,20 @@ const setCustomSaveFolderIPC = () => {
         }
         // Move contents if needed
         try {
+            // Delete pronunciation-venv in oldSaveFolder before moving
+            const oldVenvPath = path.join(oldSaveFolder, "pronunciation-venv");
+            event.sender.send("venv-delete-status", { status: "deleting", path: oldVenvPath });
+            try {
+                await fsPromises.rm(oldVenvPath, { recursive: true, force: true });
+                console.log("Deleted old pronunciation-venv at:", oldVenvPath);
+                applog.info("Deleted old pronunciation-venv at:", oldVenvPath);
+                event.sender.send("venv-delete-status", { status: "deleted", path: oldVenvPath });
+            } catch (venvErr) {
+                // Log but do not block move if venv doesn't exist or can't be deleted
+                console.log("Could not delete old pronunciation-venv:", venvErr.message);
+                applog.warn("Could not delete old pronunciation-venv:", venvErr.message);
+                event.sender.send("venv-delete-status", { status: "error", path: oldVenvPath, error: venvErr.message });
+            }
             if (
                 oldSaveFolder !== newSaveFolder &&
                 fs.existsSync(oldSaveFolder) &&
@@ -234,4 +248,3 @@ const setCustomSaveFolderIPC = () => {
 };
 
 export { setCustomSaveFolderIPC };
-

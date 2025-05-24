@@ -300,7 +300,7 @@ const PronunciationChecker = ({
                 charCount === currentBoundary - (syllableBoundaries[spaceIdx - 1] || 0)
             ) {
                 rendered.push(
-                    <span key={`extra-separator`} className="mx-1 text-xs text-gray-400">
+                    <span key={`extra-separator`} className="mx-1 text-xs text-gray-600 dark:text-slate-400">
                         |{/* separator for extra phonemes */}
                     </span>
                 );
@@ -419,7 +419,7 @@ const PronunciationChecker = ({
                                                             {accuracyScore}
                                                         </span>
                                                     </div>
-                                                    <p className="text-sm text-gray-600 italic dark:text-gray-400">
+                                                    <p className="text-sm text-gray-600 italic dark:text-slate-400">
                                                         {t(
                                                             "wordPage.pronunciationChecker.approximateScore"
                                                         )}
@@ -494,7 +494,7 @@ const PronunciationChecker = ({
                                                     )}
                                                 </p>
                                             )}
-                                            <p className="text-sm text-gray-600 italic dark:text-gray-400">
+                                            <p className="text-sm text-gray-600 italic dark:text-slate-400">
                                                 {t("wordPage.pronunciationChecker.disclaimerText")}
                                             </p>
                                         </>

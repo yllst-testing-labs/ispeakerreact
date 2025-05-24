@@ -63,7 +63,7 @@ const PronunciationCheckerDialogContent = ({
                         ))}
                     </select>
                     {/* Show description for selected model */}
-                    <div className="mt-2 min-h-[1.5em] text-sm text-gray-600 dark:text-gray-400">
+                    <div className="mt-2 min-h-[1.5em] text-sm text-gray-600 dark:text-slate-400">
                         {modelOptions.find((opt) => opt.value === modelValue) &&
                             t(modelOptions.find((opt) => opt.value === modelValue).description)}
                     </div>

@@ -1384,8 +1384,9 @@
             "modelSelectLabel": "Select a model to download",
             "modelExplanationTitle": "What is a phoneme recognition model?",
             "modelExplanationBody": "A phoneme recognition model is a tool that listens to speech and breaks it down into the small sounds (called phonemes) that make up each word. It uses AI to help understand how words are pronounced. Bigger models are usually more accurate but take more time to process.",
-            "modelDescription1": "High accuracy, might take longer to process.",
-            "modelDescription2": "Smaller, faster to process."
+            "modelDescriptionHighAccuracy": "High accuracy. Might take longer to process.",
+            "modelDescriptionMediumAccuracy": "Medium accuracy. Might take moderate time to process.",
+            "modelDescriptionLowAccuracy": "Low accuracy. Might take less time to process."
         }
     },
     "downloadPage": {

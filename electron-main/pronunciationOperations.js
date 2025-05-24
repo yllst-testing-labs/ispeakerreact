@@ -505,6 +505,9 @@ const cancelProcess = () => {
             console.log("[Cancel] No Python process to kill. Setting pendingCancel flag.");
             pendingCancel = true;
         }
+        // Update installConf with cancelled state
+        const prevStatus = installConf.get("status", {}) || {};
+        installConf.set("status", { ...prevStatus, cancelled: true, timestamp: Date.now() });
         event.sender.send("pronunciation-cancelled");
         console.log("[Cancel] Pronunciation process cancelled (event sent to renderer)");
     });

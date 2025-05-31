@@ -12,10 +12,7 @@ Thank you for your interest in contributing! Please take a moment to review this
 
 ## 🔀 Submitting pull requests
 
-### 📌 Project note
-
-- This project **does not use TypeScript** or any kind of static type checking yet.
-  - In the meantime, **use** `PropTypes` to validate component props for basic type safety.
+We now update our project to use TypeScript as of [pull request #65](https://github.com/learnercraft/ispeakerreact/pull/65). This allows our project to have better type safety and developer experience.
 
 ### ✅ What you should do
 
@@ -24,9 +21,8 @@ Thank you for your interest in contributing! Please take a moment to review this
 - **Format your code** before committing and pushing. You must use **Prettier with our configuration** to ensure consistent formatting.
 
 - **Test your code thoroughly** before pushing. Resolve any ESLint errors if possible.
-  - An exception is allowed for variables defined in `vite.config.js` and available only at build time. If ESLint complains about these (e.g., the `__APP_VERSION__` variable), you can safely ignore the warning.
 
-- **Use clear, concise variable names** written in `camelCase`. Names should be self-explanatory and reflect their purpose.
+- **Use clear, concise variable names** written in `camelCase`. Names should be self-explanatory and reflect their purpose. For component name, use `PascalCase`.
 
 - **Use a clear, concise pull request title**. We recommend following [semantic commit message conventions](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716). Examples:
   - `fix: handle audio timeout error on older devices`
@@ -51,7 +47,7 @@ Thank you for your interest in contributing! Please take a moment to review this
 
 - Submit a pull request with **one or several giant commit(s)**. This makes it difficult to review.
 
-- Use unclear, vague, or default commit messages like `Update file`, `fix`, or `misc changes`.
+- Use unclear, vague, or default commit messages like `update file`, `fix`, or `misc changes`.
 
 - Modify configuration files (e.g., `.prettierrc`, `eslint.config.js`, etc.), or any files in the `.github` folder without prior discussion.
 
@@ -60,12 +56,12 @@ Thank you for your interest in contributing! Please take a moment to review this
 - Add code or commits that:
   - Are **obscure** or **unclear** in intent  
   - Are **malicious** or **unsafe**  
-  - **Executes scripts from external sources** associated with malicious, unsafe, or illegal behavior  
+  - **Executes scripts from external sources** associated with **malicious, unsafe, or illegal behavior**  
   - Attempts to introduce **backdoors** or hidden functionality
 
   If we find any code that violates these rules, you will be blocked from further contributions and reported to GitHub for Terms of Use violations.
 
-- Use expletives or offensive language. This project is intended for everyone, and we strive to maintain a respectful environment for all contributors and users.
+- Use **expletives** or **offensive language**. This project is intended for everyone, and we strive to maintain a respectful environment for all contributors and users.
 
 ---
 

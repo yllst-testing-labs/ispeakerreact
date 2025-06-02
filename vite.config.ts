@@ -1,0 +1,182 @@
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react-swc";
+import process from "node:process";
+import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
+import packageJson from "./package.json";
+import { fileURLToPath, URL } from "node:url";
+
+// https://vite.dev/config/
+export default defineConfig(({ mode }) => {
+    const isElectron = mode === "electron";
+    const isDev = mode === "development";
+    let base = "/";
+    if (process.env.VITE_BASE) {
+        base = process.env.VITE_BASE;
+    } else if (isElectron) {
+        base = "./";
+    } else if (isDev) {
+        base = "/";
+    } else {
+        base = "/ispeakerreact/";
+    }
+
+    return {
+        base: base,
+
+        build: {
+            rollupOptions: {
+                output: {
+                    ...(isElectron
+                        ? { inlineDynamicImports: true } // disables chunking for Electron
+                        : {
+                              manualChunks(id) {
+                                  if (id.includes("node_modules")) {
+                                      return id
+                                          .toString()
+                                          .split("node_modules/")[1]
+                                          .split("/")[0]
+                                          .toString();
+                                  }
+                              },
+                          }),
+                },
+            },
+            manifest: true,
+            outDir: "dist-react",
+            sourcemap: false,
+        },
+
+        plugins: [
+            react(),
+            tailwindcss(),
+            !isElectron &&
+                VitePWA({
+                    registerType: "autoUpdate",
+                    manifest: {
+                        name: "iSpeakerReact",
+                        short_name: "iSpeakerReact",
+                        theme_color: "#2a303c",
+                        background_color: "#2a303c",
+                        description:
+                            "An English-learning interactive tool written in React, designed to help learners practice speaking and listening.",
+                        lang: "en",
+                        icons: [
+                            {
+                                src: `${base}images/icons/ios/192.png`,
+                                sizes: "192x192",
+                                type: "image/png",
+                            },
+                            {
+                                src: `${base}images/icons/ios/512.png`,
+                                sizes: "512x512",
+                                type: "image/png",
+                            },
+                        ],
+                        screenshots: [
+                            {
+                                src: `${base}images/screenshots/screenshot-00.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                            {
+                                src: `${base}images/screenshots/screenshot-01.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                            {
+                                src: `${base}images/screenshots/screenshot-02.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                            {
+                                src: `${base}images/screenshots/screenshot-03.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                            {
+                                src: `${base}images/screenshots/screenshot-04.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                            {
+                                src: `${base}images/screenshots/screenshot-05.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                            {
+                                src: `${base}images/screenshots/screenshot-06.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                            {
+                                src: `${base}images/screenshots/screenshot-07.webp`,
+                                sizes: "1920x1080",
+                                type: "image/webp",
+                                form_factor: "wide",
+                            },
+                        ],
+                        id: "io.yllsttestinglabs.ispeakerreact",
+                        dir: "ltr",
+                        orientation: "any",
+                        categories: ["education"],
+                        prefer_related_applications: false,
+                    },
+                    workbox: {
+                        runtimeCaching: [
+                            {
+                                // Files that need caching permanently
+                                urlPattern: /\.(?:woff2|ttf|jpg|jpeg|webp|svg|ico|png)$/,
+                                handler: "CacheFirst",
+                                options: {
+                                    cacheName: "permanent-cache",
+                                    expiration: {
+                                        maxEntries: 50,
+                                        maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                                    },
+                                },
+                            },
+                            {
+                                // Cache other assets dynamically with versioning
+                                urlPattern: /\.(?:js|css|json|html)$/,
+                                handler: "CacheFirst",
+                                options: {
+                                    cacheName: `dynamic-cache-v${packageJson.version}`,
+                                    expiration: {
+                                        maxEntries: 150,
+                                        maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                }),
+        ],
+
+        define: {
+            __APP_VERSION__: JSON.stringify(packageJson.version), // Inject version
+        },
+
+        optimizeDeps: {
+            exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util"],
+        },
+
+        server: {
+            port: 5173,
+            strictPort: true,
+        },
+
+        resolve: {
+            alias: {
+                "~": fileURLToPath(new URL("./", import.meta.url)),
+            },
+        },
+    };
+});
